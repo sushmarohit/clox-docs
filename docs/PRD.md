@@ -13,6 +13,8 @@ Deliver a compliance-first freight marketplace connecting senders and transport 
 - Transport Company (bid, assign, execute)
 - Driver (execute trip and collect proof)
 
+Role-based screen flows (navigation, journeys, wireframes): [screen-flows/README.md](screen-flows/README.md)
+
 ## Problem Statement
 Current freight booking and dispatch processes are fragmented, manual, and dispute-prone. Clox must digitize booking, compliance checks, assignment, and trip evidence while preserving legal and operational controls.
 
@@ -100,6 +102,8 @@ Current freight booking and dispatch processes are fragmented, manual, and dispu
   - Core marketplace, compliance gate, assignment workflow, trip evidence, geofence waiting logic.
 - Phase 2:
   - Fleet+ advanced analytics, profit engine, advanced optimization, expanded AI decisioning.
+
+Program milestones (delivery sequencing, exit criteria, FR traceability): [MILESTONES.md](MILESTONES.md) · Australia-only summary: [MILESTONES-AUSTRALIA.md](MILESTONES-AUSTRALIA.md)
 
 ## Acceptance Criteria (High-Level)
 - Only compliant carriers can bid.
