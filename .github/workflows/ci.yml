@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            api/package-lock.json
+            web/package-lock.json
+            admin/package-lock.json
+            e2e/package-lock.json
+
+      - name: Install API
+        run: npm ci
+        working-directory: api
+
+      - name: Install web
+        run: npm ci
+        working-directory: web
+
+      - name: Install admin
+        run: npm ci
+        working-directory: admin
+
+      - name: Install e2e
+        run: npm ci
+        working-directory: e2e
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        working-directory: api
+
+      - name: Lint / typecheck API
+        run: npm run lint
+        working-directory: api
+
+      - name: Unit tests API
+        run: npm test -- --passWithNoTests
+        working-directory: api
+
+      - name: Build API
+        run: npm run build
+        working-directory: api
+
+      - name: Typecheck / build web
+        run: npm run build
+        working-directory: web
+
+      - name: Typecheck / build admin
+        run: npm run build
+        working-directory: admin
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: e2e
+
+      - name: Playwright smoke
+        run: npx playwright test --grep-invert "API-backed"
+        working-directory: e2e
+        env:
+          CI: 'true'

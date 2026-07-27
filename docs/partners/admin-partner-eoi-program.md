@@ -1,8 +1,9 @@
 # Admin Partner — Expression of Interest (EOI) Program
 
-**Sources:** `investorportal.html` · `eoiform.html`  
-**Program:** Administrative & Revenue Partner — Australian Road Freight Network  
-**Related:** [administrative-hierarchy-revenue-flow.md](../operations/administrative-hierarchy-revenue-flow.md) · [screen-flows/state-master-admin.md](../screen-flows/state-master-admin.md)
+**Canonical form:** [admin-eoi-form.md](admin-eoi-form.md) ← sourced from `clox_admin_eoi_form.pdf`  
+**HTML reference:** `Pre-Launch/eoiform.html`  
+**Strategy:** [pre-launch-strategy.md](pre-launch-strategy.md)  
+**Related:** [administrative-hierarchy-revenue-flow.md](../operations/administrative-hierarchy-revenue-flow.md) · [screen-flows/state-master-admin.md](../screen-flows/state-master-admin.md) · [investor-portal-form.md](investor-portal-form.md)
 
 ---
 
@@ -11,6 +12,8 @@
 CLOX recruits regional operating partners through an **Expression of Interest** before formal Master Administration Agreement execution.
 
 > **Code Forwarding Revolution:** CLOX replaces traditional freight broker markup with automated code, isolating regional operations through multi-tier administration and programmatic escrow revenue splits.
+
+**This program is not the Investor Portal.** Capital / equity pre-qualification is a separate funnel — see [investor-portal-form.md](investor-portal-form.md).
 
 ---
 
@@ -32,49 +35,20 @@ CLOX recruits regional operating partners through an **Expression of Interest** 
 
 ## EOI form sections
 
-### 1. Desired role & territory
+Full field-level transcription: **[admin-eoi-form.md](admin-eoi-form.md)**.
 
-- Role selection (State Master or Local BDE)
-- Target state/region (required)
-- Target suburbs/city (required)
-
-### 2. Applicant information
-
-- Full legal name
-- Company entity name
-- ABN (required) · ACN (if applicable)
-- Primary email · phone
-- Corporate address
-
-### 3. Logistics network & experience
-
-- Existing network / industry footprint in AU logistics
-- Target execution strategy (shipper acquisition, fleet onboarding, etc.)
-
-### 4. Revenue framework (disclosed to applicants)
-
-| Tier | Share | Cycle | Mandate summary |
-|------|-------|-------|-----------------|
-| State Master | 10% gross | Fortnightly | Compliance, RWC/ABN lockouts, disputes |
-| Local BDE | 5% gross | Fortnightly | Acquisition, carrier onboarding, lane velocity |
-
-**Settlement note (EOI copy):** Admin distributions over rolling 14-day cycle via **Monoova NPP splits**, net of platform management fees and marketing cost recovery.
-
-### 5. Declarations
-
-Applicant confirms:
-
-- Information is true and current
-- EOI does **not** guarantee admission
-- Final selection requires KYB, executive review, Master Administration Agreement, non-compete
-- Bound by active NDA
+1. Desired role & territory (State Master or Local BDE + state + suburbs/city)
+2. Applicant information (legal name, entity, ABN/ACN, email, phone, address)
+3. Logistics network & experience (network footprint + execution strategy)
+4. Revenue framework disclosure (10%/5%, Monoova NPP settlement note)
+5. Declarations + signature bands (KYB, executive review, Master Admin Agreement, non-compete, NDA)
 
 ---
 
-## Post-EOI process (implied)
+## Post-EOI process
 
-1. EOI submission (web form)
-2. KYB screening
+1. EOI submission (web form → API)
+2. KYB screening (manual in Phase 0)
 3. Executive board review
 4. Master Administration Agreement + non-compete execution
 5. Ops provisioning (Super Admin creates State/Local accounts per [screen-flows](../screen-flows/super-admin.md))
@@ -85,8 +59,9 @@ Applicant confirms:
 
 | Item | EOI/marketing | Engineering docs | Action |
 |------|---------------|------------------|--------|
-| Payout rail | Monoova NPP | Stripe Connect Phase 1 | Align partner comms with G0-6 |
+| Payout rail | Monoova NPP | Stripe Connect Phase 1 | Align partner comms with G0-6; no live Monoova in Phase 0 |
 | Super Admin 15% | Not in EOI form (State/Local only) | BRD 15/10/5 split | Correct — HQ retains 15% |
 | Compliance approve | State Master implied | Local BDE view+escalate default | G0-4 |
+| Investor vs EOI | HTML `investorportal.html` wrongly duplicated EOI | PDF investor form is equity intake | Keep funnels separate |
 
-**Implementation:** EOI forms are static HTML today — backend intake API + CRM/ops queue needed for production (not in M0–M12 unless pre-launch priority).
+**Implementation:** Phase 0 uses `POST /v1/leads/eoi` + Super Admin EOI queue. Digital form must match `clox_admin_eoi_form.pdf`.

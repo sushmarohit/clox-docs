@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: clox-postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: clox
+      POSTGRES_PASSWORD: clox
+      POSTGRES_DB: clox_prelaunch
+    volumes:
+      - clox_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U clox -d clox_prelaunch']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  clox_pg_data:

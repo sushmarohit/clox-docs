@@ -33,7 +33,8 @@ See [sources/README.md](sources/README.md) for full conversion index.
 2. **Fleet+ profit engine** — Phase 2 but detailed in P1/legal ([p1-functional-specification.md](product/p1-functional-specification.md))
 3. **Global legal framework** — binding terms v2.0 ([legal/global-legal-framework.md](legal/global-legal-framework.md))
 4. **Vehicle pricing tables** — Super Admin tariff seed data ([vehicle-pricing-and-load-types.md](product/vehicle-pricing-and-load-types.md))
-5. **Pre-launch / EOI HTML** — GTM capture ([partners/](partners/))
+5. **Pre-launch capture** — three funnels: registry, Admin EOI, Investor Portal ([partners/pre-launch-strategy.md](partners/pre-launch-strategy.md))
+6. **Canonical partner PDFs** — Admin EOI + Investor forms ([admin-eoi-form.md](partners/admin-eoi-form.md), [investor-portal-form.md](partners/investor-portal-form.md))
 
 ---
 
@@ -50,6 +51,7 @@ See [sources/README.md](sources/README.md) for full conversion index.
 | C7 | **Hourly stop patterns** | Original BRD: "up to 4 pickups" | P1/legal: Pattern A (3→1) or B (1→3), max 4 locations | **Update BRD** to Pattern A/B model |
 | C8 | **Carrier unlock** | Legal: Regional Admin manual | transportcompanyonboarding-sequence: auto + Ops hybrid | **Hybrid** per G0-3 (already recommended) |
 | C9 | **Admin payout messaging** | HTML: "splits on POD" | BRD: fortnightly 4th night | **Fix marketing copy** — accrual on complete, payout fortnightly |
+| C10 | **Investor vs EOI** | `investorportal.html` = Admin EOI clone | `clox_investor_portal_form.pdf` = equity / Corporations Act form | **Treat as separate funnels**; rebuild `/investors` from PDF; do not merge with Admin EOI |
 
 ---
 
@@ -61,7 +63,7 @@ See [sources/README.md](sources/README.md) for full conversion index.
 | REST API catalog | P1, system-design TODO | Backend | M1 contracts |
 | Run sheet PDF service | Hourly run sheet doc | Backend | M10 extension |
 | Tariff seed tables | Vehicle pricing doc | Product + Super policy UI | M6 pricing |
-| EOI / pre-launch API | HTML forms | Web + backend | Pre-pilot GTM |
+| EOI / investor / pre-launch API | Partner PDFs + HTML | Web + backend | Pre-pilot GTM |
 | Valhalla hosting | Legal framework | DevOps | M6 routing cost model |
 | Liquidated damages policy | Technical ops docs | Legal + Finance | M11 disputes |
 
@@ -167,7 +169,7 @@ High-risk clauses for counsel:
 | UX specification | Strong | **Very strong** |
 | Pricing/tariffs | Missing | **Draft ranges** (need Super Admin tables) |
 | Compliance (NHVR) | Mentioned | **Referenced** (Phase 2 automation) |
-| GTM / partners | Missing | **EOI + pre-launch defined** |
+| GTM / partners | Missing | **Registry + Admin EOI + Investor Portal defined** |
 | Implementation | None | None |
 
 ---

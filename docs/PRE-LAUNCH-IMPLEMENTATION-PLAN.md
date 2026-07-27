@@ -1,11 +1,11 @@
 # CLOX Pre-Launch → Platform — Full Implementation Plan
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Date:** 2026-07-27  
-**Status:** Approved for execution  
-**Stack:** React · Zustand · shadcn/ui · Tailwind · PWA · i18n (en, ru) · NestJS · PostgreSQL
+**Status:** Approved for execution (updated for investor PDF + simple npm layout)  
+**Stack:** React · Zustand · Tailwind · PWA · i18n (en first, ru later) · NestJS · PostgreSQL · **npm** (no monorepo)
 
-**Related:** [TPM-DOCUMENT-ANALYSIS.md](TPM-DOCUMENT-ANALYSIS.md) · [MILESTONES.md](MILESTONES.md) · [partners/pre-launch-registry.md](partners/pre-launch-registry.md) · [partners/admin-partner-eoi-program.md](partners/admin-partner-eoi-program.md)
+**Related:** [partners/pre-launch-strategy.md](partners/pre-launch-strategy.md) · [partners/admin-eoi-form.md](partners/admin-eoi-form.md) · [partners/investor-portal-form.md](partners/investor-portal-form.md) · [partners/pre-launch-registry.md](partners/pre-launch-registry.md) · [TPM-DOCUMENT-ANALYSIS.md](TPM-DOCUMENT-ANALYSIS.md) · [MILESTONES.md](MILESTONES.md)
 
 ---
 
@@ -30,47 +30,42 @@ This plan ships **Pre-Launch (Phase 0)** first, on foundations that **M0–M12 r
 | In scope | Out of scope |
 |----------|--------------|
 | Public registry (sender/carrier) — migrate from static HTML | Live Stripe / easyAML / Monoova |
-| Public EOI (State/Local BDE partner) | Full M3/M4 onboarding wizards |
-| `POST` lead APIs + validation | Jobs, bids, trips, POD |
-| Super Admin portal: dashboard, leads, EOI, notes, export | State/Local BDE portal |
+| Public **Admin Partner EOI** (State/Local BDE) — from `clox_admin_eoi_form.pdf` | Full M3/M4 onboarding wizards |
+| Public **Investor Portal** — from `clox_investor_portal_form.pdf` | Auto investor accreditation checks |
+| `POST` lead APIs + validation (registry, eoi, investor) | Jobs, bids, trips, POD |
+| Super Admin portal: dashboard, registry / EOI / investor queues, notes, export | State/Local BDE portal |
 | Auth: Super Admin OTP/session | Carrier/sender product login |
 | Audit log for admin actions | Fleet+, settlements |
 
 ### Success criteria (Phase 0)
 
-- [ ] Registry + EOI submit to `api.clox.com.au/v1/leads/*` with validation
-- [ ] Super Admin sees all submissions, filters, status pipeline, notes
-- [ ] CSV export; email alert on new EOI (configurable)
-- [ ] Mobile-first PWA; en + ru on all public + admin surfaces
+- [ ] Registry + Admin EOI + Investor submit to `api.clox.com.au/v1/leads/*` with validation
+- [ ] Super Admin sees all submissions (3 queues), filters, status pipeline, notes
+- [ ] CSV export; email alert on new registry / EOI / investor (configurable)
+- [ ] Mobile-first PWA; English first (Russian after UI stable)
 - [ ] Deploy: `clox.com.au` (public) · `dev.clox.com.au` (admin) · `api.clox.com.au` (API)
 - [ ] OpenAPI published; E2E smoke tests green
 
 ---
 
-## 2. Repository structure (monorepo)
+## 2. Repository structure (simple apps — npm)
 
 ```
 clox/
-├── apps/
-│   ├── web-public/          # React PWA — registry, EOI, marketing shell
-│   ├── web-admin/           # React PWA — Super Admin pre-launch portal
-│   └── api/                 # NestJS modular monolith
-├── packages/
-│   ├── shared-types/        # DTOs, enums, Zod schemas (FE + BE)
-│   ├── shared-i18n/         # en.json, ru.json keys (optional split)
-│   └── ui/                  # shadcn wrappers, CLOX tokens, shared components
+├── api/                     # NestJS + Prisma (npm)
+├── web/                     # Public React PWA — registry, EOI, investors
+├── admin/                   # Super Admin React PWA
 ├── docs/
-├── Pre-Launch/              # Legacy static (deprecate after web-public parity)
-├── docker/
-├── .github/workflows/
-├── package.json             # pnpm workspaces
-├── pnpm-workspace.yaml
-└── turbo.json               # optional: Turborepo
+├── Pre-Launch/              # Legacy static HTML (reference; investor HTML is wrong vs PDF)
+├── docker/                  # Postgres Compose
+├── img/                     # Brand assets
+├── package.json             # Convenience scripts only (npm --prefix …)
+└── README.md
 ```
 
-**Package manager:** pnpm workspaces  
-**Node:** 20 LTS
-
+**Package manager:** npm (each app has its own `package.json` / lockfile)  
+**Node:** 20 LTS  
+**Strategy detail:** [partners/pre-launch-strategy.md](partners/pre-launch-strategy.md)
 ---
 
 ## 3. Domain & environment map
@@ -91,24 +86,20 @@ clox/
 ### 4.1 Module layout (bounded contexts)
 
 ```
-apps/api/src/
+api/src/
 ├── main.ts
 ├── app.module.ts
-├── config/                  # env validation (Joi/Zod)
-├── common/
-│   ├── filters/
-│   ├── interceptors/        # logging, correlation-id
-│   ├── guards/
-│   └── decorators/
+├── config/                  # env validation (Zod)
+├── common/                  # filters, guards, pipes
 ├── modules/
 │   ├── health/
-│   ├── auth/                # Phase 0: admin OTP + JWT
-│   ├── users/               # AdminUser entity
-│   ├── leads/               # Registry + EOI (Phase 0 core)
-│   ├── audit/               # AuditEvent
-│   ├── notifications/       # email on new EOI
-│   └── i18n/                # Accept-Language for API messages (optional)
-└── prisma/ or database/
+│   ├── auth/                # admin OTP + JWT
+│   ├── leads/               # registry + admin EOI + investor
+│   ├── admin/               # dashboard, list, notes, export, audit
+│   ├── audit/
+│   └── notifications/       # Gmail SMTP alerts + OTP
+├── shared/types.ts          # local Zod DTOs (duplicated in web/admin as needed)
+└── prisma/
 ```
 
 **Future modules (stubs only — no implementation in Phase 0):** `compliance`, `jobs`, `payments`, `trips`, `geolocation`.
@@ -119,7 +110,8 @@ apps/api/src/
 |--------|------|------|-------------|
 | GET | `/v1/health` | — | Health check |
 | POST | `/v1/leads/registry` | Public + rate limit | Sender/carrier pre-launch |
-| POST | `/v1/leads/eoi` | Public + rate limit | Partner EOI |
+| POST | `/v1/leads/eoi` | Public + rate limit | Admin partner EOI (`clox_admin_eoi_form.pdf`) |
+| POST | `/v1/leads/investor` | Public + rate limit | Investor portal (`clox_investor_portal_form.pdf`) |
 | POST | `/v1/auth/otp/request` | — | Admin email OTP |
 | POST | `/v1/auth/otp/verify` | — | Returns access + refresh JWT |
 | POST | `/v1/auth/refresh` | Refresh token | Rotate session |
@@ -143,6 +135,7 @@ enum LeadType {
   REGISTRY_CARRIER
   EOI_STATE_MASTER
   EOI_LOCAL_BDE
+  INVESTOR
 }
 
 enum LeadStatus {
@@ -237,9 +230,18 @@ model AdminUser {
 
 **Carrier:** `userType`, `fleetEntityName`, `abn`, `depotState`, `fleetComposition[]`, `capabilities[]`, `complianceAuthorized`, `email`, `phone`
 
-### 4.6 EOI payload (alignment with `eoiform.html`)
+### 4.6 Admin EOI payload (alignment with `clox_admin_eoi_form.pdf`)
 
-`role`, `targetState`, `targetTerritory`, `fullLegalName`, `companyName`, `abn`, `acn`, `email`, `phone`, `corporateAddress`, `networkExperience`, `executionStrategy`, `declarationAccepted`
+`role`, `targetState`, `targetTerritory`, `fullLegalName`, `companyName`, `abn`, `acn`, `email`, `phone`, `corporateAddress`, `networkExperience`, `executionStrategy`, `declarationAccepted`  
+(+ digital signature equivalent: typed name / accepted-at timestamp)
+
+Full field map: [partners/admin-eoi-form.md](partners/admin-eoi-form.md)
+
+### 4.7 Investor payload (alignment with `clox_investor_portal_form.pdf`)
+
+`fullNameOrEntity`, `contactPersonName?`, `email`, `phone`, `abn?`, `acn?`, `residence`, `investorClassifications[]`, `capitalAllocation`, `ecosystemFocus`, `strategicNotes`, `declarationAccepted`
+
+Full field map: [partners/investor-portal-form.md](partners/investor-portal-form.md)
 
 ---
 
@@ -247,24 +249,25 @@ model AdminUser {
 
 ### 5.1 Apps
 
-#### `apps/web-public` (mobile-first PWA)
+#### `web/` (mobile-first public PWA)
 
-| Route | Page | Source |
-|-------|------|--------|
-| `/` | Landing / redirect | clox_about_us positioning |
-| `/registry` | 3-step sender/carrier flow | `Pre-Launch/index.html` |
-| `/partner/eoi` | Admin partner EOI | `eoiform.html` |
-| `/legal/privacy` | Privacy (stub) | Compliance |
-| `/legal/terms` | Terms (stub) | Compliance |
+| Route | Page | Source of truth |
+|-------|------|-----------------|
+| `/` | Landing | clox_about_us positioning |
+| `/registry` | 3-step sender/carrier flow | `Pre-Launch/index.html` (+ email/phone) |
+| `/partner/eoi` | Admin partner EOI | **`clox_admin_eoi_form.pdf`** |
+| `/investors` | Investor portal | **`clox_investor_portal_form.pdf`** |
+| `/privacy`, `/terms` | Legal stubs | Client-provided text later |
 
-#### `apps/web-admin` (Super Admin)
+#### `admin/` (Super Admin)
 
 | Route | Page |
 |-------|------|
 | `/login` | OTP login |
-| `/` | Pre-launch dashboard (KPIs) |
+| `/` | Pre-launch dashboard (KPIs across registry / EOI / investor) |
 | `/leads/registry` | Sender + carrier table |
-| `/leads/eoi` | Partner EOI table |
+| `/leads/eoi` | Admin partner EOI table |
+| `/leads/investors` | Investor pre-qualification table |
 | `/leads/:id` | Detail + notes + timeline |
 | `/activity` | Audit log |
 | `/settings` | Export, notifications (minimal) |
@@ -284,12 +287,12 @@ model AdminUser {
 | PWA | vite-plugin-pwa; manifest, icons, offline shell for public app |
 | Responsive | Tailwind breakpoints; bottom-fixed CTAs on mobile per screen-flows |
 
-### 5.3 Design system (`packages/ui`)
+### 5.3 Design system
 
 - CSS variables: `--navy`, `--orange` (from Pre-Launch)
-- shadcn theme customized to CLOX brand
-- Shared: `AppShell`, `StepIndicator`, `StatusBadge`, `LeadStatusPill`, `DataTable`, `MobileCardList` (table on desktop, cards on mobile)
-- Typography: system-ui / Segoe stack
+- Tailwind tokens in `web/` and `admin/`
+- Shared patterns: step indicator, status badges, tables (desktop) / cards (mobile)
+- Typography: Segoe / system-ui stack
 
 ### 5.4 Zustand stores
 
@@ -298,28 +301,22 @@ model AdminUser {
 | `useAuthStore` | Admin JWT, user, login/logout |
 | `useRegistryWizardStore` | Step 1–3, userType, draft (sessionStorage persist) |
 | `useEoiFormStore` | Optional draft persist |
+| `useInvestorFormStore` | Optional draft persist |
 | `useLocaleStore` | `en` \| `ru`, sync with i18n + `localStorage` |
 
 **Note:** Server data lives in TanStack Query, not Zustand.
 
-### 5.5 i18n (en + ru)
+### 5.5 i18n (en first, ru later)
 
 ```
-packages/shared-i18n/
-  locales/
-    en/
-      common.json
-      registry.json
-      eoi.json
-      admin.json
-    ru/
-      (same structure)
+web/src/locales/en/…
+admin/src/locales/en/…
 ```
 
-- Language switcher in header (public + admin)
-- `Accept-Language` sent to API on submit → stored on `Lead.locale`
+- Namespaces: `common`, `registry`, `eoi`, `investor`, `admin`
+- English ships first; Russian after UI stable (D6)
+- `Accept-Language` / form locale stored on `Lead.locale`
 - RTL not required for ru; test Cyrillic line-height / font fallbacks
-
 ### 5.6 PWA requirements
 
 | Item | Public app | Admin app |
@@ -369,75 +366,74 @@ Provider: SendGrid / AWS SES / Resend — env-configured.
 
 | Step | Action |
 |------|--------|
-| 1 | Build `web-public` to pixel-parity with existing HTML (content unchanged) |
-| 2 | Add `email` + `phone` to registry (product gap) |
-| 3 | Wire API; remove fake `setTimeout` submit |
-| 4 | Point `clox.com.au` to `web-public` build |
-| 5 | Archive `Pre-Launch/` or keep as reference only |
+| 1 | Build `web` registry to parity with `index.html` (+ email/phone) |
+| 2 | Build Admin EOI from **`clox_admin_eoi_form.pdf`** (not only HTML) |
+| 3 | Build Investor Portal from **`clox_investor_portal_form.pdf`** — **do not** reuse EOI HTML |
+| 4 | Replace / retire wrong `investorportal.html` content (it currently clones Admin EOI) |
+| 5 | Wire APIs; remove fake `setTimeout` submit |
+| 6 | Point `clox.com.au` to `web` build; keep `Pre-Launch/` as reference |
 
 ---
 
 ## 9. Implementation phases & timeline
 
-**Assumption:** 2 FE + 2 BE engineers, 0.5 DevOps, 0.25 QA — **~6–8 weeks** to Phase 0 prod.
+**Assumption:** lean team — **~6–8 weeks** to Phase 0 prod (adjusted for simple npm apps).
 
 ### Sprint 0 — Foundation (Week 1)
 
 | Task | Owner |
 |------|-------|
-| Monorepo bootstrap (pnpm, turbo, ESLint, Prettier, TS strict) | All |
+| Simple apps: `api/`, `web/`, `admin/` with npm | All |
 | NestJS skeleton, health, config, Prisma, Docker Compose (Postgres) | BE |
-| React apps scaffold, Tailwind, shadcn init, CLOX theme | FE |
-| `packages/shared-types` — Lead enums, DTOs, Zod schemas | BE + FE |
+| React apps scaffold, Tailwind, CLOX theme | FE |
+| Local Zod/types in each app as needed | BE + FE |
 | CI: lint, test, build on PR | DevOps |
 
-**Exit:** `pnpm dev` runs API + both web apps locally.
-
+**Exit:** `npm run dev` works in each of `api`, `web`, `admin` locally.
 ### Sprint 1 — Leads API (Week 2)
 
 | Task | Owner |
 |------|-------|
-| Prisma models: Lead, LeadNote, LeadEvent, AdminUser | BE |
-| `POST /v1/leads/registry`, `POST /v1/leads/eoi` | BE |
+| Prisma models: Lead, LeadNote, LeadEvent, AdminUser (+ `INVESTOR` type) | BE |
+| `POST /v1/leads/registry`, `/eoi`, `/investor` | BE |
 | Validation, rate limit, audit on create | BE |
 | OpenAPI + integration tests | BE |
-| i18n setup en/ru skeleton | FE |
+| i18n setup English skeleton | FE |
 
-**Exit:** Postman/curl can create leads; DB persisted.
+**Exit:** Postman/curl can create registry, EOI, and investor leads; DB persisted.
 
 ### Sprint 2 — Public web (Week 3)
 
 | Task | Owner |
 |------|-------|
 | Registry 3-step wizard (mobile-first) | FE |
-| EOI form page | FE |
+| Admin EOI page (PDF-accurate) | FE |
+| Investor portal page (PDF-accurate) | FE |
 | TanStack Query mutations → API | FE |
-| Language switcher en/ru | FE |
 | PWA manifest + SW (public) | FE |
 
-**Exit:** Public forms submit to real API in dev.
-
+**Exit:** All three public forms submit to real API in dev.
 ### Sprint 3 — Admin auth + leads UI (Week 4)
 
 | Task | Owner |
 |------|-------|
 | Admin OTP auth flow | BE + FE |
-| Dashboard stats endpoint | BE |
-| Admin: login, dashboard, registry list, EOI list | FE |
+| Dashboard stats endpoint (registry + EOI + investor KPIs) | BE |
+| Admin: login, dashboard, registry / EOI / investor lists | FE |
 | Lead detail + notes + status PATCH | BE + FE |
 | Mobile-responsive admin tables/cards | FE |
 
-**Exit:** Super Admin can review and update leads end-to-end.
+**Exit:** Super Admin can review and update all three lead types end-to-end.
 
 ### Sprint 4 — Polish & enterprise hardening (Week 5)
 
 | Task | Owner |
 |------|-------|
-| CSV export | BE + FE |
-| Email on new EOI | BE |
+| CSV export (all queues) | BE + FE |
+| Email on new registry / EOI / investor | BE |
 | Activity/audit log UI | FE |
 | Duplicate ABN detection (warning) | BE |
-| E2E: Playwright (registry submit → admin sees lead) | QA |
+| E2E: Playwright (registry + EOI + investor → admin) | QA |
 | Error boundaries, loading states, empty states | FE |
 
 **Exit:** Demo-ready on staging.
@@ -510,13 +506,14 @@ Provider: SendGrid / AWS SES / Resend — env-configured.
 | D2 | Domains | **Confirmed** | `clox.com.au` (public) · `dev.clox.com.au` (admin web) · `api.clox.com.au` (API) |
 | D3 | Admin auth | Default | Email OTP (JWT session) |
 | D4 | Registry contact fields | Default | Add email + phone |
-| D5 | EOI pages | Default | Single `/partner/eoi` route |
-| D6 | Russian copy | Pending | Client review after en ship |
+| D5 | Partner forms | **Updated 2026-07-27** | **Two routes:** `/partner/eoi` (Admin EOI PDF) **and** `/investors` (Investor PDF). Do **not** merge. |
+| D6 | Russian copy | **Confirmed** | **After English UI is stable** |
 | D7 | easyAML / KYB | **Confirmed** | **No auto integration in Phase 0** — manual review from Super Admin |
-| D8 | Email notifications | **Confirmed** | **Required** — notify Super Admin on new submissions (EOI + registry) |
+| D8 | Email notifications | **Confirmed** | **Required** — notify Super Admin on new registry, EOI, **and investor** |
 | D9 | Seed Super Admin | **Confirmed** | `abc@example.com` in seed file (replace before prod) |
-| D10 | Email provider | Pending | SES / SendGrid / Resend — pick before Sprint 4 |
+| D10 | Email provider | **Confirmed** | **Gmail SMTP** (app password / Workspace) |
 | D11 | Cloud vendor | Pending | AWS/Azure/GCP — DNS/hosting TBD; domains confirmed |
+| D12 | Investor portal | **Confirmed from PDF** | Separate lead type `INVESTOR`; optional CC `invest@clox.com.au` |
 
 ### easyAML / KYB (Phase 0 behaviour)
 
@@ -530,7 +527,8 @@ Provider: SendGrid / AWS SES / Resend — env-configured.
 | Event | Recipient | Channel |
 |-------|-----------|---------|
 | New registry (sender/carrier) | Super Admin(s) | Transactional email |
-| New EOI | Super Admin(s) | Transactional email |
+| New Admin EOI | Super Admin(s) | Transactional email |
+| New Investor lead | Super Admin(s) (+ optional `invest@clox.com.au`) | Transactional email |
 | Admin OTP login | Requesting admin email | Transactional email |
 
 Super Admin recipient list: seed from `AdminUser` table + optional `NOTIFY_EMAIL` env override.
@@ -543,7 +541,7 @@ Super Admin recipient list: seed from `AdminUser` table + optional `NOTIFY_EMAIL
 |------|------------------|
 | Privacy Policy | Required before public launch — page at `/legal/privacy` |
 | Terms of Service | Required — page at `/legal/terms` |
-| Registry/EOI consent | Checkbox linking to both + data collection notice |
+| Registry / EOI / Investor consent | Checkbox linking to Privacy + Terms + form-specific declaration |
 | Entity | Achieve Global Enterprises Pty Ltd · ABN 48 626 269 387 (per legal framework doc) |
 
 **Input needed from client:** approved legal text **or** permission to ship **placeholder pages** marked “draft — legal review pending” until counsel signs off. Engineering can wire routes + checkboxes either way; **we do not publish real PII collection without a privacy policy link.**
@@ -555,9 +553,9 @@ Super Admin recipient list: seed from `AdminUser` table + optional `NOTIFY_EMAIL
 ## 14. Definition of done — Phase 0
 
 - [ ] All Phase 0 API endpoints documented in OpenAPI
-- [ ] Public registry + EOI work on mobile Chrome/Safari; PWA installable
-- [ ] en + ru complete for user-facing strings
-- [ ] Super Admin: dashboard, lists, detail, notes, status, export
+- [ ] Public registry + Admin EOI + Investor work on mobile Chrome/Safari; PWA installable
+- [ ] English complete for user-facing strings (ru later)
+- [ ] Super Admin: dashboard, three queues, detail, notes, status, export
 - [ ] Audit trail for admin actions
 - [ ] Deployed to client domains with TLS
 - [ ] No secrets in git; env documented in `.env.example`
@@ -566,14 +564,15 @@ Super Admin recipient list: seed from `AdminUser` table + optional `NOTIFY_EMAIL
 
 ---
 
-## 15. Immediate next steps (when coding starts)
+## 15. Immediate next steps
 
-1. Run **Sprint 0** monorepo bootstrap (Day 1–2)
-2. ~~Lock Gate 0 decisions~~ — see §13 (client inputs received 2026-07-27)
-3. Implement **Lead** schema + `POST /v1/leads/*` (Day 3–5)
-4. Parallel: **web-public** registry wizard + **web-admin** shell on `dev.clox.com.au`
-5. `notifications` module: email to Super Admin on lead create (provider env in Sprint 4)
+1. Keep **simple npm apps** (`api` / `web` / `admin`) — no monorepo regression
+2. Add `INVESTOR` lead type + `POST /v1/leads/investor`
+3. Rebuild public Investor page from **`clox_investor_portal_form.pdf`**
+4. Align Admin EOI page to **`clox_admin_eoi_form.pdf`** (signature/declaration parity)
+5. Extend Super Admin with Investor queue + dashboard KPIs
+6. Continue admin OTP UI + remaining Phase 0 polish
 
 ---
 
-**Plan complete. Ready to begin Sprint 0 on your go.**
+**Plan updated v1.1 — Pre-Launch strategy now treats Admin EOI and Investor Portal as separate funnels.**

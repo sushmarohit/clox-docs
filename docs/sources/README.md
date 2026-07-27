@@ -23,8 +23,12 @@
 | `Clox Freight Forwarding.pdf` / `.docx` | PDF/DOCX | [product/vehicle-pricing-and-load-types.md](../product/vehicle-pricing-and-load-types.md) | Pricing, load types, breakdown flows |
 | `Work and rest requirements.pdf` | PDF | [compliance/nhvr-work-rest-reference.md](../compliance/nhvr-work-rest-reference.md) | NHVR reference (Phase 2 input) |
 | `Reference - Similar Australian portal.docx` | DOCX | [reference/australian-competitor-portals.md](../reference/australian-competitor-portals.md) | Competitor links |
-| `investorportal.html` / `eoiform.html` | HTML | [partners/admin-partner-eoi-program.md](../partners/admin-partner-eoi-program.md) | Admin partner EOI program |
+| `investorportal.html` / `eoiform.html` | HTML | [partners/admin-partner-eoi-program.md](../partners/admin-partner-eoi-program.md) | **Caution:** `investorportal.html` currently clones Admin EOI — not the investor PDF |
 | `index.html` | HTML | [partners/pre-launch-registry.md](../partners/pre-launch-registry.md) | Sender/carrier pre-launch signup |
+| `clox_admin_eoi_form.pdf` | PDF | [partners/admin-eoi-form.md](../partners/admin-eoi-form.md) | **Canonical** Admin Partner EOI (2 pages) |
+| `clox_investor_portal_form.pdf` | PDF | [partners/investor-portal-form.md](../partners/investor-portal-form.md) | **Canonical** Investor Portal equity form (2 pages) |
+
+**Pre-Launch strategy (three funnels):** [partners/pre-launch-strategy.md](../partners/pre-launch-strategy.md)
 
 ---
 

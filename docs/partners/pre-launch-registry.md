@@ -1,8 +1,8 @@
 # Pre-Launch Registry (Sender & Carrier)
 
 **Source:** `index.html`  
-**Status:** Pre-launch marketing capture (no backend integration in repo)  
-**Related:** [useronboarding.md](../useronboarding.md) · [admin-partner-eoi-program.md](admin-partner-eoi-program.md)
+**Status:** Pre-launch marketing capture  
+**Related:** [pre-launch-strategy.md](pre-launch-strategy.md) · [useronboarding.md](../useronboarding.md) · [admin-eoi-form.md](admin-eoi-form.md) · [investor-portal-form.md](investor-portal-form.md)
 
 ---
 
