@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CLOX App</title>
+
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+
+    <div id="loader-wrapper">
+        <div class="loader-content">
+
+            <div class="logo-container mb-4">
+                <img src="./assets/img/logo.png" alt="CLOX Logo" width="200">
+            </div>
+            
+            <div class="truck-animation-wrapper">
+                <div class="road-track">
+                    <div class="road-lines"></div>
+                </div>
+                <div class="animated-truck">
+                    <svg width="80" height="32" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="60" height="25" rx="2" fill="#1A2F4C"/>
+  <text x="16" y="22" fill="#fff" font-family="'Segoe UI', Arial, sans-serif" font-weight="bold" font-size="14" font-style="italic">CL<tspan fill="#F26E22">O</tspan>X</text>
+  <path d="M 67 15 L 77 15 L 83 22 L 83 30 L 67 30 Z" fill="#1A2F4C"/>
+ <path d="M 68 16 L 76 16 L 80 21 L 68 21 Z" fill="#E6EDF2"/>
+ <circle cx="20" cy="32" r="5" fill="#333"/>
+ <circle cx="20" cy="32" r="2" fill="#ccc"/>
+ <circle cx="50" cy="32" r="5" fill="#333"/>
+ <circle cx="50" cy="32" r="2" fill="#ccc"/>
+ <circle cx="75" cy="32" r="5" fill="#333"/>
+ <circle cx="75" cy="32" r="2" fill="#ccc"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="loading-text mt-3">Connecting...</p>
+        </div>
+    </div>
+
+    <!-- App Main Container -->
+    <div id="main-content" style="display: none;">
+        <!-- App Header -->
+        <div class="app-header">
+            <div class="text-center w-100">
+                <img src="./assets/img/logo.png" alt="CLOX Logo" height="40">
+            </div>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <div class="app-content">
+            <div class="hero-bg"></div>
+            
+            <div class="container-fluid py-4 position-relative z-1">
+                <div class="text-center text-white mb-4">
+                    <span class="badge bg-orange mb-2 px-3 py-1 rounded-pill small">EXPRESSION OF INTEREST (EOI) FORM</span>
+                
+                </div>
+
+                <div class="card app-card border-0 shadow-lg mx-auto" style="max-width: 450px; overflow: hidden;">
+                    <!-- EOI Form Header -->
+                    <div class="card-header bg-navy text-white text-center py-3 border-0">
+                        <h5 class="mb-0 fw-bold">Expression of Interest</h5>
+                    </div>
+                    <div class="card-body p-3 p-sm-4">
+                        <form id="eoiForm" class="needs-validation" autocomplete="off" novalidate>
+                            <div class="mb-4 text-center">
+                                <p class="small text-muted lh-sm text-start p-3 bg-light rounded-3 border">
+                                    <strong class="text-navy">Code Forwarding Revolution:</strong> CLOX shifts the high-markup traditional freight broker paradigm into fully automated code. We isolate regional operations through a multi-tier administration framework, incentivizing active ecosystem partners with direct automated gross revenue splits managed natively via programmatic escrow settlements.
+                                </p>
+                            </div>
+
+                            <h6 class="fw-bold text-navy border-bottom pb-2 mb-3">1. DESIRED PLATFORM ROLE & TARGET TERRITORY</h6>
+                            <div class="mb-3 d-flex flex-column gap-2">
+                                <div class="form-check p-3 bg-light rounded-3 border mb-0 position-relative">
+                                    <input class="form-check-input" type="radio" name="role" id="roleState" required>
+                                    <label class="form-check-label w-100" for="roleState">
+                                        <strong class="text-navy d-block">State Master Admin (Regional Tier)</strong>
+                                        <span class="badge bg-orange mb-2">10% Gross Platform Fee Split</span>
+                                        <div class="small text-muted lh-sm mt-1" style="font-size: 0.75rem;">Responsible for regional compliance auditing, carrier verification safety nets (ABN, Insurances, RWCs), legislative alignment, and regional transport corridor management.</div>
+                                    </label>
+                                </div>
+                                <div class="form-check p-3 bg-light rounded-3 border mb-0 position-relative">
+                                    <input class="form-check-input" type="radio" name="role" id="roleBde" required>
+                                    <label class="form-check-label w-100" for="roleBde">
+                                        <strong class="text-navy d-block">Local BDE Admin / Business Development Manager (Local Tier)</strong>
+                                        <span class="badge bg-orange mb-2">5% Gross Platform Fee Split</span>
+                                        <div class="small text-muted lh-sm mt-1" style="font-size: 0.75rem;">Responsible for regional sales generation, local shipper/carrier onboarding acquisition pipelines, lane density development, and local relationship management.</div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="row g-2 mb-4">
+                                <div class="col-6">
+                                    <label class="form-label text-navy fw-semibold small mb-1">Target State / Region <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm app-input" required>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-navy fw-semibold small mb-1">Target Suburbs / City <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm app-input" required>
+                                </div>
+                            </div>
+
+                            <h6 class="fw-bold text-navy border-bottom pb-2 mb-3">2. APPLICANT PRIMARY INFORMATION</h6>
+                            <div class="row g-2 mb-4">
+                                <div class="col-12">
+                                    <label class="form-label text-navy fw-semibold small mb-1">Full Legal Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm app-input" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-navy fw-semibold small mb-1">Company Entity Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm app-input" required>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-navy fw-semibold small mb-1">ABN <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm app-input" required>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-navy fw-semibold small mb-1">ACN (if applicable)</label>
+                                    <input type="text" class="form-control form-control-sm app-input">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-navy fw-semibold small mb-1">Primary Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control form-control-sm app-input" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-navy fw-semibold small mb-1">Contact Phone <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control form-control-sm app-input" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-navy fw-semibold small mb-1">Corporate Address <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm app-input" required>
+                                </div>
+                            </div>
+
+                            <h6 class="fw-bold text-navy border-bottom pb-2 mb-3">3. LOGISTICS NETWORK & PROFESSIONAL EXPERIENCE</h6>
+                            <div class="mb-4">
+                                <label class="form-label text-navy fw-semibold small mb-1">Briefly outline your existing network, industry footprint, or experience within the Australian logistics ecosystem <span class="text-danger">*</span></label>
+                                <textarea class="form-control form-control-sm app-input mb-3" rows="3" required></textarea>
+                                
+                                <label class="form-label text-navy fw-semibold small mb-1">Specify your target execution strategy (e.g., local shipper acquisition channels, corporate sender procurement networks, fleet onboarding resources) <span class="text-danger">*</span></label>
+                                <textarea class="form-control form-control-sm app-input" rows="3" required></textarea>
+                            </div>
+
+                            <h6 class="fw-bold text-navy border-bottom pb-2 mb-3">4. ADMINISTRATIVE & REVENUE FRAMEWORK OVERVIEW</h6>
+                            <div class="table-responsive mb-2">
+                                <table class="table table-sm table-bordered align-middle small text-muted">
+                                    <thead class="table-light text-navy">
+                                        <tr>
+                                            <th>Tier Position</th>
+                                            <th>Revenue Share</th>
+                                            <th>Settlement Cycle</th>
+                                            <th>Core Administrative Mandate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-bold">State Master Admin</td>
+                                            <td>10% Gross Fare</td>
+                                            <td>Fortnightly (4th Night)</td>
+                                            <td style="font-size: 0.75rem;">Regional compliance audits, verify heavy vehicle RWC & ABN safety lockouts, dispute management intervention.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Local BDE Admin (BDM)</td>
+                                            <td>5% Gross Fare</td>
+                                            <td>Fortnightly (4th Night)</td>
+                                            <td style="font-size: 0.75rem;">Customer liquidity acquisition, onboard regional carrier owner-operators, accelerate lane velocity.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="small text-muted mb-4 fst-italic" style="font-size: 0.7rem;">*Note: As per the CLOX Settlement Logic, all administrative distributions are automatically generated over a rolling 14-day cycle and distributed via Monoova NPP splits, net of standardized platform management fees and corporate marketing cost recovery allocations.</p>
+
+                            <h6 class="fw-bold text-navy border-bottom pb-2 mb-3">5. PARTNERSHIP DECLARATIONS & SIGNATURE BANDS</h6>
+                            <div class="p-3 bg-light rounded-3 border mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="declaration" required>
+                                    <label class="form-check-label small text-muted lh-sm" for="declaration" style="font-size: 0.75rem;">
+                                        By executing this Expression of Interest (EOI), the applicant confirms that all information provided is true, accurate, and current. The applicant acknowledges that submission of this form does not guarantee admission into the CLOX administrative network, and that final selection is contingent upon strict KYB screening, manual executive board review, and execution of the formal CLOX Master Administration Agreement and non-compete frameworks. All discussions and proprietary operational disclosures remain strictly bound by the terms of the active CLOX Non-Disclosure Agreement (NDA).
+                                    </label>
+                                    <div class="invalid-feedback">You must accept the declaration to proceed.</div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-navy btn-lg fw-bold rounded-pill shadow w-100 py-3" onclick="submitEOI()">Submit Expression of Interest</button>
+
+                            <div id="eoiSuccessMsg" class="alert alert-success mt-4 mb-0 p-3 small text-center rounded-3 fw-semibold shadow-sm" style="display: none;">
+                                <i class="fa-solid fa-circle-check fs-5 d-block mb-2 text-success"></i>
+                                EOI submitted successfully!<br><span class="text-muted fw-normal" style="font-size: 0.75rem;">We will be in touch shortly.</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3 pb-3">
+                    <p class="text-white opacity-50 small m-0" style="font-size: 0.7rem;">&copy; 2026 CLOX Logistics. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
+   <script src="./assets/js/bw.js?v=3"></script>
+  
+</body>
+</html>

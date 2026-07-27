@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CLOX App</title>
+
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+
+    <div id="loader-wrapper">
+        <div class="loader-content">
+
+            <div class="logo-container mb-4">
+                <img src="./assets/img/logo.png" alt="CLOX Logo" width="200">
+            </div>
+            
+            <div class="truck-animation-wrapper">
+                <div class="road-track">
+                    <div class="road-lines"></div>
+                </div>
+                <div class="animated-truck">
+                    <svg width="80" height="32" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="60" height="25" rx="2" fill="#1A2F4C"/>
+  <text x="16" y="22" fill="#fff" font-family="'Segoe UI', Arial, sans-serif" font-weight="bold" font-size="14" font-style="italic">CL<tspan fill="#F26E22">O</tspan>X</text>
+  <path d="M 67 15 L 77 15 L 83 22 L 83 30 L 67 30 Z" fill="#1A2F4C"/>
+ <path d="M 68 16 L 76 16 L 80 21 L 68 21 Z" fill="#E6EDF2"/>
+ <circle cx="20" cy="32" r="5" fill="#333"/>
+ <circle cx="20" cy="32" r="2" fill="#ccc"/>
+ <circle cx="50" cy="32" r="5" fill="#333"/>
+ <circle cx="50" cy="32" r="2" fill="#ccc"/>
+ <circle cx="75" cy="32" r="5" fill="#333"/>
+ <circle cx="75" cy="32" r="2" fill="#ccc"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="loading-text mt-3">Connecting...</p>
+        </div>
+    </div>
+
+    <!-- App Main Container -->
+    <div id="main-content" style="display: none;">
+        <!-- App Header -->
+        <div class="app-header">
+            <div class="text-center w-100">
+                <img src="./assets/img/logo.png" alt="CLOX Logo" height="40">
+            </div>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <div class="app-content">
+            <div class="hero-bg"></div>
+            
+            <div class="container-fluid py-4 position-relative z-1">
+                <div class="text-center text-white mb-4">
+                    <span class="badge bg-orange mb-2 px-3 py-1 rounded-pill small">Pre-Launch</span>
+                    <h2 class="fw-bold mb-2">Freight Broker <br>is Now Code.</h2>
+                    <p class="small opacity-75 mb-0 px-3">Welcome to the future of Australian logistics.</p>
+                </div>
+
+                <div class="card app-card border-0 shadow-lg mx-auto" style="max-width: 450px; overflow: hidden;">
+                    <!-- Stepper / Tabs -->
+                    <div class="card-header bg-navy text-white p-0 border-0">
+                        <div class="d-flex justify-content-between text-center step-indicator">
+                            <div class="step active" id="indicator-step1">
+                                <div class="step-num">1</div>
+                                <span class="step-label">Role</span>
+                            </div>
+                            <div class="step" id="indicator-step2">
+                                <div class="step-num">2</div>
+                                <span class="step-label">Details</span>
+                            </div>
+                            <div class="step" id="indicator-step3">
+                                <div class="step-num">3</div>
+                                <span class="step-label">Verify</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-3 p-sm-4">
+                        <form id="preLaunchForm" class="needs-validation" autocomplete="off" novalidate>
+                            
+                     
+                            <div id="step1">
+                                <h5 class="fw-bold text-navy mb-1">Join the Network</h5>
+                                <p class="text-muted small mb-3">How will you participate?</p>
+                                
+                                <div class="d-flex flex-column gap-2">
+                                    <div>
+                                        <input type="radio" class="btn-check" name="userType" id="typeSender" value="sender" autocomplete="off" onchange="showStep2()">
+                                        <label class="btn btn-outline-navy w-100 p-3 type-selector rounded-3 text-start d-flex align-items-center" for="typeSender">
+                                            <div class="icon-box bg-light rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 45px; height: 45px;">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A2F4C" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline></svg>
+                                            </div>
+                                            <div>
+                                                <span class="fw-bold d-block text-navy"> Sender / Corporate Shipper</span>
+                                                <small class="text-muted" style="font-size: 0.75rem;">I need to ship freight</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" class="btn-check" name="userType" id="typeCarrier" value="carrier" autocomplete="off" onchange="showStep2()">
+                                        <label class="btn btn-outline-navy w-100 p-3 type-selector rounded-3 text-start d-flex align-items-center" for="typeCarrier">
+                                            <div class="icon-box bg-light rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 45px; height: 45px;">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A2F4C" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                            </div>
+                                            <div>
+                                                <span class="fw-bold d-block text-navy">Carrier / Transport Company </span>
+                                                <small class="text-muted" style="font-size: 0.75rem;">I transport freight</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                     
+                            <div id="step2" style="display: none;">
+                                <div class="d-flex align-items-center mb-3 pb-2 border-bottom">
+                                    <button type="button" class="btn btn-link text-muted p-0 me-2" onclick="showStep1()" style="text-decoration: none;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                                    </button>
+                                    <h5 class="fw-bold text-navy mb-0" id="step2Title">Details</h5>
+                                </div>
+
+                                <div id="senderFields" style="display: none;">
+                                    <div class="mb-3 d-flex flex-column gap-3">
+                                    <div>
+                                        <label class="form-label text-navy fw-semibold small mb-1">Company Legal Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control form-control-sm app-input sender-req" placeholder="e.g. Acme Manufacturing Pty Ltd">
+                                        <div class="invalid-feedback">Please provide your company legal name.</div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-navy fw-semibold small mb-1">Australian Business Number (ABN) <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control form-control-sm app-input sender-req" placeholder="Verified in real-time via easyAML / ABR">
+                                        <div class="invalid-feedback">Please provide your ABN.</div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-navy fw-semibold small mb-1">Primary Shipping Origin Base <span class="text-danger">*</span></label>
+                                        <select class="form-select form-select-sm app-input sender-req">
+                                            <option value="" disabled selected>Select City...</option>
+                                            <option>Melbourne</option>
+                                            <option>Sydney</option>
+                                            <option>Brisbane</option>
+                                            <option>Perth</option>
+                                            <option>Adelaide</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select a primary shipping origin.</div>
+                                    </div>
+                                    
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <label class="form-label text-navy fw-semibold small mb-2 d-block">Freight Operational Model Preference <span class="text-danger">*</span></label>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input sender-req-checkbox" type="checkbox" id="om1">
+                                            <label class="form-check-label small text-muted" for="om1">Local Couriers & P2P On-Demand</label>
+                                        </div>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input sender-req-checkbox" type="checkbox" id="om2">
+                                            <label class="form-check-label small text-muted" for="om2">Heavy Vehicle / Multi-Stop Distribution</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input sender-req-checkbox" type="checkbox" id="om3">
+                                            <label class="form-check-label small text-muted" for="om3">Interstate Linehaul Lanes</label>
+                                        </div>
+                                        <div class="invalid-feedback" id="omFeedback" style="display: none;">Please select at least one preference.</div>
+                                    </div>
+
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <label class="form-label text-navy fw-semibold small mb-2 d-block">Preferred Bidding & Booking Structure <span class="text-danger">*</span></label>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input sender-req" type="radio" name="biddingType" id="bid1">
+                                            <label class="form-check-label small text-muted" for="bid1">Per-KM Dynamic Spot Market Bidding</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input sender-req" type="radio" name="biddingType" id="bid2">
+                                            <label class="form-check-label small text-muted" for="bid2">Standardized Hourly Block Booking (4-hr min)</label>
+                                            <div class="invalid-feedback">Please select a bidding structure.</div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label text-navy fw-semibold small mb-1">Average Monthly Freight Volume (AUD) <span class="text-danger">*</span></label>
+                                        <select class="form-select form-select-sm app-input sender-req">
+                                            <option value="" disabled selected>Select volume range...</option>
+                                            <option>Under $10k</option>
+                                            <option>$10k - $50k</option>
+                                            <option>$50k+</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select your monthly freight volume.</div>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <div id="carrierFields" style="display: none;">
+                                    <div class="mb-3 d-flex flex-column gap-3">
+                                    <div>
+                                        <label class="form-label text-navy fw-semibold small mb-1">Registered Transport Fleet Entity Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control form-control-sm app-input carrier-req" placeholder="e.g. Paramount Road Freighters">
+                                        <div class="invalid-feedback">Please provide your entity name.</div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-navy fw-semibold small mb-1">Australian Business Number (ABN) <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control form-control-sm app-input carrier-req" placeholder="Mandatory easyAML KYB Compliance">
+                                        <div class="invalid-feedback">Please provide your ABN.</div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-navy fw-semibold small mb-1">Primary Operational Base & Depot State <span class="text-danger">*</span></label>
+                                        <select class="form-select form-select-sm app-input carrier-req">
+                                            <option value="" disabled selected>Select State...</option>
+                                            <option>VIC</option>
+                                            <option>NSW</option>
+                                            <option>QLD</option>
+                                            <option>WA</option>
+                                            <option>SA</option>
+                                            <option>TAS</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select an operational base.</div>
+                                    </div>
+                                    
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <label class="form-label text-navy fw-semibold small mb-2 d-block">Active Fleet Composition <span class="text-danger">*</span></label>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input carrier-req-checkbox" type="checkbox" id="fc1">
+                                            <label class="form-check-label small text-muted" for="fc1">Light Commercial / Courier Vans</label>
+                                        </div>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input carrier-req-checkbox" type="checkbox" id="fc2">
+                                            <label class="form-check-label small text-muted" for="fc2">Medium Rigid Trucks (3T - 8T MR)</label>
+                                        </div>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input carrier-req-checkbox" type="checkbox" id="fc3">
+                                            <label class="form-check-label small text-muted" for="fc3">Heavy Rigid (HR / 3-Axle Tray)</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input carrier-req-checkbox" type="checkbox" id="fc4">
+                                            <label class="form-check-label small text-muted" for="fc4">Prime Movers / Semi-Trailers / B-Doubles</label>
+                                        </div>
+                                        <div class="invalid-feedback" id="fcFeedback" style="display: none;">Please select at least one fleet composition.</div>
+                                    </div>
+
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <label class="form-label text-navy fw-semibold small mb-2 d-block">Specialized Capability & Permits</label>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input" type="checkbox" id="sc1">
+                                            <label class="form-check-label small text-muted" for="sc1">Dangerous Goods (DG) Licensed</label>
+                                        </div>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input" type="checkbox" id="sc2">
+                                            <label class="form-check-label small text-muted" for="sc2">Over-Size / Over-Mass (OSOM) Permits</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="sc3">
+                                            <label class="form-check-label small text-muted" for="sc3">Refrigerated / Cold Chain Infrastructure</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <label class="form-label text-navy fw-semibold small mb-2 d-block">Compliance & Payout Escrow Gateway Authorization <span class="text-danger">*</span></label>
+                                        <div class="form-check">
+                                            <input class="form-check-input carrier-req" type="checkbox" id="auth1">
+                                            <label class="form-check-label small text-muted lh-sm" for="auth1" style="font-size: 0.75rem;">I authorize compliance verification of our ABN, Public Liability Insurance ($10M-$20M), and vehicle Roadworthy Certificates (RWC) for live system bidding.</label>
+                                            <div class="invalid-feedback">You must authorize compliance verification to proceed.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+
+             
+                      
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <button type="button" class="btn btn-link text-muted p-0 text-decoration-none small" onclick="showStep1()"><i class="fa-solid fa-arrow-left me-1"></i> Back</button>
+                                    <button type="button" class="btn btn-orange px-4 py-2 fw-bold rounded-pill shadow-sm" onclick="showStep3()">Continue <i class="fa-solid fa-arrow-right ms-1"></i></button>
+                                </div>
+                            </div>
+                            
+
+                            <div id="step3" class="step-pane" style="display: none;">
+                                <h5 class="fw-bold text-navy mb-4 text-center"><i class="fa-solid fa-shield-halved text-orange me-2"></i> Verification & Payout Infrastructure</h5>
+                                
+                                <div class="infrastructure-cards d-flex flex-column gap-3 mb-4">
+                                    <!-- easyAML -->
+                                    <div class="infra-card d-flex align-items-center p-3 border rounded-3 shadow-sm bg-white position-relative" style="cursor: pointer;" onclick="toggleInfra(this)">
+                                        <div class="infra-icon bg-navy text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px;">
+                                            <i class="fa-solid fa-id-card-clip fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1 text-navy">easyAML Portal</h6>
+                                            <p class="small text-muted mb-0 lh-sm" style="font-size: 0.75rem;">Automated instant verification of business status and driver identity check.</p>
+                                        </div>
+                                        <i class="fa-solid fa-circle-check fs-5 position-absolute end-0 me-3 text-orange infra-check" style="opacity: 0; transition: opacity 0.2s;"></i>
+                                    </div>
+                                    
+                
+                                    <div class="infra-card d-flex align-items-center p-3 border rounded-3 shadow-sm bg-white position-relative" style="cursor: pointer;" onclick="toggleInfra(this)">
+                                        <div class="infra-icon bg-orange text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px;">
+                                            <i class="fa-brands fa-stripe-s fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1 text-navy">Stripe Connect Escrow</h6>
+                                            <p class="small text-muted mb-0 lh-sm" style="font-size: 0.75rem;">Funds are secured 100% upfront before dispatch to eliminate bad carrier debt.</p>
+                                        </div>
+                                        <i class="fa-solid fa-circle-check fs-5 position-absolute end-0 me-3 text-orange infra-check" style="opacity: 0; transition: opacity 0.2s;"></i>
+                                    </div>
+                                    
+                     
+                                    <div class="infra-card d-flex align-items-center p-3 border rounded-3 shadow-sm bg-white position-relative" style="cursor: pointer;" onclick="toggleInfra(this)">
+                                        <div class="infra-icon text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px; background-color: #1A2F4C;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                                                <circle cx="12" cy="12" r="2"></circle>
+                                                <path d="M6 12h.01M18 12h.01"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1 text-navy">Monoova NPP PayTo</h6>
+                                            <p class="small text-muted mb-0 lh-sm" style="font-size: 0.75rem;">Real-time automated admin and carrier splits executed immediately on POD.</p>
+                                        </div>
+                                        <i class="fa-solid fa-circle-check fs-5 position-absolute end-0 me-3 text-orange infra-check" style="opacity: 0; transition: opacity 0.2s;"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex flex-column gap-3">
+                                    <button type="button" id="finalSubmitBtn" class="btn btn-navy btn-lg fw-bold rounded-pill shadow w-100 py-3" onclick="submitFinal()" disabled>Finalize & Submit Registry</button>
+                                    <button type="button" class="btn btn-link text-muted p-0 text-decoration-none small mx-auto" onclick="showStep2()"><i class="fa-solid fa-arrow-left me-1"></i> Back to Details</button>
+                                </div>
+                                
+                                <div id="finalSuccessMsg" class="alert alert-success mt-4 mb-0 p-3 small text-center rounded-3 fw-semibold shadow-sm" style="display: none;">
+                                    <i class="fa-solid fa-circle-check fs-5 d-block mb-2 text-success"></i>
+                                    Registry completed successfully!<br><span class="text-muted fw-normal" style="font-size: 0.75rem;">You are now part of the CLOX System.</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3 pb-3">
+                    <p class="text-white opacity-50 small m-0" style="font-size: 0.7rem;">&copy; 2026 CLOX Logistics. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
+   <script src="./assets/js/bw.js?v=3"></script>
+  
+</body>
+</html>

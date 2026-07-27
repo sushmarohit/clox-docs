@@ -1,0 +1,356 @@
+
+:root {
+    --navy-blue: #1A2F4C;
+    --navy-light: #2A466E;
+    --orange: #F26E22;
+    --orange-hover: #D95A16;
+    --light-bg: #F8F9FA;
+    --pure-white: #FFFFFF;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; 
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--light-bg);
+    overflow: hidden; 
+}
+
+
+.text-navy { color: var(--navy-blue) !important; }
+.text-orange { color: var(--orange) !important; }
+.bg-navy { background-color: var(--navy-blue) !important; }
+.bg-orange { background-color: var(--orange) !important; }
+
+.logo-text {
+    font-size: 1.5rem;
+    font-style: italic;
+    transform: skewX(-10deg);
+    letter-spacing: 1px;
+}
+
+
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #ffffff 0%, #E6EDF2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.6s ease-in-out, visibility 0.6s;
+}
+
+.loader-content {
+    text-align: center;
+    width: 250px;
+}
+
+.logo-container {
+    animation: floatLogo 3s ease-in-out infinite;
+}
+
+.truck-animation-wrapper {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.road-track {
+    position: absolute;
+    bottom: 2px;
+    width: 200%;
+    height: 3px;
+    background-color: #888;
+    border-radius: 2px;
+    animation: moveRoad 0.8s linear infinite;
+}
+
+.road-lines {
+    position: absolute;
+    top: 1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-image: linear-gradient(90deg, #fff 40%, transparent 40%);
+    background-size: 20px 100%;
+}
+
+.animated-truck {
+    position: absolute;
+    bottom: 4px;
+    left: -100px;
+    animation: driveTruck 2s cubic-bezier(0.2, 0, 0.8, 1) forwards;
+}
+
+.animated-truck svg {
+    animation: truckBounce 0.3s infinite alternate;
+}
+
+.loading-text {
+    color: var(--navy-blue);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: pulseText 1.5s infinite alternate;
+}
+
+@keyframes floatLogo {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes moveRoad {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@keyframes driveTruck {
+    0% { left: -100px; }
+    20% { left: calc(50% - 40px); }
+    80% { left: calc(50% - 40px); }
+    100% { left: 120%; }
+}
+
+@keyframes truckBounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-1px); }
+}
+
+@keyframes pulseText {
+    from { opacity: 0.4; }
+    to { opacity: 1; }
+}
+
+.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.fade-in {
+    animation: fadeInPage 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#main-content {
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    background-color: var(--navy-blue);
+}
+
+.app-header {
+    background-color: var(--navy-blue);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 10;
+    position: relative;
+}
+
+.app-content {
+    flex: 1;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hero-bg {
+    position: fixed; /* Fixed so it doesn't scroll with content */
+    top: 60px; /* Below header */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px);
+    background: linear-gradient(180deg, rgba(26, 47, 76, 0.8) 0%, rgba(26, 47, 76, 0.95) 100%), url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+    z-index: 0;
+}
+
+.app-card {
+    border-radius: 16px;
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+
+.btn-outline-navy {
+    color: var(--navy-blue);
+    border-color: #E6EDF2;
+    border-width: 2px;
+    background-color: #fff;
+    transition: all 0.2s ease;
+}
+
+.btn-check:checked + .btn-outline-navy {
+    border-color: var(--orange);
+    background-color: rgba(242, 110, 34, 0.05);
+}
+
+.btn-check:checked + .btn-outline-navy .icon-box svg {
+    stroke: var(--orange);
+}
+
+.app-input {
+    border: 1px solid #D1D9E0;
+    border-radius: 8px;
+    background-color: #F8FAFC;
+    padding: 0.6rem 0.8rem;
+}
+
+.app-input:focus {
+    border-color: var(--orange);
+    background-color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(242, 110, 34, 0.15);
+}
+
+.btn-orange {
+    background-color: var(--orange);
+    color: white;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.btn-orange:active {
+    background-color: var(--orange-hover);
+    transform: scale(0.98);
+}
+
+
+.step-indicator {
+    padding: 16px 24px;
+    position: relative;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    color: rgba(255, 255, 255, 0.4);
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.step-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.step-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+
+.step.active {
+    color: var(--orange);
+}
+.step.active .step-num {
+    background-color: var(--orange);
+    color: var(--pure-white);
+    box-shadow: 0 0 0 4px rgba(242, 110, 34, 0.2);
+}
+
+
+.step.completed {
+    color: var(--pure-white);
+}
+.step.completed .step-num {
+    background-color: var(--pure-white);
+    color: var(--navy-blue);
+}
+
+
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: calc(50% + 16px);
+    width: calc(100% - 32px);
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.15);
+    z-index: -1;
+    transition: all 0.3s ease;
+}
+
+.step.completed:not(:last-child)::after {
+    background-color: var(--orange);
+}
+
+.infra-card {
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+    border: 1px solid #dee2e6; 
+}
+.infra-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(242, 110, 34, 0.15) !important;
+    border-color: var(--orange) !important;
+    background-color: rgba(242, 110, 34, 0.03) !important;
+}
+
+.infra-card.selected {
+    border-color: var(--orange) !important;
+    background-color: rgba(242, 110, 34, 0.05) !important;
+    box-shadow: 0 4px 12px rgba(242, 110, 34, 0.15) !important;
+}
+
+.infra-card.selected .infra-check {
+    opacity: 1 !important;
+}
+
+/* -------------------------------------
+ * Button Hover Effects
+ * ------------------------------------- */
+.btn-orange:hover {
+    background-color: var(--navy-blue) !important;
+    color: var(--pure-white) !important;
+    border-color: var(--navy-blue) !important;
+}
+
+.btn-navy {
+    background-color: var(--navy-blue);
+    color: var(--pure-white);
+    border: 2px solid var(--navy-blue);
+    transition: all 0.3s ease;
+}
+
+.btn-navy:hover {
+    background-color: var(--orange) !important;
+    color: var(--pure-white) !important;
+    border-color: var(--orange) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(242, 110, 34, 0.3) !important;
+}
