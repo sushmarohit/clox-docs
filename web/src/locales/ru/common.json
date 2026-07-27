@@ -50,6 +50,8 @@
     "senderDetails": "Данные отправителя",
     "carrierDetails": "Данные перевозчика",
     "companyLegalName": "Юридическое название компании",
+    "companyPlaceholder": "напр. Acme Manufacturing Pty Ltd",
+    "fleetPlaceholder": "напр. Paramount Road Freighters",
     "abn": "Австралийский бизнес-номер (ABN)",
     "abnPlaceholderSender": "Проверяется вручную супер-админом",
     "abnPlaceholderCarrier": "Ручная KYB-проверка супер-админом",

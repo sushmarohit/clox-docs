@@ -82,7 +82,7 @@ const focusAreas: {
 ];
 
 export function InvestorsPage() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const [success, setSuccess] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
@@ -136,7 +136,7 @@ export function InvestorsPage() {
       abn: values.abn || undefined,
       acn: values.acn || undefined,
       contactPersonName: values.contactPersonName || undefined,
-      locale: 'en',
+      locale: i18n.language?.startsWith('ru') ? 'ru' : 'en',
       source: 'web:/investors',
     });
 

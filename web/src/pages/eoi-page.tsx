@@ -31,7 +31,7 @@ type FormValues = {
 type FieldErrors = Partial<Record<keyof FormValues, string>>;
 
 export function EoiPage() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const [success, setSuccess] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
@@ -67,7 +67,7 @@ export function EoiPage() {
     const parsed = eoiLeadSchema.safeParse({
       ...values,
       role: values.role || undefined,
-      locale: 'en',
+      locale: i18n.language?.startsWith('ru') ? 'ru' : 'en',
       acn: values.acn || undefined,
     });
 

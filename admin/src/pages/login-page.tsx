@@ -5,6 +5,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getErrorDetail, requestOtp, verifyOtp } from '@/lib/api';
 import { fieldClassName, primaryButtonClassName } from '@/components/admin-shell';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { useAuthStore } from '@/stores/auth-store';
 
 type EmailForm = { email: string };
@@ -59,9 +60,12 @@ export function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
       <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-clox-orange">
-          {t('brand')}
-        </p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-clox-orange">
+            {t('brand')}
+          </p>
+          <LanguageSwitcher />
+        </div>
         <h1 className="mt-4 text-3xl font-bold">{t('admin.loginTitle')}</h1>
         <p className="mt-3 text-sm text-slate-300">
           {step === 'email' ? t('admin.loginHint') : t('admin.otpHint')}
@@ -99,10 +103,12 @@ export function LoginPage() {
             noValidate
           >
             <p className="rounded-xl border border-white/10 bg-slate-900/60 px-3 py-2 text-sm text-slate-300">
-              Code sent to <span className="font-medium text-white">{email}</span>
+              {t('admin.codeSentTo')} <span className="font-medium text-white">{email}</span>
             </p>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-200">Login code</label>
+              <label className="mb-1.5 block text-sm font-medium text-slate-200">
+                {t('admin.loginCode')}
+              </label>
               <input
                 type="text"
                 inputMode="numeric"

@@ -50,6 +50,8 @@
     "senderDetails": "Sender details",
     "carrierDetails": "Carrier details",
     "companyLegalName": "Company Legal Name",
+    "companyPlaceholder": "e.g. Acme Manufacturing Pty Ltd",
+    "fleetPlaceholder": "e.g. Paramount Road Freighters",
     "abn": "Australian Business Number (ABN)",
     "abnPlaceholderSender": "Verified manually by Super Admin",
     "abnPlaceholderCarrier": "Manual KYB review by Super Admin",

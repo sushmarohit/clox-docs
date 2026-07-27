@@ -10,7 +10,7 @@ import {
 } from '@/components/admin-shell';
 import { addLeadNote, getErrorDetail, getLead, updateLead } from '@/lib/api';
 import {
-  LEAD_STATUS_LABELS,
+  LEAD_STATUS_KEYS,
   formatDateTime,
   formatLeadStatus,
   formatLeadType,
@@ -91,45 +91,45 @@ export function LeadDetailPage() {
               <p className="mt-1 text-slate-400">{lead.email}</p>
               <dl className="mt-5 grid gap-3 sm:grid-cols-2 text-sm">
                 <div>
-                  <dt className="text-slate-500">Phone</dt>
-                  <dd className="text-white">{lead.phone || '—'}</dd>
+                  <dt className="text-slate-500">{t('admin.phone')}</dt>
+                  <dd className="text-white">{lead.phone || t('dash')}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">ABN / ACN</dt>
+                  <dt className="text-slate-500">{t('admin.abnAcn')}</dt>
                   <dd className="text-white">
-                    {[lead.abn, lead.acn].filter(Boolean).join(' / ') || '—'}
+                    {[lead.abn, lead.acn].filter(Boolean).join(' / ') || t('dash')}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Location</dt>
+                  <dt className="text-slate-500">{t('admin.location')}</dt>
                   <dd className="text-white">
-                    {[lead.state, lead.territory].filter(Boolean).join(' · ') || '—'}
+                    {[lead.state, lead.territory].filter(Boolean).join(' · ') || t('dash')}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Source</dt>
-                  <dd className="text-white">{lead.source || '—'}</dd>
+                  <dt className="text-slate-500">{t('admin.source')}</dt>
+                  <dd className="text-white">{lead.source || t('dash')}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Created</dt>
+                  <dt className="text-slate-500">{t('admin.created')}</dt>
                   <dd className="text-white">{formatDateTime(lead.createdAt)}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Updated</dt>
+                  <dt className="text-slate-500">{t('admin.updated')}</dt>
                   <dd className="text-white">{formatDateTime(lead.updatedAt)}</dd>
                 </div>
               </dl>
             </section>
 
             <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-semibold">Submission payload</h2>
+              <h2 className="text-lg font-semibold">{t('admin.payload')}</h2>
               <pre className="mt-3 max-h-96 overflow-auto rounded-xl bg-slate-950/80 p-3 text-xs text-slate-300">
                 {JSON.stringify(lead.payload ?? {}, null, 2)}
               </pre>
             </section>
 
             <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-semibold">Notes</h2>
+              <h2 className="text-lg font-semibold">{t('admin.notes')}</h2>
               <form
                 className="mt-3 space-y-3"
                 onSubmit={(event) => {
@@ -157,7 +157,7 @@ export function LeadDetailPage() {
               </form>
               <ul className="mt-5 space-y-3">
                 {(lead.notes ?? []).length === 0 ? (
-                  <li className="text-sm text-slate-500">No notes yet.</li>
+                  <li className="text-sm text-slate-500">{t('admin.noNotes')}</li>
                 ) : (
                   lead.notes.map((item) => (
                     <li
@@ -165,7 +165,9 @@ export function LeadDetailPage() {
                       className="rounded-xl border border-white/10 bg-slate-950/50 p-3 text-sm"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
-                        <span>{item.author?.name || item.author?.email || 'Admin'}</span>
+                        <span>
+                          {item.author?.name || item.author?.email || t('admin.adminFallback')}
+                        </span>
                         <span>{formatDateTime(item.createdAt)}</span>
                       </div>
                       <p className="mt-2 whitespace-pre-wrap text-slate-200">{item.body}</p>
@@ -178,18 +180,18 @@ export function LeadDetailPage() {
 
           <div className="space-y-6">
             <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-semibold">Review</h2>
+              <h2 className="text-lg font-semibold">{t('admin.review')}</h2>
               <div className="mt-4 space-y-3">
                 <div>
-                  <label className="mb-1.5 block text-sm text-slate-400">Status</label>
+                  <label className="mb-1.5 block text-sm text-slate-400">{t('admin.status')}</label>
                   <select
                     className={fieldClassName}
                     value={status}
                     onChange={(event) => setStatus(event.target.value as LeadStatus)}
                   >
-                    {Object.entries(LEAD_STATUS_LABELS).map(([value, label]) => (
+                    {LEAD_STATUS_KEYS.map((value) => (
                       <option key={value} value={value}>
-                        {label}
+                        {t(`leadStatuses.${value}`)}
                       </option>
                     ))}
                   </select>
@@ -206,7 +208,7 @@ export function LeadDetailPage() {
                   <p className="text-sm text-red-300">{getErrorDetail(updateMutation.error)}</p>
                 ) : null}
                 {updateMutation.isSuccess ? (
-                  <p className="text-sm text-emerald-300">Saved.</p>
+                  <p className="text-sm text-emerald-300">{t('saved')}</p>
                 ) : null}
                 <button
                   type="button"
@@ -217,22 +219,22 @@ export function LeadDetailPage() {
                   {updateMutation.isPending ? t('loading') : t('admin.saveStatus')}
                 </button>
                 <p className="text-xs text-slate-500">
-                  Current: {formatLeadStatus(lead.status)}
+                  {t('admin.currentStatus', { status: formatLeadStatus(lead.status) })}
                 </p>
               </div>
             </section>
 
             <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-semibold">Activity</h2>
+              <h2 className="text-lg font-semibold">{t('admin.activity')}</h2>
               <ul className="mt-3 space-y-3">
                 {(lead.events ?? []).length === 0 ? (
-                  <li className="text-sm text-slate-500">No events yet.</li>
+                  <li className="text-sm text-slate-500">{t('admin.noEvents')}</li>
                 ) : (
                   lead.events.map((event) => (
                     <li key={event.id} className="border-b border-white/10 pb-3 last:border-0">
                       <p className="text-sm font-medium text-white">{event.action}</p>
                       <p className="mt-1 text-xs text-slate-500">
-                        {event.actor?.email || 'system'} · {formatDateTime(event.createdAt)}
+                        {event.actor?.email || t('system')} · {formatDateTime(event.createdAt)}
                       </p>
                     </li>
                   ))
@@ -241,7 +243,7 @@ export function LeadDetailPage() {
             </section>
 
             <Link to="/leads" className={`${secondaryButtonClassName} w-full`}>
-              Back to queue
+              {t('admin.backToQueue')}
             </Link>
           </div>
         </div>

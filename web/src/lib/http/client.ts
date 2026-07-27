@@ -1,4 +1,5 @@
 import axios, { AxiosError, isAxiosError, type AxiosInstance } from 'axios';
+import { i18n } from '@/lib/i18n';
 
 export class ApiError extends Error {
   status: number;
@@ -34,7 +35,7 @@ export function getErrorDetail(error: unknown): string {
     return error.message;
   }
   if (error instanceof Error) return error.message;
-  return 'Unexpected error';
+  return i18n.t('unexpectedError');
 }
 
 export function toApiError(error: unknown): ApiError {

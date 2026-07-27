@@ -56,7 +56,7 @@ export function AuditPage() {
       <div>
         <h1 className="text-3xl font-bold">{t('admin.auditTitle')}</h1>
         <p className="mt-2 text-sm text-slate-400">
-          {total} events · lead creates, status changes, notes, and auth
+          {t('admin.auditSubtitle', { count: total })}
         </p>
       </div>
 
@@ -87,7 +87,7 @@ export function AuditPage() {
           className={secondaryButtonClassName}
           onClick={() => updateFilter('leadId', leadIdDraft.trim())}
         >
-          Filter
+          {t('filter')}
         </button>
       </div>
 
@@ -108,10 +108,10 @@ export function AuditPage() {
           <table className="min-w-full text-left text-sm">
             <thead className="bg-white/5 text-slate-400">
               <tr>
-                <th className="px-3 py-2 font-medium">When</th>
-                <th className="px-3 py-2 font-medium">Action</th>
-                <th className="px-3 py-2 font-medium">Actor</th>
-                <th className="px-3 py-2 font-medium">Lead</th>
+                <th className="px-3 py-2 font-medium">{t('admin.colWhen')}</th>
+                <th className="px-3 py-2 font-medium">{t('admin.colAction')}</th>
+                <th className="px-3 py-2 font-medium">{t('admin.colActor')}</th>
+                <th className="px-3 py-2 font-medium">{t('admin.colLead')}</th>
               </tr>
             </thead>
             <tbody>
@@ -136,7 +136,7 @@ export function AuditPage() {
                       ) : null}
                     </td>
                     <td className="px-3 py-3 text-slate-300">
-                      {item.actor?.email || 'system'}
+                      {item.actor?.email || t('system')}
                     </td>
                     <td className="px-3 py-3">
                       {item.lead ? (
@@ -156,10 +156,10 @@ export function AuditPage() {
                           to={`/leads/${item.leadId}`}
                           className="text-clox-orange hover:underline"
                         >
-                          View lead
+                          {t('viewLead')}
                         </Link>
                       ) : (
-                        <span className="text-slate-500">—</span>
+                        <span className="text-slate-500">{t('dash')}</span>
                       )}
                     </td>
                   </tr>
@@ -178,18 +178,16 @@ export function AuditPage() {
             disabled={page <= 1}
             onClick={() => updateFilter('page', String(page - 1))}
           >
-            Previous
+            {t('previous')}
           </button>
-          <span>
-            Page {page} of {totalPages}
-          </span>
+          <span>{t('pageOf', { page, totalPages })}</span>
           <button
             type="button"
             className={secondaryButtonClassName}
             disabled={page >= totalPages}
             onClick={() => updateFilter('page', String(page + 1))}
           >
-            Next
+            {t('next')}
           </button>
         </div>
       ) : null}

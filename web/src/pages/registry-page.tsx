@@ -85,7 +85,7 @@ function mapZodErrors(issues: { path: PropertyKey[]; message: string }[]): Field
 }
 
 export function RegistryPage() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { step, userType, setStep, setUserType, reset } = useRegistryWizardStore();
   const [success, setSuccess] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -140,7 +140,7 @@ export function RegistryPage() {
         infraAcknowledged: values.infraAcknowledged,
         email: values.email,
         phone: values.phone,
-        locale: 'en' as const,
+        locale: i18n.language?.startsWith('ru') ? ('ru' as const) : ('en' as const),
         honeypot: values.honeypot,
       };
     }
@@ -156,7 +156,7 @@ export function RegistryPage() {
       infraAcknowledged: values.infraAcknowledged,
       email: values.email,
       phone: values.phone,
-      locale: 'en' as const,
+      locale: i18n.language?.startsWith('ru') ? ('ru' as const) : ('en' as const),
       honeypot: values.honeypot,
     };
   }
@@ -414,7 +414,7 @@ function SenderFields({
         <FieldLabel required>{t('registry.companyLegalName')}</FieldLabel>
         <input
           className={inputClassName}
-          placeholder="e.g. Acme Manufacturing Pty Ltd"
+          placeholder={t('registry.companyPlaceholder')}
           {...form.register('companyLegalName')}
         />
         <FieldError message={errors.companyLegalName} />
@@ -505,7 +505,7 @@ function CarrierFields({
         <FieldLabel required>{t('registry.fleetEntityName')}</FieldLabel>
         <input
           className={inputClassName}
-          placeholder="e.g. Paramount Road Freighters"
+          placeholder={t('registry.fleetPlaceholder')}
           {...form.register('fleetEntityName')}
         />
         <FieldError message={errors.fleetEntityName} />

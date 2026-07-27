@@ -11,8 +11,8 @@ import {
 import { EmptyBlock, LoadingBlock } from '@/components/status-blocks';
 import { exportLeadsCsv, getErrorDetail, listLeads } from '@/lib/api';
 import {
-  LEAD_STATUS_LABELS,
-  LEAD_TYPE_LABELS,
+  LEAD_STATUS_KEYS,
+  LEAD_TYPE_KEYS,
   formatDateTime,
   formatLeadStatus,
   formatLeadType,
@@ -81,7 +81,7 @@ export function LeadsPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold">{t('admin.leadsTitle')}</h1>
-          <p className="mt-2 text-sm text-slate-400">{total} total</p>
+          <p className="mt-2 text-sm text-slate-400">{t('totalCount', { count: total })}</p>
         </div>
         <button
           type="button"
@@ -109,9 +109,9 @@ export function LeadsPage() {
           onChange={(event) => updateFilter('type', event.target.value)}
         >
           <option value="">{t('admin.allTypes')}</option>
-          {Object.entries(LEAD_TYPE_LABELS).map(([value, label]) => (
+          {LEAD_TYPE_KEYS.map((value) => (
             <option key={value} value={value}>
-              {label}
+              {t(`leadTypes.${value}`)}
             </option>
           ))}
         </select>
@@ -121,14 +121,14 @@ export function LeadsPage() {
           onChange={(event) => updateFilter('status', event.target.value)}
         >
           <option value="">{t('admin.allStatuses')}</option>
-          {Object.entries(LEAD_STATUS_LABELS).map(([value, label]) => (
+          {LEAD_STATUS_KEYS.map((value) => (
             <option key={value} value={value}>
-              {label}
+              {t(`leadStatuses.${value}`)}
             </option>
           ))}
         </select>
         <button type="button" className={primaryButtonClassName} onClick={applySearch}>
-          Search
+          {t('search')}
         </button>
       </div>
 
@@ -149,11 +149,11 @@ export function LeadsPage() {
           <table className="min-w-full text-left text-sm">
             <thead className="bg-white/5 text-slate-400">
               <tr>
-                <th className="px-3 py-2 font-medium">Lead</th>
-                <th className="px-3 py-2 font-medium">Type</th>
-                <th className="px-3 py-2 font-medium">Status</th>
-                <th className="px-3 py-2 font-medium">Location</th>
-                <th className="px-3 py-2 font-medium">Created</th>
+                <th className="px-3 py-2 font-medium">{t('admin.colLead')}</th>
+                <th className="px-3 py-2 font-medium">{t('admin.colType')}</th>
+                <th className="px-3 py-2 font-medium">{t('admin.colStatus')}</th>
+                <th className="px-3 py-2 font-medium">{t('admin.colLocation')}</th>
+                <th className="px-3 py-2 font-medium">{t('admin.colCreated')}</th>
               </tr>
             </thead>
             <tbody>
@@ -162,7 +162,7 @@ export function LeadsPage() {
                   <td colSpan={5} className="p-0">
                     <EmptyBlock
                       title={t('admin.noLeads')}
-                      description="Try clearing filters or wait for new submissions."
+                      description={t('admin.noLeadsHint')}
                     />
                   </td>
                 </tr>
@@ -187,7 +187,7 @@ export function LeadsPage() {
                     <td className="px-3 py-3 text-slate-300">{formatLeadType(lead.type)}</td>
                     <td className="px-3 py-3 text-slate-300">{formatLeadStatus(lead.status)}</td>
                     <td className="px-3 py-3 text-slate-400">
-                      {[lead.state, lead.territory].filter(Boolean).join(' · ') || '—'}
+                      {[lead.state, lead.territory].filter(Boolean).join(' · ') || t('dash')}
                     </td>
                     <td className="px-3 py-3 text-slate-400">{formatDateTime(lead.createdAt)}</td>
                   </tr>
@@ -206,18 +206,16 @@ export function LeadsPage() {
             disabled={page <= 1}
             onClick={() => updateFilter('page', String(page - 1))}
           >
-            Previous
+            {t('previous')}
           </button>
-          <span>
-            Page {page} of {totalPages}
-          </span>
+          <span>{t('pageOf', { page, totalPages })}</span>
           <button
             type="button"
             className={secondaryButtonClassName}
             disabled={page >= totalPages}
             onClick={() => updateFilter('page', String(page + 1))}
           >
-            Next
+            {t('next')}
           </button>
         </div>
       ) : null}

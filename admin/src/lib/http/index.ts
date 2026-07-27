@@ -5,6 +5,7 @@ import {
   type AxiosInstance,
 } from '@/lib/http/client';
 import { useAuthStore } from '@/stores/auth-store';
+import { LOCALE_STORAGE_KEY } from '@/locales';
 
 type RetryConfig = InternalAxiosRequestConfig & { _retry?: boolean };
 
@@ -53,6 +54,12 @@ export const http: AxiosInstance = createHttpClient();
 
 http.interceptors.request.use((config) => {
   const { accessToken } = useAuthStore.getState();
+  const locale =
+    (typeof localStorage !== 'undefined' && localStorage.getItem(LOCALE_STORAGE_KEY)) ||
+    import.meta.env.VITE_DEFAULT_LOCALE ||
+    'en';
+
+  config.headers.set('Accept-Language', locale);
   config.headers.set('X-Client-App', 'clox-admin');
   config.headers.set('X-Request-Id', crypto.randomUUID());
 
