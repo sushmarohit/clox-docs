@@ -9,6 +9,7 @@ import {
   PublicShell,
   inputClassName,
 } from '@/components/public-shell';
+import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitEoiLead } from '@/lib/api';
 
 type FormValues = {
@@ -87,17 +88,25 @@ export function EoiPage() {
 
   return (
     <PublicShell>
-      <div className="mb-4 text-center">
-        <h1 className="text-2xl font-bold leading-tight">{t('eoi.pageTitle')}</h1>
-        <p className="mt-2 text-sm text-white/75">{t('eoi.pageSubtitle')}</p>
+      <div className="mb-6 text-center sm:mb-8">
+        <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
+          {t('eoi.pageTitle')}
+        </h1>
+        <p className="mx-auto mt-2 max-w-2xl text-sm text-white/75 sm:text-base">
+          {t('eoi.pageSubtitle')}
+        </p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
-        <div className="bg-clox-navy px-4 py-3 text-center text-white">
-          <h2 className="text-lg font-bold">{t('eoi.cardTitle')}</h2>
+      <div className="overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl">
+        <div className="bg-clox-navy px-4 py-3 text-center text-white sm:px-6 sm:py-4">
+          <h2 className="text-lg font-bold sm:text-xl">{t('eoi.cardTitle')}</h2>
         </div>
 
-        <form className="space-y-4 p-4 sm:p-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+        <form
+          className="space-y-5 p-4 sm:space-y-6 sm:p-6 md:p-8"
+          onSubmit={form.handleSubmit(onSubmit)}
+          noValidate
+        >
           <input
             type="text"
             tabIndex={-1}
@@ -115,7 +124,7 @@ export function EoiPage() {
             <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
               {t('eoi.section1')}
             </h3>
-            <div className="flex flex-col gap-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               <RoleOption
                 form={form}
                 value="state_master"
@@ -133,7 +142,7 @@ export function EoiPage() {
             </div>
             <FieldError message={fieldErrors.role} />
 
-            <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <div>
                 <FieldLabel required>{t('eoi.targetState')}</FieldLabel>
                 <input className={inputClassName} {...form.register('targetState')} />
@@ -148,10 +157,10 @@ export function EoiPage() {
           </section>
 
           <section>
-            <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
+            <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy sm:text-base">
               {t('eoi.section2')}
             </h3>
-            <div className="grid gap-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <FieldLabel required>{t('eoi.fullLegalName')}</FieldLabel>
                 <input className={inputClassName} {...form.register('fullLegalName')} />
@@ -162,16 +171,14 @@ export function EoiPage() {
                 <input className={inputClassName} {...form.register('companyName')} />
                 <FieldError message={fieldErrors.companyName} />
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <FieldLabel required>{t('eoi.abn')}</FieldLabel>
-                  <input className={inputClassName} {...form.register('abn')} />
-                  <FieldError message={fieldErrors.abn} />
-                </div>
-                <div>
-                  <FieldLabel>{t('eoi.acn')}</FieldLabel>
-                  <input className={inputClassName} {...form.register('acn')} />
-                </div>
+              <div>
+                <FieldLabel required>{t('eoi.abn')}</FieldLabel>
+                <input className={inputClassName} {...form.register('abn')} />
+                <FieldError message={fieldErrors.abn} />
+              </div>
+              <div>
+                <FieldLabel>{t('eoi.acn')}</FieldLabel>
+                <input className={inputClassName} {...form.register('acn')} />
               </div>
               <div>
                 <FieldLabel required>{t('eoi.primaryEmail')}</FieldLabel>
@@ -183,7 +190,7 @@ export function EoiPage() {
                 <input className={inputClassName} type="tel" {...form.register('phone')} />
                 <FieldError message={fieldErrors.phone} />
               </div>
-              <div>
+              <div className="sm:col-span-2">
                 <FieldLabel required>{t('eoi.corporateAddress')}</FieldLabel>
                 <input className={inputClassName} {...form.register('corporateAddress')} />
                 <FieldError message={fieldErrors.corporateAddress} />
@@ -192,24 +199,24 @@ export function EoiPage() {
           </section>
 
           <section>
-            <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
+            <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy sm:text-base">
               {t('eoi.section3')}
             </h3>
-            <div className="grid gap-3">
-              <div>
+            <div className="grid gap-3 sm:grid-cols-2 sm:items-stretch">
+              <div className="flex h-full flex-col">
                 <FieldLabel required>{t('eoi.networkExperience')}</FieldLabel>
                 <textarea
-                  className={inputClassName}
-                  rows={3}
+                  className={`${inputClassName} mt-auto`}
+                  rows={4}
                   {...form.register('networkExperience')}
                 />
                 <FieldError message={fieldErrors.networkExperience} />
               </div>
-              <div>
+              <div className="flex h-full flex-col">
                 <FieldLabel required>{t('eoi.executionStrategy')}</FieldLabel>
                 <textarea
-                  className={inputClassName}
-                  rows={3}
+                  className={`${inputClassName} mt-auto`}
+                  rows={4}
                   {...form.register('executionStrategy')}
                 />
                 <FieldError message={fieldErrors.executionStrategy} />
@@ -269,22 +276,22 @@ export function EoiPage() {
             </p>
           ) : null}
 
-          {success ? (
-            <div className="rounded-xl bg-emerald-50 p-4 text-center text-sm font-semibold text-emerald-700">
-              {t('eoi.successTitle')}
-              <div className="mt-1 font-normal text-emerald-600">{t('eoi.successBody')}</div>
-            </div>
-          ) : null}
-
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="w-full rounded-full bg-clox-navy py-3 text-base font-bold text-white shadow disabled:opacity-50"
+            className="w-full rounded-full bg-clox-navy py-3 text-base font-bold text-white shadow disabled:opacity-50 sm:mx-auto sm:block sm:max-w-md sm:py-3.5"
           >
             {mutation.isPending ? t('submitting') : t('eoi.submit')}
           </button>
         </form>
       </div>
+
+      <SuccessModal
+        open={success}
+        title={t('eoi.successTitle')}
+        body={t('eoi.successBody')}
+        onClose={() => setSuccess(false)}
+      />
     </PublicShell>
   );
 }

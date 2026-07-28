@@ -10,6 +10,7 @@ import {
   StepIndicator,
   inputClassName,
 } from '@/components/public-shell';
+import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitRegistryLead } from '@/lib/api';
 import { useRegistryWizardStore } from '@/stores/registry-wizard-store';
 
@@ -201,22 +202,24 @@ export function RegistryPage() {
 
   return (
     <PublicShell>
-      <div className="mb-4 text-center">
+      <div className="mb-6 text-center sm:mb-8">
         <span className="inline-flex rounded-full bg-clox-orange px-3 py-1 text-xs font-semibold text-white">
           {t('preLaunch')}
         </span>
-        <h1 className="mt-3 text-2xl font-bold leading-tight">
-          {t('registry.heroTitleLine1')} <br />
-          {t('registry.heroTitleLine2')}
+        <h1 className="mt-3 text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
+          {t('registry.heroTitleLine1')} <br className="sm:hidden" />
+          <span className="sm:ml-2">{t('registry.heroTitleLine2')}</span>
         </h1>
-        <p className="mt-2 text-sm text-white/75">{t('registry.heroWelcome')}</p>
+        <p className="mx-auto mt-2 max-w-2xl text-sm text-white/75 sm:text-base">
+          {t('registry.heroWelcome')}
+        </p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl">
         <StepIndicator activeStep={step} />
 
         <form
-          className="p-4 sm:p-5"
+          className="p-4 sm:p-6 md:p-8"
           onSubmit={(event) => {
             event.preventDefault();
             onSubmit();
@@ -236,7 +239,7 @@ export function RegistryPage() {
             <div>
               <h2 className="text-lg font-bold text-clox-navy">{t('registry.joinTitle')}</h2>
               <p className="mb-3 text-sm text-slate-500">{t('registry.joinPrompt')}</p>
-              <div className="flex flex-col gap-2">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <RoleButton
                   title={t('registry.senderRoleTitle')}
                   subtitle={t('registry.senderRoleSubtitle')}
@@ -271,7 +274,7 @@ export function RegistryPage() {
                 <CarrierFields form={form} values={values} errors={fieldErrors} />
               )}
 
-              <div className="mt-3 flex flex-col gap-3">
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <div>
                   <FieldLabel required>{t('email')}</FieldLabel>
                   <input className={inputClassName} type="email" {...form.register('email')} />
@@ -304,7 +307,7 @@ export function RegistryPage() {
               <h2 className="mb-4 text-center text-lg font-bold text-clox-navy">
                 {t('registry.verifyTitle')}
               </h2>
-              <div className="mb-4 flex flex-col gap-3">
+              <div className="mb-4 grid gap-3 sm:grid-cols-3">
                 {INFRA.map((option) => {
                   const selected = values.infraAcknowledged.includes(option.value);
                   return (
@@ -317,7 +320,7 @@ export function RegistryPage() {
                           : [...values.infraAcknowledged, option.value];
                         form.setValue('infraAcknowledged', next);
                       }}
-                      className={`relative flex items-start gap-3 rounded-xl border p-3 text-left shadow-sm ${
+                      className={`relative flex items-start gap-3 rounded-xl border p-3 text-left shadow-sm sm:flex-col sm:items-center sm:p-4 sm:text-center ${
                         selected ? 'border-clox-orange bg-orange-50' : 'border-slate-200 bg-white'
                       }`}
                     >
@@ -339,20 +342,11 @@ export function RegistryPage() {
                 </p>
               ) : null}
 
-              {success ? (
-                <div className="mb-3 rounded-xl bg-emerald-50 p-4 text-center text-sm font-semibold text-emerald-700">
-                  {t('registry.successTitle')}
-                  <div className="mt-1 font-normal text-emerald-600">
-                    {t('registry.successBody')}
-                  </div>
-                </div>
-              ) : null}
-
               <div className="flex flex-col gap-3">
                 <button
                   type="submit"
                   disabled={!canSubmit || mutation.isPending}
-                  className="w-full rounded-full bg-clox-navy py-3 text-base font-bold text-white shadow disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-full bg-clox-navy py-3 text-base font-bold text-white shadow disabled:cursor-not-allowed disabled:opacity-50 sm:mx-auto sm:block sm:max-w-md sm:py-3.5"
                 >
                   {mutation.isPending ? t('submitting') : t('registry.finalize')}
                 </button>
@@ -368,6 +362,13 @@ export function RegistryPage() {
           ) : null}
         </form>
       </div>
+
+      <SuccessModal
+        open={success}
+        title={t('registry.successTitle')}
+        body={t('registry.successBody')}
+        onClose={() => setSuccess(false)}
+      />
     </PublicShell>
   );
 }
@@ -409,8 +410,8 @@ function SenderFields({
   const { t } = useTranslation('common');
 
   return (
-    <div className="flex flex-col gap-3">
-      <div>
+    <div className="grid gap-3 sm:grid-cols-2">
+      <div className="sm:col-span-2">
         <FieldLabel required>{t('registry.companyLegalName')}</FieldLabel>
         <input
           className={inputClassName}
@@ -441,38 +442,42 @@ function SenderFields({
         <FieldError message={errors.shippingOrigin} />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
         <FieldLabel required>{t('registry.operationalModel')}</FieldLabel>
-        {OPS.map((option) => (
-          <label key={option.value} className="mb-1 flex items-start gap-2 text-sm text-slate-600">
-            <input
-              type="checkbox"
-              checked={values.operationalModels.includes(option.value)}
-              onChange={(event) => {
-                const next = event.target.checked
-                  ? [...values.operationalModels, option.value]
-                  : values.operationalModels.filter((item) => item !== option.value);
-                form.setValue('operationalModels', next);
-              }}
-            />
-            <span>{t(option.labelKey)}</span>
-          </label>
-        ))}
+        <div className="mt-1 grid gap-1 sm:grid-cols-2">
+          {OPS.map((option) => (
+            <label key={option.value} className="flex items-start gap-2 text-sm text-slate-600">
+              <input
+                type="checkbox"
+                checked={values.operationalModels.includes(option.value)}
+                onChange={(event) => {
+                  const next = event.target.checked
+                    ? [...values.operationalModels, option.value]
+                    : values.operationalModels.filter((item) => item !== option.value);
+                  form.setValue('operationalModels', next);
+                }}
+              />
+              <span>{t(option.labelKey)}</span>
+            </label>
+          ))}
+        </div>
         <FieldError message={errors.operationalModels} />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
         <FieldLabel required>{t('registry.biddingStructure')}</FieldLabel>
-        {BIDDING.map((option) => (
-          <label key={option.value} className="mb-1 flex items-start gap-2 text-sm text-slate-600">
-            <input type="radio" value={option.value} {...form.register('biddingType')} />
-            <span>{t(option.labelKey)}</span>
-          </label>
-        ))}
+        <div className="mt-1 grid gap-1 sm:grid-cols-2">
+          {BIDDING.map((option) => (
+            <label key={option.value} className="flex items-start gap-2 text-sm text-slate-600">
+              <input type="radio" value={option.value} {...form.register('biddingType')} />
+              <span>{t(option.labelKey)}</span>
+            </label>
+          ))}
+        </div>
         <FieldError message={errors.biddingType} />
       </div>
 
-      <div>
+      <div className="sm:col-span-2">
         <FieldLabel required>{t('registry.monthlyVolume')}</FieldLabel>
         <select className={inputClassName} {...form.register('monthlyVolume')}>
           <option value="">{t('registry.selectVolume')}</option>
@@ -500,8 +505,8 @@ function CarrierFields({
   const { t } = useTranslation('common');
 
   return (
-    <div className="flex flex-col gap-3">
-      <div>
+    <div className="grid gap-3 sm:grid-cols-2">
+      <div className="sm:col-span-2">
         <FieldLabel required>{t('registry.fleetEntityName')}</FieldLabel>
         <input
           className={inputClassName}
@@ -532,48 +537,52 @@ function CarrierFields({
         <FieldError message={errors.depotState} />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
         <FieldLabel required>{t('registry.fleetComposition')}</FieldLabel>
-        {FLEET.map((option) => (
-          <label key={option.value} className="mb-1 flex items-start gap-2 text-sm text-slate-600">
-            <input
-              type="checkbox"
-              checked={values.fleetComposition.includes(option.value)}
-              onChange={(event) => {
-                const next = event.target.checked
-                  ? [...values.fleetComposition, option.value]
-                  : values.fleetComposition.filter((item) => item !== option.value);
-                form.setValue('fleetComposition', next);
-              }}
-            />
-            <span>{t(option.labelKey)}</span>
-          </label>
-        ))}
+        <div className="mt-1 grid gap-1 sm:grid-cols-2">
+          {FLEET.map((option) => (
+            <label key={option.value} className="flex items-start gap-2 text-sm text-slate-600">
+              <input
+                type="checkbox"
+                checked={values.fleetComposition.includes(option.value)}
+                onChange={(event) => {
+                  const next = event.target.checked
+                    ? [...values.fleetComposition, option.value]
+                    : values.fleetComposition.filter((item) => item !== option.value);
+                  form.setValue('fleetComposition', next);
+                }}
+              />
+              <span>{t(option.labelKey)}</span>
+            </label>
+          ))}
+        </div>
         <FieldError message={errors.fleetComposition} />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
         <FieldLabel>{t('registry.capabilities')}</FieldLabel>
-        {CAPABILITY.map((option) => (
-          <label key={option.value} className="mb-1 flex items-start gap-2 text-sm text-slate-600">
-            <input
-              type="checkbox"
-              checked={values.capabilities.includes(option.value)}
-              onChange={(event) => {
-                const next = event.target.checked
-                  ? [...values.capabilities, option.value]
-                  : values.capabilities.filter((item) => item !== option.value);
-                form.setValue('capabilities', next);
-              }}
-            />
-            <span>{t(option.labelKey)}</span>
-          </label>
-        ))}
+        <div className="mt-1 grid gap-1 sm:grid-cols-2">
+          {CAPABILITY.map((option) => (
+            <label key={option.value} className="flex items-start gap-2 text-sm text-slate-600">
+              <input
+                type="checkbox"
+                checked={values.capabilities.includes(option.value)}
+                onChange={(event) => {
+                  const next = event.target.checked
+                    ? [...values.capabilities, option.value]
+                    : values.capabilities.filter((item) => item !== option.value);
+                  form.setValue('capabilities', next);
+                }}
+              />
+              <span>{t(option.labelKey)}</span>
+            </label>
+          ))}
+        </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
         <FieldLabel required>{t('registry.complianceAuth')}</FieldLabel>
-        <label className="flex items-start gap-2 text-xs text-slate-600">
+        <label className="flex items-start gap-2 text-xs text-slate-600 sm:text-sm">
           <input type="checkbox" {...form.register('complianceAuthorized')} />
           <span>{t('registry.complianceAuthBody')}</span>
         </label>

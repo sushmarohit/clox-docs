@@ -14,6 +14,7 @@ import {
   PublicShell,
   inputClassName,
 } from '@/components/public-shell';
+import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitInvestorLead } from '@/lib/api';
 
 type Classification = (typeof investorClassificationSchema.options)[number];
@@ -156,17 +157,25 @@ export function InvestorsPage() {
 
   return (
     <PublicShell>
-      <div className="mb-4 text-center">
-        <h1 className="text-2xl font-bold leading-tight">{t('investors.pageTitle')}</h1>
-        <p className="mt-2 text-sm text-white/75">{t('investors.pageSubtitle')}</p>
+      <div className="mb-6 text-center sm:mb-8">
+        <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
+          {t('investors.pageTitle')}
+        </h1>
+        <p className="mx-auto mt-2 max-w-2xl text-sm text-white/75 sm:text-base">
+          {t('investors.pageSubtitle')}
+        </p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
-        <div className="bg-clox-navy px-4 py-3 text-center text-white">
-          <h2 className="text-lg font-bold">{t('investors.cardTitle')}</h2>
+      <div className="overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl">
+        <div className="bg-clox-navy px-4 py-3 text-center text-white sm:px-6 sm:py-4">
+          <h2 className="text-lg font-bold sm:text-xl">{t('investors.cardTitle')}</h2>
         </div>
 
-        <form className="space-y-4 p-4 sm:p-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+        <form
+          className="space-y-5 p-4 sm:space-y-6 sm:p-6 md:p-8"
+          onSubmit={form.handleSubmit(onSubmit)}
+          noValidate
+        >
           <input
             type="text"
             tabIndex={-1}
@@ -184,13 +193,13 @@ export function InvestorsPage() {
             <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
               {t('investors.section1')}
             </h3>
-            <div className="grid gap-3">
-              <div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="sm:col-span-2">
                 <FieldLabel required>{t('investors.fullNameOrEntity')}</FieldLabel>
                 <input className={inputClassName} {...form.register('fullNameOrEntity')} />
                 <FieldError message={fieldErrors.fullNameOrEntity} />
               </div>
-              <div>
+              <div className="sm:col-span-2">
                 <FieldLabel>{t('investors.contactPersonName')}</FieldLabel>
                 <input className={inputClassName} {...form.register('contactPersonName')} />
                 <FieldError message={fieldErrors.contactPersonName} />
@@ -205,19 +214,17 @@ export function InvestorsPage() {
                 <input className={inputClassName} type="tel" {...form.register('phone')} />
                 <FieldError message={fieldErrors.phone} />
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <FieldLabel>{t('investors.abn')}</FieldLabel>
-                  <input className={inputClassName} {...form.register('abn')} />
-                  <FieldError message={fieldErrors.abn} />
-                </div>
-                <div>
-                  <FieldLabel>{t('investors.acn')}</FieldLabel>
-                  <input className={inputClassName} {...form.register('acn')} />
-                  <FieldError message={fieldErrors.acn} />
-                </div>
+              <div>
+                <FieldLabel>{t('investors.abn')}</FieldLabel>
+                <input className={inputClassName} {...form.register('abn')} />
+                <FieldError message={fieldErrors.abn} />
               </div>
               <div>
+                <FieldLabel>{t('investors.acn')}</FieldLabel>
+                <input className={inputClassName} {...form.register('acn')} />
+                <FieldError message={fieldErrors.acn} />
+              </div>
+              <div className="sm:col-span-2">
                 <FieldLabel required>{t('investors.residence')}</FieldLabel>
                 <input className={inputClassName} {...form.register('residence')} />
                 <FieldError message={fieldErrors.residence} />
@@ -226,15 +233,15 @@ export function InvestorsPage() {
           </section>
 
           <section>
-            <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
+            <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy sm:text-base">
               {t('investors.section2')}
             </h3>
             <p className="mb-2 text-xs text-slate-500">{t('selectAllThatApply')}</p>
-            <div className="flex flex-col gap-2">
+            <div className="grid gap-3 sm:grid-cols-3">
               {classifications.map((item) => (
                 <label
                   key={item.value}
-                  className="block rounded-xl border border-slate-200 bg-slate-50 p-3"
+                  className="block rounded-xl border border-slate-200 bg-slate-50 p-3 sm:p-4"
                 >
                   <div className="flex items-start gap-2">
                     <input
@@ -257,17 +264,17 @@ export function InvestorsPage() {
           </section>
 
           <section>
-            <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
+            <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy sm:text-base">
               {t('investors.section3')}
             </h3>
-            <div className="grid gap-3">
+            <div className="grid gap-5 sm:grid-cols-2">
               <div>
                 <FieldLabel required>{t('investors.capitalAllocation')}</FieldLabel>
                 <div className="flex flex-col gap-2">
                   {capitalBands.map((band) => (
                     <label
                       key={band.value}
-                      className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700"
+                      className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700"
                     >
                       <input
                         type="radio"
@@ -286,7 +293,7 @@ export function InvestorsPage() {
                   {focusAreas.map((area) => (
                     <label
                       key={area.value}
-                      className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700"
+                      className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700"
                     >
                       <input type="radio" value={area.value} {...form.register('ecosystemFocus')} />
                       {t(area.labelKey)}
@@ -335,19 +342,10 @@ export function InvestorsPage() {
             </p>
           ) : null}
 
-          {success ? (
-            <div className="rounded-xl bg-emerald-50 p-4 text-center text-sm font-semibold text-emerald-700">
-              {t('investors.successTitle')}
-              <div className="mt-1 font-normal text-emerald-600">
-                {t('investors.successBody')}
-              </div>
-            </div>
-          ) : null}
-
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="w-full rounded-full bg-clox-navy py-3 text-base font-bold text-white shadow disabled:opacity-50"
+            className="w-full rounded-full bg-clox-navy py-3 text-base font-bold text-white shadow disabled:opacity-50 sm:mx-auto sm:block sm:max-w-md sm:py-3.5"
           >
             {mutation.isPending ? t('submitting') : t('investors.submit')}
           </button>
@@ -355,6 +353,13 @@ export function InvestorsPage() {
           <p className="text-center text-[0.7rem] text-slate-400">{t('investors.footerContact')}</p>
         </form>
       </div>
+
+      <SuccessModal
+        open={success}
+        title={t('investors.successTitle')}
+        body={t('investors.successBody')}
+        onClose={() => setSuccess(false)}
+      />
     </PublicShell>
   );
 }
