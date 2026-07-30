@@ -1,20 +1,23 @@
 import { createHttpClient, type AxiosInstance } from '@/lib/http/client';
+import { LOCALE_STORAGE_KEY } from '@/locales';
 
-const LOCALE_KEY = 'clox-public-locale';
-
-export const http: AxiosInstance = createHttpClient();
+export const http: AxiosInstance = createHttpClient({ baseURL: '/api' });
 
 http.interceptors.request.use((config) => {
   const locale =
-    (typeof localStorage !== 'undefined' && localStorage.getItem(LOCALE_KEY)) ||
-    import.meta.env.VITE_DEFAULT_LOCALE ||
+    (typeof localStorage !== 'undefined' && localStorage.getItem(LOCALE_STORAGE_KEY)) ||
+    process.env.NEXT_PUBLIC_DEFAULT_LOCALE ||
     'en';
 
   config.headers.set('Accept-Language', locale);
   config.headers.set('X-Client-App', 'clox-web');
-  config.headers.set('X-Request-Id', crypto.randomUUID());
+  config.headers.set(
+    'X-Request-Id',
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}`,
+  );
 
-  // Public forms: never cache POST responses.
   if ((config.method ?? 'get').toLowerCase() !== 'get') {
     config.headers.set('Cache-Control', 'no-store');
   }

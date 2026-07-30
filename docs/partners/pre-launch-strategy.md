@@ -50,7 +50,7 @@ The official PDFs show they are **different products**:
 | `dev.clox.com.au` | Super Admin PWA — login, dashboards, queues |
 | `api.clox.com.au` | NestJS API `/v1/*` |
 
-Local: `web` :5173 · `admin` :5174 · `api` :3000
+Local: `web` :5173 (Next.js) · `admin` :5174 · `api` :3000
 
 ---
 

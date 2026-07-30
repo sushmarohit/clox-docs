@@ -32,7 +32,8 @@ Copy from `.env.example`. Critical values:
 - `SMTP_*` + `MAIL_FROM` — Gmail or Workspace for OTP + lead alerts
 - `NOTIFY_EMAIL` — Super Admin inbox
 - `INVEST_NOTIFY_EMAIL` — optional CC for investor leads (`invest@clox.com.au`)
-- Public/admin Vite: `VITE_API_BASE_URL=https://api.clox.com.au/v1`
+- Public web (Next.js): `SITE_URL=https://clox.com.au`, `API_BASE_URL=https://api.clox.com.au/v1`, optional `AI_PROVIDER` / provider keys
+- Admin Vite: `VITE_API_BASE_URL=https://api.clox.com.au/v1`
 
 Never commit real secrets.
 
@@ -40,13 +41,14 @@ Never commit real secrets.
 
 1. Provision Postgres; run `prisma migrate deploy` + seed Super Admin
 2. Deploy API behind TLS; health check `/v1/health`
-3. Build & deploy `web` and `admin` static assets (or container) to their hosts
+3. Build & deploy `web` (Next.js Node/server or container) and `admin` static assets to their hosts
 4. Point DNS A/AAAA (or CNAME) for the three hostnames
-5. Verify CORS from both frontends
+5. Verify public lead proxies (`/api/leads/*`) and CORS for admin
 6. Request OTP to seeded Super Admin email; complete login on `dev.clox.com.au`
 7. Submit one registry, one EOI, one investor lead; confirm admin queues + email notify
 8. Export CSV; confirm audit log entries
-9. Client UAT sign-off
+9. Verify PWA install/offline shell, `/llms.txt`, and site guide with `AI_PROVIDER=mock` or a configured provider
+10. Client UAT sign-off
 
 ## CI
 

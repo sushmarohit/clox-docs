@@ -22,7 +22,7 @@ test.describe('Lead submit (API-backed)', () => {
     test.skip(!(await apiHealthy()), 'API/database unavailable — skipping submit flow');
 
     const stamp = Date.now();
-    await page.goto('/partner/eoi');
+    await page.goto('/en/partner/eoi');
 
     await page.locator('input[type="radio"][value="state_master"]').check();
     await fieldInput(page, 'Target State / Region').fill('VIC');

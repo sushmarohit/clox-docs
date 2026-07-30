@@ -21,7 +21,7 @@ export default defineConfig({
     {
       name: 'web',
       use: { ...devices['Desktop Chrome'], baseURL: WEB_URL },
-      testMatch: /public|lead-submit/,
+      testMatch: /public|lead-submit|seo-pwa-chat/,
     },
     {
       name: 'admin',
@@ -31,10 +31,10 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: 'npm --prefix ../web run dev -- --host 127.0.0.1 --port 5173',
+      command: 'npm --prefix ../web run dev',
       url: WEB_URL,
       reuseExistingServer: !process.env.CI,
-      timeout: 120_000,
+      timeout: 180_000,
     },
     {
       command: 'npm --prefix ../admin run dev -- --host 127.0.0.1 --port 5174',

@@ -35,11 +35,3 @@ export function submitInvestorLead(
     })
     .then((res) => res.data);
 }
-
-export function getPublicHealth(options?: { signal?: AbortSignal }) {
-  return http
-    .get<{ status: string; database: string; service: string }>('/health', {
-      signal: options?.signal,
-    })
-    .then((res) => res.data);
-}

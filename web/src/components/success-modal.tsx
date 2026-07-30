@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +31,7 @@ export function SuccessModal({ open, title, body, onClose }: SuccessModalProps) 
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || typeof document === 'undefined') return null;
 
   return createPortal(
     <div

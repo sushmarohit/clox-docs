@@ -1,9 +1,12 @@
+'use client';
+
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
   children: ReactNode;
   title?: string;
+  homeHref?: string;
 };
 
 type State = {
@@ -13,7 +16,7 @@ type State = {
 function ErrorFallback({
   title,
   onRetry,
-  homeHref = '/',
+  homeHref = '/en',
 }: {
   title?: string;
   onRetry: () => void;
@@ -67,6 +70,7 @@ export class ErrorBoundary extends Component<Props, State> {
     return (
       <ErrorFallback
         title={this.props.title}
+        homeHref={this.props.homeHref}
         onRetry={() => this.setState({ error: null })}
       />
     );

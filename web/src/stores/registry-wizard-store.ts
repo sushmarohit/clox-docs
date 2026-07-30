@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -23,3 +26,14 @@ export const useRegistryWizardStore = create<RegistryWizardState>()(
     { name: 'clox-registry-wizard' },
   ),
 );
+
+/** Avoid SSR/client mismatch for persisted wizard state. */
+export function useRegistryWizardHydrated() {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    const finish = () => setHydrated(true);
+    finish();
+    return useRegistryWizardStore.persist.onFinishHydration(finish);
+  }, []);
+  return hydrated;
+}

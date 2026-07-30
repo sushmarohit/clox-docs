@@ -1,5 +1,4 @@
 import axios, { AxiosError, isAxiosError, type AxiosInstance } from 'axios';
-import { i18n } from '@/lib/i18n';
 
 export class ApiError extends Error {
   status: number;
@@ -35,7 +34,7 @@ export function getErrorDetail(error: unknown): string {
     return error.message;
   }
   if (error instanceof Error) return error.message;
-  return i18n.t('unexpectedError');
+  return 'Unexpected error';
 }
 
 export function toApiError(error: unknown): ApiError {
@@ -58,7 +57,7 @@ export function createHttpClient(options?: {
   withCredentials?: boolean;
 }): AxiosInstance {
   const client = axios.create({
-    baseURL: options?.baseURL ?? import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000/v1',
+    baseURL: options?.baseURL ?? '/api',
     timeout: options?.timeoutMs ?? 30_000,
     withCredentials: options?.withCredentials ?? false,
     headers: {

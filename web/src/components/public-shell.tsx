@@ -1,26 +1,31 @@
+'use client';
+
 import type { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import { useLocaleParam } from '@/lib/use-locale-param';
 
 export function PublicShell({ children }: { children: ReactNode }) {
   const { t } = useTranslation('common');
+  const locale = useLocaleParam();
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-clox-navy text-white">
+      <div className="pointer-events-none absolute inset-0 clox-hero-backdrop opacity-95" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40"
+        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-35"
         style={{ backgroundImage: "url('/brand/back.jpeg')" }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-clox-navy/70 via-clox-navy/85 to-clox-navy" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-clox-navy/55 via-clox-navy/82 to-clox-navy" />
 
       <header className="relative z-10 border-b border-white/10 bg-clox-navy/80 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4 sm:h-16 sm:px-6 lg:max-w-4xl">
-          <Link to="/">
+          <Link href={`/${locale}`}>
             <img src="/brand/logo.png" alt="CLOX" className="h-9 w-auto sm:h-10" />
           </Link>
-          <LanguageSwitcher />
+          <LanguageSwitcher className="text-white" />
         </div>
       </header>
 
@@ -30,11 +35,11 @@ export function PublicShell({ children }: { children: ReactNode }) {
 
       <footer className="relative z-10 mx-auto max-w-3xl px-4 pb-8 text-center text-[0.7rem] text-white/50 sm:px-6 lg:max-w-4xl">
         {t('footerRights')} ·{' '}
-        <Link to="/privacy" className="underline-offset-2 hover:underline">
+        <Link href={`/${locale}/privacy`} className="underline-offset-2 hover:underline">
           {t('shell.privacyShort')}
         </Link>{' '}
         ·{' '}
-        <Link to="/terms" className="underline-offset-2 hover:underline">
+        <Link href={`/${locale}/terms`} className="underline-offset-2 hover:underline">
           {t('shell.termsShort')}
         </Link>
       </footer>

@@ -8,32 +8,25 @@ import {
   type AppLocale,
 } from '@/locales';
 
-function readStoredLocale(): AppLocale {
-  if (typeof localStorage === 'undefined') return defaultLocale;
-  const stored = localStorage.getItem(LOCALE_STORAGE_KEY);
-  return stored === 'ru' || stored === 'en' ? stored : defaultLocale;
+export function createAppI18n(locale: AppLocale) {
+  const instance = i18n.createInstance();
+  void instance.use(initReactI18next).init({
+    lng: locale,
+    fallbackLng: defaultLocale,
+    ns: ['common'],
+    defaultNS: 'common',
+    resources: {
+      en: { common: enCommon },
+      ru: { common: ruCommon },
+    },
+    interpolation: {
+      escapeValue: false,
+    },
+  });
+  return instance;
 }
 
-const initialLocale =
-  (import.meta.env.VITE_DEFAULT_LOCALE as AppLocale | undefined) || readStoredLocale();
-
-void i18n.use(initReactI18next).init({
-  lng: initialLocale,
-  fallbackLng: defaultLocale,
-  ns: ['common'],
-  defaultNS: 'common',
-  resources: {
-    en: { common: enCommon },
-    ru: { common: ruCommon },
-  },
-  interpolation: {
-    escapeValue: false,
-  },
-});
-
-export function setAppLocale(locale: AppLocale) {
+export function persistLocale(locale: AppLocale) {
+  if (typeof localStorage === 'undefined') return;
   localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-  void i18n.changeLanguage(locale);
 }
-
-export { i18n };

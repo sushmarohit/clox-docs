@@ -53,7 +53,7 @@ This plan ships **Pre-Launch (Phase 0)** first, on foundations that **M0–M12 r
 ```
 clox/
 ├── api/                     # NestJS + Prisma (npm)
-├── web/                     # Public React PWA — registry, EOI, investors
+├── web/                     # Public Next.js PWA — registry, EOI, investors, SEO/RAG
 ├── admin/                   # Super Admin React PWA
 ├── docs/
 ├── Pre-Launch/              # Legacy static HTML (reference; investor HTML is wrong vs PDF)
@@ -72,7 +72,7 @@ clox/
 
 | Environment | Public web | Admin web | API |
 |-------------|------------|-----------|-----|
-| Local | `localhost:5173` | `localhost:5174` | `localhost:3000` |
+| Local | `localhost:5173` (Next.js) | `localhost:5174` | `localhost:3000` |
 | Dev | `clox.com.au` or `www` (static/CDN) | `dev.clox.com.au` | `api.clox.com.au` |
 | Staging | same pattern | `staging-admin.clox.com.au` | `staging-api.clox.com.au` |
 | Prod | `clox.com.au` | `admin.clox.com.au` | `api.clox.com.au` |
