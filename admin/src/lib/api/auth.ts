@@ -12,6 +12,7 @@ export function requestOtp(payload: OtpRequestInput, options?: { signal?: AbortS
   return publicHttp
     .post<{ ok: boolean; message: string }>('/auth/otp/request', payload, {
       signal: options?.signal,
+      timeout: 60_000,
     })
     .then((res) => res.data);
 }

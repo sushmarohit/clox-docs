@@ -94,19 +94,30 @@ export class AuthService {
       metadata: { email: admin.email },
     });
 
-    const mailResult = await this.notifications.sendOtpEmail({
-      to: admin.email,
-      code,
-      ttlMinutes,
-    });
-
-    if (mailResult.skipped) {
-      if (this.config.get('NODE_ENV', { infer: true }) !== 'production') {
-        this.logger.warn(`DEV OTP for ${admin.email}: ${code}`);
-      }
-    } else {
-      this.logger.log(`OTP email accepted by SMTP for ${admin.email}`);
-    }
+    // Don't block the HTTP response on SMTP (Gmail from Render can take many seconds).
+    void this.notifications
+      .sendOtpEmail({
+        to: admin.email,
+        code,
+        ttlMinutes,
+      })
+      .then((mailResult) => {
+        if (mailResult.skipped) {
+          if (this.config.get('NODE_ENV', { infer: true }) !== 'production') {
+            this.logger.warn(`DEV OTP for ${admin.email}: ${code}`);
+          } else {
+            this.logger.warn(`OTP email skipped (SMTP not configured) for ${admin.email}`);
+          }
+          return;
+        }
+        this.logger.log(`OTP email accepted by SMTP for ${admin.email}`);
+      })
+      .catch((error: unknown) => {
+        this.logger.error(
+          `Failed to send OTP email for ${admin.email}`,
+          error instanceof Error ? error.stack : String(error),
+        );
+      });
 
     return generic;
   }
