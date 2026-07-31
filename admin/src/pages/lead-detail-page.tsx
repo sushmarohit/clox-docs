@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  AdminShell,
   fieldClassName,
   primaryButtonClassName,
   secondaryButtonClassName,
@@ -63,7 +62,7 @@ export function LeadDetailPage() {
   });
 
   return (
-    <AdminShell>
+    <div>
       <Link to="/leads" className="text-sm font-medium text-clox-orange hover:underline">
         ← {t('admin.leadsTitle')}
       </Link>
@@ -85,10 +84,10 @@ export function LeadDetailPage() {
               <p className="text-xs font-semibold uppercase tracking-wide text-clox-orange">
                 {formatLeadType(lead.type)}
               </p>
-              <h1 className="mt-2 text-3xl font-bold">
+              <h1 className="mt-2 break-words text-2xl font-bold sm:text-3xl">
                 {lead.companyName || lead.email}
               </h1>
-              <p className="mt-1 text-slate-400">{lead.email}</p>
+              <p className="mt-1 break-all text-slate-400">{lead.email}</p>
               <dl className="mt-5 grid gap-3 sm:grid-cols-2 text-sm">
                 <div>
                   <dt className="text-slate-500">{t('admin.phone')}</dt>
@@ -123,7 +122,7 @@ export function LeadDetailPage() {
 
             <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <h2 className="text-lg font-semibold">{t('admin.payload')}</h2>
-              <pre className="mt-3 max-h-96 overflow-auto rounded-xl bg-slate-950/80 p-3 text-xs text-slate-300">
+              <pre className="mt-3 max-h-96 overflow-x-auto overflow-y-auto rounded-xl bg-slate-950/80 p-3 text-xs text-slate-300 whitespace-pre-wrap break-words sm:whitespace-pre">
                 {JSON.stringify(lead.payload ?? {}, null, 2)}
               </pre>
             </section>
@@ -248,6 +247,6 @@ export function LeadDetailPage() {
           </div>
         </div>
       ) : null}
-    </AdminShell>
+    </div>
   );
 }

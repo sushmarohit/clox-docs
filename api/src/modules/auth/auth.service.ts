@@ -67,6 +67,11 @@ export class AuthService {
     };
 
     if (!admin || !admin.active) {
+      if (this.config.get('NODE_ENV', { infer: true }) !== 'production') {
+        this.logger.warn(
+          `OTP requested for unknown/inactive admin email: ${input.email} (no email sent)`,
+        );
+      }
       return generic;
     }
 
@@ -95,8 +100,12 @@ export class AuthService {
       ttlMinutes,
     });
 
-    if (mailResult.skipped && this.config.get('NODE_ENV', { infer: true }) !== 'production') {
-      this.logger.warn(`DEV OTP for ${admin.email}: ${code}`);
+    if (mailResult.skipped) {
+      if (this.config.get('NODE_ENV', { infer: true }) !== 'production') {
+        this.logger.warn(`DEV OTP for ${admin.email}: ${code}`);
+      }
+    } else {
+      this.logger.log(`OTP email accepted by SMTP for ${admin.email}`);
     }
 
     return generic;

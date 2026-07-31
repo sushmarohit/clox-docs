@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  AdminShell,
   fieldClassName,
   primaryButtonClassName,
   secondaryButtonClassName,
@@ -77,10 +76,10 @@ export function LeadsPage() {
   }
 
   return (
-    <AdminShell>
+    <div>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold">{t('admin.leadsTitle')}</h1>
+          <h1 className="text-2xl font-bold sm:text-3xl">{t('admin.leadsTitle')}</h1>
           <p className="mt-2 text-sm text-slate-400">{t('totalCount', { count: total })}</p>
         </div>
         <button
@@ -145,61 +144,102 @@ export function LeadsPage() {
       ) : null}
 
       {!leadsQuery.isLoading && !leadsQuery.isError ? (
-        <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-white/5 text-slate-400">
-              <tr>
-                <th className="px-3 py-2 font-medium">{t('admin.colLead')}</th>
-                <th className="px-3 py-2 font-medium">{t('admin.colType')}</th>
-                <th className="px-3 py-2 font-medium">{t('admin.colStatus')}</th>
-                <th className="px-3 py-2 font-medium">{t('admin.colLocation')}</th>
-                <th className="px-3 py-2 font-medium">{t('admin.colCreated')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="p-0">
-                    <EmptyBlock
-                      title={t('admin.noLeads')}
-                      description={t('admin.noLeadsHint')}
-                    />
-                  </td>
-                </tr>
-              ) : (
-                items.map((lead) => (
-                  <tr key={lead.id} className="border-t border-white/10 hover:bg-white/5">
-                    <td className="px-3 py-3">
-                      <Link
-                        to={`/leads/${lead.id}`}
-                        className="font-medium text-white hover:text-clox-orange"
-                      >
-                        {lead.companyName || lead.email}
-                        {lead.priority ? (
-                          <span className="ml-2 text-xs text-clox-orange">★</span>
+        <>
+          {items.length === 0 ? (
+            <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
+              <EmptyBlock
+                title={t('admin.noLeads')}
+                description={t('admin.noLeadsHint')}
+              />
+            </div>
+          ) : (
+            <>
+              {/* Mobile cards */}
+              <div className="mt-6 space-y-3 md:hidden">
+                {items.map((lead) => (
+                  <Link
+                    key={lead.id}
+                    to={`/leads/${lead.id}`}
+                    className="block rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/5"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate font-medium text-white">
+                          {lead.companyName || lead.email}
+                          {lead.priority ? (
+                            <span className="ml-2 text-xs text-clox-orange">★</span>
+                          ) : null}
+                        </p>
+                        <p className="mt-0.5 truncate text-xs text-slate-500">{lead.email}</p>
+                        {lead.phone ? (
+                          <p className="truncate text-xs text-slate-500">{lead.phone}</p>
                         ) : null}
-                      </Link>
-                      <div className="text-xs text-slate-500">{lead.email}</div>
-                      {lead.phone ? (
-                        <div className="text-xs text-slate-500">{lead.phone}</div>
-                      ) : null}
-                    </td>
-                    <td className="px-3 py-3 text-slate-300">{formatLeadType(lead.type)}</td>
-                    <td className="px-3 py-3 text-slate-300">{formatLeadStatus(lead.status)}</td>
-                    <td className="px-3 py-3 text-slate-400">
-                      {[lead.state, lead.territory].filter(Boolean).join(' · ') || t('dash')}
-                    </td>
-                    <td className="px-3 py-3 text-slate-400">{formatDateTime(lead.createdAt)}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                      </div>
+                      <span className="shrink-0 rounded-md bg-white/5 px-2 py-1 text-xs text-slate-300">
+                        {formatLeadStatus(lead.status)}
+                      </span>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-400">
+                      <span>{formatLeadType(lead.type)}</span>
+                      <span>
+                        {[lead.state, lead.territory].filter(Boolean).join(' · ') || t('dash')}
+                      </span>
+                      <span>{formatDateTime(lead.createdAt)}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Desktop table */}
+              <div className="mt-6 hidden overflow-x-auto rounded-2xl border border-white/10 md:block">
+                <table className="min-w-[44rem] w-full text-left text-sm">
+                  <thead className="bg-white/5 text-slate-400">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">{t('admin.colLead')}</th>
+                      <th className="px-3 py-2 font-medium">{t('admin.colType')}</th>
+                      <th className="px-3 py-2 font-medium">{t('admin.colStatus')}</th>
+                      <th className="px-3 py-2 font-medium">{t('admin.colLocation')}</th>
+                      <th className="px-3 py-2 font-medium">{t('admin.colCreated')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {items.map((lead) => (
+                      <tr key={lead.id} className="border-t border-white/10 hover:bg-white/5">
+                        <td className="px-3 py-3">
+                          <Link
+                            to={`/leads/${lead.id}`}
+                            className="font-medium text-white hover:text-clox-orange"
+                          >
+                            {lead.companyName || lead.email}
+                            {lead.priority ? (
+                              <span className="ml-2 text-xs text-clox-orange">★</span>
+                            ) : null}
+                          </Link>
+                          <div className="text-xs text-slate-500">{lead.email}</div>
+                          {lead.phone ? (
+                            <div className="text-xs text-slate-500">{lead.phone}</div>
+                          ) : null}
+                        </td>
+                        <td className="px-3 py-3 text-slate-300">{formatLeadType(lead.type)}</td>
+                        <td className="px-3 py-3 text-slate-300">{formatLeadStatus(lead.status)}</td>
+                        <td className="px-3 py-3 text-slate-400">
+                          {[lead.state, lead.territory].filter(Boolean).join(' · ') || t('dash')}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-3 text-slate-400">
+                          {formatDateTime(lead.createdAt)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </>
       ) : null}
 
       {totalPages > 1 ? (
-        <div className="mt-4 flex items-center justify-between text-sm text-slate-400">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-400">
           <button
             type="button"
             className={secondaryButtonClassName}
@@ -208,7 +248,9 @@ export function LeadsPage() {
           >
             {t('previous')}
           </button>
-          <span>{t('pageOf', { page, totalPages })}</span>
+          <span className="order-first w-full text-center sm:order-none sm:w-auto">
+            {t('pageOf', { page, totalPages })}
+          </span>
           <button
             type="button"
             className={secondaryButtonClassName}
@@ -219,6 +261,6 @@ export function LeadsPage() {
           </button>
         </div>
       ) : null}
-    </AdminShell>
+    </div>
   );
 }

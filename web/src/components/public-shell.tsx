@@ -20,7 +20,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-clox-navy/55 via-clox-navy/82 to-clox-navy" />
 
-      <header className="relative z-10 border-b border-white/10 bg-clox-navy/80 backdrop-blur">
+      <header className="relative z-50 border-b border-white/10 bg-clox-navy/80 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4 sm:h-16 sm:px-6 lg:max-w-4xl">
           <Link href={`/${locale}`}>
             <img src="/brand/logo.png" alt="CLOX" className="h-9 w-auto sm:h-10" />
@@ -29,7 +29,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto w-full max-w-3xl px-4 py-6 pb-12 sm:px-6 sm:py-10 lg:max-w-4xl">
+      <main className="relative z-0 mx-auto w-full max-w-3xl px-4 py-6 pb-12 sm:px-6 sm:py-10 lg:max-w-4xl">
         {children}
       </main>
 

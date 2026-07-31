@@ -27,7 +27,7 @@ export const envSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   MAIL_FROM: z.string().optional(),
-  NOTIFY_EMAIL: z.string().email().default('abc@example.com'),
+  NOTIFY_EMAIL: z.string().email().optional(),
   INVEST_NOTIFY_EMAIL: z.string().email().optional(),
   ENABLE_OPENAPI: booleanFromString.default(false),
   SEED_SUPER_ADMIN_EMAIL: z.string().email().default('abc@example.com'),

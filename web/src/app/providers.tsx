@@ -1,7 +1,7 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { createAppI18n } from '@/lib/i18n';
 import type { AppLocale } from '@/locales';
@@ -26,6 +26,13 @@ export function AppProviders({
       }),
   );
   const [i18n] = useState(() => createAppI18n(locale));
+
+  // Next soft-nav keeps this provider mounted across /en ↔ /ru; sync i18n to the URL locale.
+  useEffect(() => {
+    if (i18n.language !== locale) {
+      void i18n.changeLanguage(locale);
+    }
+  }, [i18n, locale]);
 
   return (
     <I18nextProvider i18n={i18n}>

@@ -85,7 +85,7 @@ export function LoginPage() {
                 type="email"
                 autoComplete="email"
                 className={fieldClassName}
-                placeholder="abc@example.com"
+                placeholder="super-admin@email.com"
                 {...emailForm.register('email', { required: true })}
               />
             </div>

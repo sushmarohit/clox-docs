@@ -23,7 +23,7 @@ export default async function LocaleLayout({
   const locale = raw as AppLocale;
 
   return (
-    <AppProviders key={locale} locale={locale}>
+    <AppProviders locale={locale}>
       <LocaleHtmlLang locale={locale} />
       <ErrorBoundary homeHref={`/${locale}`}>
         {children}

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { AdminShell } from '@/components/admin-shell';
 import { useAuthStore } from '@/stores/auth-store';
 import { DashboardPage } from '@/pages/dashboard-page';
 import { AuditPage } from '@/pages/audit-page';
@@ -15,42 +16,24 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
   return children;
 }
 
+function ProtectedShell() {
+  return (
+    <ProtectedRoute>
+      <AdminShell />
+    </ProtectedRoute>
+  );
+}
+
 export function AppRouter() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/leads"
-        element={
-          <ProtectedRoute>
-            <LeadsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/leads/:id"
-        element={
-          <ProtectedRoute>
-            <LeadDetailPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/audit"
-        element={
-          <ProtectedRoute>
-            <AuditPage />
-          </ProtectedRoute>
-        }
-      />
+      <Route element={<ProtectedShell />}>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/leads" element={<LeadsPage />} />
+        <Route path="/leads/:id" element={<LeadDetailPage />} />
+        <Route path="/audit" element={<AuditPage />} />
+      </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

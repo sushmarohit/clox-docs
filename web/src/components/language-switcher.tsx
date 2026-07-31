@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { persistLocale } from '@/lib/i18n';
+import { useLocaleParam } from '@/lib/use-locale-param';
 import type { AppLocale } from '@/locales';
 import { isAppLocale } from '@/locales';
 
@@ -25,7 +26,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
   const { i18n, t } = useTranslation('common');
   const pathname = usePathname() || '/en';
   const router = useRouter();
-  const current = (i18n.language?.startsWith('ru') ? 'ru' : 'en') as AppLocale;
+  const current = useLocaleParam();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -110,7 +111,11 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
                     ? 'bg-slate-100 font-bold text-clox-navy'
                     : 'text-clox-ink hover:bg-clox-surface hover:text-clox-orange'
                 }`}
-                onClick={() => switchTo(option.locale)}
+                onMouseDown={(event) => {
+                  // Run before document mousedown-outside closes the menu.
+                  event.preventDefault();
+                  switchTo(option.locale);
+                }}
               >
                 {option.label}
               </button>

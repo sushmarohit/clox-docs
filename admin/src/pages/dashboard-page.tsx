@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AdminShell } from '@/components/admin-shell';
 import { EmptyBlock, LoadingBlock } from '@/components/status-blocks';
 import { getDashboardStats, getErrorDetail } from '@/lib/api';
 import {
@@ -31,10 +30,10 @@ export function DashboardPage() {
   const byStatus = query.data?.byStatus ?? {};
 
   return (
-    <AdminShell>
+    <div>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold">{t('admin.dashboardTitle')}</h1>
+          <h1 className="text-2xl font-bold sm:text-3xl">{t('admin.dashboardTitle')}</h1>
           <p className="mt-2 text-sm text-slate-400">{t('admin.dashboardSubtitle')}</p>
         </div>
         <Link
@@ -75,48 +74,80 @@ export function DashboardPage() {
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             <section className="lg:col-span-2">
               <h2 className="text-lg font-semibold">{t('admin.recentLeads')}</h2>
-              <div className="mt-3 overflow-hidden rounded-2xl border border-white/10">
-                <table className="min-w-full text-left text-sm">
-                  <thead className="bg-white/5 text-slate-400">
-                    <tr>
-                      <th className="px-3 py-2 font-medium">{t('admin.colCompany')}</th>
-                      <th className="px-3 py-2 font-medium">{t('admin.colType')}</th>
-                      <th className="px-3 py-2 font-medium">{t('admin.colStatus')}</th>
-                      <th className="px-3 py-2 font-medium">{t('admin.colCreated')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recentLeads.length === 0 ? (
-                      <tr>
-                        <td colSpan={4} className="p-0">
-                          <EmptyBlock
-                            title={t('admin.noLeadsYet')}
-                            description={t('admin.noLeadsYetHint')}
-                          />
-                        </td>
-                      </tr>
-                    ) : (
-                      recentLeads.map((lead) => (
-                        <tr key={lead.id} className="border-t border-white/10 hover:bg-white/5">
-                          <td className="px-3 py-2.5">
-                            <Link to={`/leads/${lead.id}`} className="font-medium text-white hover:text-clox-orange">
+
+              {recentLeads.length === 0 ? (
+                <div className="mt-3 overflow-hidden rounded-2xl border border-white/10">
+                  <EmptyBlock
+                    title={t('admin.noLeadsYet')}
+                    description={t('admin.noLeadsYetHint')}
+                  />
+                </div>
+              ) : (
+                <>
+                  <div className="mt-3 space-y-3 md:hidden">
+                    {recentLeads.map((lead) => (
+                      <Link
+                        key={lead.id}
+                        to={`/leads/${lead.id}`}
+                        className="block rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/5"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="truncate font-medium text-white">
                               {lead.companyName || lead.email}
-                            </Link>
-                            <div className="text-xs text-slate-500">{lead.email}</div>
-                          </td>
-                          <td className="px-3 py-2.5 text-slate-300">{formatLeadType(lead.type)}</td>
-                          <td className="px-3 py-2.5 text-slate-300">
+                            </p>
+                            <p className="mt-0.5 truncate text-xs text-slate-500">{lead.email}</p>
+                          </div>
+                          <span className="shrink-0 rounded-md bg-white/5 px-2 py-1 text-xs text-slate-300">
                             {formatLeadStatus(lead.status)}
-                          </td>
-                          <td className="px-3 py-2.5 text-slate-400">
-                            {formatDateTime(lead.createdAt)}
-                          </td>
+                          </span>
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-400">
+                          <span>{formatLeadType(lead.type)}</span>
+                          <span>{formatDateTime(lead.createdAt)}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+
+                  <div className="mt-3 hidden overflow-x-auto rounded-2xl border border-white/10 md:block">
+                    <table className="min-w-[36rem] w-full text-left text-sm">
+                      <thead className="bg-white/5 text-slate-400">
+                        <tr>
+                          <th className="px-3 py-2 font-medium">{t('admin.colCompany')}</th>
+                          <th className="px-3 py-2 font-medium">{t('admin.colType')}</th>
+                          <th className="px-3 py-2 font-medium">{t('admin.colStatus')}</th>
+                          <th className="px-3 py-2 font-medium">{t('admin.colCreated')}</th>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                      </thead>
+                      <tbody>
+                        {recentLeads.map((lead) => (
+                          <tr key={lead.id} className="border-t border-white/10 hover:bg-white/5">
+                            <td className="px-3 py-2.5">
+                              <Link
+                                to={`/leads/${lead.id}`}
+                                className="font-medium text-white hover:text-clox-orange"
+                              >
+                                {lead.companyName || lead.email}
+                              </Link>
+                              <div className="text-xs text-slate-500">{lead.email}</div>
+                            </td>
+                            <td className="px-3 py-2.5 text-slate-300">
+                              {formatLeadType(lead.type)}
+                            </td>
+                            <td className="px-3 py-2.5 text-slate-300">
+                              {formatLeadStatus(lead.status)}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-2.5 text-slate-400">
+                              {formatDateTime(lead.createdAt)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
             </section>
 
             <section>
@@ -142,6 +173,6 @@ export function DashboardPage() {
           </div>
         </>
       ) : null}
-    </AdminShell>
+    </div>
   );
 }

@@ -141,7 +141,7 @@ export class LeadsService {
       })
       .catch((error: unknown) => {
         this.logger.error(
-          `Failed to notify Super Admin for registry lead ${lead.id}`,
+          `Failed to send confirmation email for registry lead ${lead.id}`,
           error instanceof Error ? error.stack : String(error),
         );
       });
@@ -222,7 +222,7 @@ export class LeadsService {
       })
       .catch((error: unknown) => {
         this.logger.error(
-          `Failed to notify Super Admin for EOI lead ${lead.id}`,
+          `Failed to send confirmation email for EOI lead ${lead.id}`,
           error instanceof Error ? error.stack : String(error),
         );
       });
@@ -297,7 +297,7 @@ export class LeadsService {
       })
       .catch((error: unknown) => {
         this.logger.error(
-          `Failed to notify Super Admin for investor lead ${lead.id}`,
+          `Failed to send confirmation email for investor lead ${lead.id}`,
           error instanceof Error ? error.stack : String(error),
         );
       });
