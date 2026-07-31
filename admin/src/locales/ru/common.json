@@ -68,6 +68,8 @@
     "useDifferentEmail": "Использовать другой email",
     "loginCode": "Код входа",
     "codeSentTo": "Код отправлен на",
+    "debugOtpLabel": "Тестовый OTP (временно)",
+    "debugOtpHint": "Почта на этом хосте недоступна — используйте этот код для входа.",
     "dashboardTitle": "Дашборд пре-запуска",
     "dashboardSubtitle": "Просмотр реестра, партнёрских EOI и инвесторских заявок.",
     "openQueue": "Открыть очередь лидов",

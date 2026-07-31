@@ -119,6 +119,11 @@ export class AuthService {
         );
       });
 
+    if (this.config.get('EXPOSE_OTP_IN_RESPONSE', { infer: true })) {
+      this.logger.warn(`EXPOSE_OTP_IN_RESPONSE is on — returning OTP in API body for ${admin.email}`);
+      return { ...generic, debugCode: code };
+    }
+
     return generic;
   }
 

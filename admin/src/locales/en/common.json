@@ -68,6 +68,8 @@
     "useDifferentEmail": "Use a different email",
     "loginCode": "Login code",
     "codeSentTo": "Code sent to",
+    "debugOtpLabel": "Test OTP (temporary)",
+    "debugOtpHint": "Email delivery is unavailable on this host — use this code to sign in.",
     "dashboardTitle": "Pre-launch dashboard",
     "dashboardSubtitle": "Review registry, partner EOI, and investor submissions.",
     "openQueue": "Open lead queue",

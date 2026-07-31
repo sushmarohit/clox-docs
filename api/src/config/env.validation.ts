@@ -30,6 +30,8 @@ export const envSchema = z.object({
   NOTIFY_EMAIL: z.string().email().optional(),
   INVEST_NOTIFY_EMAIL: z.string().email().optional(),
   ENABLE_OPENAPI: booleanFromString.default(false),
+  /** TEMP testing: include OTP in API response and show on admin login. Turn off for real use. */
+  EXPOSE_OTP_IN_RESPONSE: booleanFromString.default(true),
   SEED_SUPER_ADMIN_EMAIL: z.string().email().default('abc@example.com'),
   SEED_SUPER_ADMIN_NAME: z.string().default('CLOX Super Admin'),
   THROTTLE_TTL_MS: z.coerce.number().int().positive().default(60_000),

@@ -19,16 +19,19 @@ export function LoginPage() {
 
   const [step, setStep] = useState<'email' | 'otp'>('email');
   const [email, setEmail] = useState('');
+  const [debugCode, setDebugCode] = useState<string | null>(null);
 
   const emailForm = useForm<EmailForm>({ defaultValues: { email: '' } });
   const otpForm = useForm<OtpForm>({ defaultValues: { code: '' } });
 
   const requestMutation = useMutation({
     mutationFn: (payload: EmailForm) => requestOtp({ email: payload.email.trim() }),
-    onSuccess: (_data, variables) => {
+    onSuccess: (data, variables) => {
       setEmail(variables.email.trim().toLowerCase());
       setStep('otp');
-      otpForm.reset({ code: '' });
+      const code = data.debugCode?.trim() || null;
+      setDebugCode(code);
+      otpForm.reset({ code: code || '' });
     },
   });
 
@@ -105,6 +108,17 @@ export function LoginPage() {
             <p className="rounded-xl border border-white/10 bg-slate-900/60 px-3 py-2 text-sm text-slate-300">
               {t('admin.codeSentTo')} <span className="font-medium text-white">{email}</span>
             </p>
+            {debugCode ? (
+              <div className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-3 py-3 text-sm text-amber-100">
+                <p className="text-xs font-semibold uppercase tracking-wide text-amber-300/90">
+                  {t('admin.debugOtpLabel')}
+                </p>
+                <p className="mt-1 font-mono text-2xl font-bold tracking-[0.35em] text-white">
+                  {debugCode}
+                </p>
+                <p className="mt-1 text-xs text-amber-200/80">{t('admin.debugOtpHint')}</p>
+              </div>
+            ) : null}
             <div>
               <label className="mb-1.5 block text-sm font-medium text-slate-200">
                 {t('admin.loginCode')}
@@ -130,6 +144,7 @@ export function LoginPage() {
               className="w-full text-sm text-slate-400 hover:text-white"
               onClick={() => {
                 setStep('email');
+                setDebugCode(null);
                 requestMutation.reset();
                 verifyMutation.reset();
               }}
