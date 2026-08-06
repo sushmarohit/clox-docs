@@ -143,7 +143,7 @@ export function RegistryPage() {
         infraAcknowledged: values.infraAcknowledged,
         email: values.email,
         phone: values.phone,
-        locale: i18n.language?.startsWith('ru') ? ('ru' as const) : ('en' as const),
+        locale: i18n.language?.startsWith('hi') ? ('hi' as const) : ('en' as const),
         honeypot: values.honeypot,
       };
     }
@@ -159,7 +159,7 @@ export function RegistryPage() {
       infraAcknowledged: values.infraAcknowledged,
       email: values.email,
       phone: values.phone,
-      locale: i18n.language?.startsWith('ru') ? ('ru' as const) : ('en' as const),
+      locale: i18n.language?.startsWith('hi') ? ('hi' as const) : ('en' as const),
       honeypot: values.honeypot,
     };
   }

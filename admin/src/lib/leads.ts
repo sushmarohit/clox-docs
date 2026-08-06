@@ -82,7 +82,7 @@ export function formatDateTime(value: string | Date | null | undefined): string 
   if (!value) return i18n.t('dash');
   const date = typeof value === 'string' ? new Date(value) : value;
   if (Number.isNaN(date.getTime())) return i18n.t('dash');
-  const locale = i18n.language?.startsWith('ru') ? 'ru-RU' : 'en-AU';
+  const locale = i18n.language?.startsWith('hi') ? 'hi-IN' : 'en-AU';
   return new Intl.DateTimeFormat(locale, {
     dateStyle: 'medium',
     timeStyle: 'short',

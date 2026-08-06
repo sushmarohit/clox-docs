@@ -5,12 +5,12 @@ import type { AppLocale } from '@/locales';
 
 const options: { locale: AppLocale; label: string }[] = [
   { locale: 'en', label: 'English' },
-  { locale: 'ru', label: 'Русский (Russian)' },
+  { locale: 'hi', label: 'हिन्दी (Hindi)' },
 ];
 
 export function LanguageSwitcher({ className = '' }: { className?: string }) {
   const { i18n, t } = useTranslation('common');
-  const current = (i18n.language?.startsWith('ru') ? 'ru' : 'en') as AppLocale;
+  const current = (i18n.language?.startsWith('hi') ? 'hi' : 'en') as AppLocale;
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -60,7 +60,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
           <line x1="2" y1="12" x2="22" y2="12" />
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
         </svg>
-        <span>{current === 'ru' ? 'RU' : 'EN'}</span>
+        <span>{current === 'hi' ? 'HI' : 'EN'}</span>
         <svg
           width="14"
           height="14"

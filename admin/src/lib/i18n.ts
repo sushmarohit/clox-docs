@@ -3,15 +3,15 @@ import { initReactI18next } from 'react-i18next';
 import {
   defaultLocale,
   enCommon,
+  hiCommon,
   LOCALE_STORAGE_KEY,
-  ruCommon,
   type AppLocale,
 } from '@/locales';
 
 function readStoredLocale(): AppLocale {
   if (typeof localStorage === 'undefined') return defaultLocale;
   const stored = localStorage.getItem(LOCALE_STORAGE_KEY);
-  return stored === 'ru' || stored === 'en' ? stored : defaultLocale;
+  return stored === 'hi' || stored === 'en' ? stored : defaultLocale;
 }
 
 const initialLocale =
@@ -24,7 +24,7 @@ void i18n.use(initReactI18next).init({
   defaultNS: 'common',
   resources: {
     en: { common: enCommon },
-    ru: { common: ruCommon },
+    hi: { common: hiCommon },
   },
   interpolation: {
     escapeValue: false,

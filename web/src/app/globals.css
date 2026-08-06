@@ -29,7 +29,9 @@
     margin: 0;
     font-family:
       var(--font-poppins),
+      var(--font-noto-devanagari),
       Poppins,
+      'Noto Sans Devanagari',
       -apple-system,
       BlinkMacSystemFont,
       'Segoe UI',
@@ -61,7 +63,7 @@
   }
 
   .clox-nav-link {
-    @apply relative text-[1.05rem] font-medium text-white transition-colors duration-300;
+    @apply relative text-[1.05rem] font-medium text-clox-navy transition-colors duration-300;
   }
 
   .clox-nav-link::after {

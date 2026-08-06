@@ -3,8 +3,8 @@ import { initReactI18next } from 'react-i18next';
 import {
   defaultLocale,
   enCommon,
+  hiCommon,
   LOCALE_STORAGE_KEY,
-  ruCommon,
   type AppLocale,
 } from '@/locales';
 
@@ -17,7 +17,7 @@ export function createAppI18n(locale: AppLocale) {
     defaultNS: 'common',
     resources: {
       en: { common: enCommon },
-      ru: { common: ruCommon },
+      hi: { common: hiCommon },
     },
     interpolation: {
       escapeValue: false,

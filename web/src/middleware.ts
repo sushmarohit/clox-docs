@@ -36,6 +36,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Legacy Russian routes → Hindi
+  if (maybeLocale === 'ru') {
+    const url = request.nextUrl.clone();
+    const rest = segments.slice(1).join('/');
+    url.pathname = rest ? `/hi/${rest}` : '/hi';
+    return NextResponse.redirect(url);
+  }
+
   if (LEGACY_PATHS.has(pathname) || pathname === '') {
     const url = request.nextUrl.clone();
     url.pathname = pathname === '/' ? `/${defaultLocale}` : `/${defaultLocale}${pathname}`;

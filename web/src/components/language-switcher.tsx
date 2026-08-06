@@ -19,7 +19,7 @@ function swapLocaleInPath(pathname: string, locale: AppLocale) {
 
 const options: { locale: AppLocale; label: string }[] = [
   { locale: 'en', label: 'English' },
-  { locale: 'ru', label: 'Русский (Russian)' },
+  { locale: 'hi', label: 'हिन्दी (Hindi)' },
 ];
 
 export function LanguageSwitcher({ className = '' }: { className?: string }) {
@@ -57,7 +57,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
     <div ref={rootRef} className={`relative ${className}`}>
       <button
         type="button"
-        className="inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-white transition hover:text-clox-orange"
+        className="inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium transition hover:text-clox-orange"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={t('language')}
@@ -78,7 +78,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
           <line x1="2" y1="12" x2="22" y2="12" />
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
         </svg>
-        <span>{current === 'ru' ? 'RU' : 'EN'}</span>
+        <span>{current === 'hi' ? 'HI' : 'EN'}</span>
         <svg
           width="14"
           height="14"

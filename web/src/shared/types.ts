@@ -36,7 +36,7 @@ export type AdminRole = (typeof AdminRole)[keyof typeof AdminRole];
 
 export const Locale = {
   en: 'en',
-  ru: 'ru',
+  hi: 'hi',
 } as const;
 
 export type Locale = (typeof Locale)[keyof typeof Locale];
@@ -55,7 +55,7 @@ export const AuditAction = {
 export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction];
 
 const honeypotField = z.string().max(200).optional();
-const localeField = z.enum(['en', 'ru']).default('en');
+const localeField = z.enum(['en', 'hi']).default('en');
 const abnField = z
   .string()
   .trim()

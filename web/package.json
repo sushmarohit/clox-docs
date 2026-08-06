@@ -3,11 +3,11 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev -p 5173",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 5173",
+    "start": "next start",
     "lint": "tsc --noEmit",
-    "preview": "next start -p 5173"
+    "preview": "next start"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.4",

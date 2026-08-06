@@ -20,12 +20,16 @@ export function PublicShell({ children }: { children: ReactNode }) {
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-clox-navy/55 via-clox-navy/82 to-clox-navy" />
 
-      <header className="relative z-50 border-b border-white/10 bg-clox-navy/80 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4 sm:h-16 sm:px-6 lg:max-w-4xl">
-          <Link href={`/${locale}`}>
-            <img src="/brand/logo.png" alt="CLOX" className="h-9 w-auto sm:h-10" />
+      <header className="relative z-50 border-b border-slate-200/80 bg-white/95 shadow-[0_4px_24px_rgba(10,31,60,0.08)] backdrop-blur">
+        <div className="mx-auto flex h-[72px] max-w-3xl items-center justify-between px-4 sm:h-[84px] sm:px-6 lg:max-w-4xl lg:px-0">
+          <Link href={`/${locale}`} className="inline-flex shrink-0">
+            <img
+              src="/brand/clox_updated_logo.png"
+              alt="CLOX"
+              className="h-[52px] w-auto object-contain sm:h-[64px]"
+            />
           </Link>
-          <LanguageSwitcher className="text-white" />
+          <LanguageSwitcher className="text-clox-navy" />
         </div>
       </header>
 

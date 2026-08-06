@@ -27,7 +27,7 @@ export function AppProviders({
   );
   const [i18n] = useState(() => createAppI18n(locale));
 
-  // Next soft-nav keeps this provider mounted across /en ↔ /ru; sync i18n to the URL locale.
+  // Next soft-nav keeps this provider mounted across /en ↔ /hi; sync i18n to the URL locale.
   useEffect(() => {
     if (i18n.language !== locale) {
       void i18n.changeLanguage(locale);

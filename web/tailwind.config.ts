@@ -16,7 +16,9 @@ const config: Config = {
       fontFamily: {
         sans: [
           'var(--font-poppins)',
+          'var(--font-noto-devanagari)',
           'Poppins',
+          'Noto Sans Devanagari',
           '-apple-system',
           'BlinkMacSystemFont',
           'Segoe UI',

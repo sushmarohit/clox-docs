@@ -70,7 +70,7 @@ export function EoiPage() {
     const parsed = eoiLeadSchema.safeParse({
       ...values,
       role: values.role || undefined,
-      locale: i18n.language?.startsWith('ru') ? 'ru' : 'en',
+      locale: i18n.language?.startsWith('hi') ? 'hi' : 'en',
       acn: values.acn || undefined,
     });
 

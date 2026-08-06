@@ -8,7 +8,7 @@ import {
 } from '@/lib/ai/providers';
 
 export const chatRequestSchema = z.object({
-  locale: z.enum(['en', 'ru']).default('en'),
+  locale: z.enum(['en', 'hi']).default('en'),
   messages: z
     .array(
       z.object({
@@ -44,7 +44,7 @@ export function buildSystemPrompt(locale: AppLocale, context: string, weak: bool
     'Never collect or ask for personal lead details (email, phone, ABN, capital amounts).',
     'Never invent pricing, ETAs, matching, legal advice, or investment advice.',
     'If the passages are weak or insufficient, say you are unsure and link the most likely funnel.',
-    `Respond in ${locale === 'ru' ? 'Russian' : 'English'}.`,
+    `Respond in ${locale === 'hi' ? 'Hindi' : 'English'}.`,
     `Retrieval confidence: ${weak ? 'weak' : 'ok'}.`,
     'Approved passages:',
     context,
@@ -75,8 +75,8 @@ export function prepareChat(request: ChatRequest) {
     retrieval,
     fallback:
       retrieval.weak && retrieval.chunks.length === 0
-        ? request.locale === 'ru'
-          ? 'Я могу опираться только на материалы сайта CLOX. Откройте /ru/registry для отправителей/перевозчиков, /ru/partner/eoi для партнёров или /ru/investors для инвесторов.'
+        ? request.locale === 'hi'
+          ? 'मैं केवल CLOX साइट की स्वीकृत सामग्री का उपयोग कर सकता हूँ। सेंडर/कैरियर के लिए /hi/registry, पार्टनर के लिए /hi/partner/eoi, या इन्वेस्टर के लिए /hi/investors खोलें।'
           : 'I can only use approved CLOX site content. Open /en/registry for senders/carriers, /en/partner/eoi for partners, or /en/investors for investors.'
         : null,
   };

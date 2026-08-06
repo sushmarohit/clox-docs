@@ -60,7 +60,7 @@ export function buildPageMetadata(
   const siteUrl = getSiteUrl();
   const canonicalPath = `/${locale}${meta.path}`;
   const url = `${siteUrl}${canonicalPath}`;
-  const alternateLocale = locale === 'en' ? 'ru' : 'en';
+  const alternateLocale = locale === 'en' ? 'hi' : 'en';
 
   return {
     title,
@@ -69,14 +69,14 @@ export function buildPageMetadata(
       canonical: url,
       languages: {
         en: `${siteUrl}/en${meta.path}`,
-        ru: `${siteUrl}/ru${meta.path}`,
+        hi: `${siteUrl}/hi${meta.path}`,
         'x-default': `${siteUrl}/en${meta.path}`,
       },
     },
     openGraph: {
       type: 'website',
-      locale: locale === 'ru' ? 'ru_RU' : 'en_AU',
-      alternateLocale: [alternateLocale === 'ru' ? 'ru_RU' : 'en_AU'],
+      locale: locale === 'hi' ? 'hi_IN' : 'en_AU',
+      alternateLocale: [alternateLocale === 'hi' ? 'hi_IN' : 'en_AU'],
       url,
       siteName: appName,
       title,
@@ -117,7 +117,7 @@ export function buildJsonLd(locale: AppLocale, route: keyof typeof routeMeta) {
         '@type': 'Organization',
         name: appName,
         url: siteUrl,
-        logo: `${siteUrl}/brand/logo.png`,
+        logo: `${siteUrl}/brand/clox_updated_logo.png`,
         description: readNested(dict, 'tagline'),
       },
       {

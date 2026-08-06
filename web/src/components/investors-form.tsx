@@ -139,7 +139,7 @@ export function InvestorsPage() {
       abn: values.abn || undefined,
       acn: values.acn || undefined,
       contactPersonName: values.contactPersonName || undefined,
-      locale: i18n.language?.startsWith('ru') ? 'ru' : 'en',
+      locale: i18n.language?.startsWith('hi') ? 'hi' : 'en',
       source: 'web:/investors',
     });
 

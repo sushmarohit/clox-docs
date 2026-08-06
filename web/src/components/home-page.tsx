@@ -189,148 +189,188 @@ const copy = {
     footerLine: '© 2026 CLOX Freight Forwarding. All rights reserved. | Australia Based',
     footerTag: 'The Freight Broker is Now Code.',
   },
-  ru: {
+  hi: {
     nav: [
-      ['Главная', '#banner'],
-      ['О нас', '#aboutus'],
-      ['Сравнение', '#comparison'],
-      ['Возможности', '#features'],
-      ['Путь', '#process'],
-      ['Экосистема', '#ecosystem'],
+      ['होम', '#banner'],
+      ['हमारे बारे में', '#aboutus'],
+      ['तुलना', '#comparison'],
+      ['विशेषताएँ', '#features'],
+      ['यात्रा', '#process'],
+      ['इकोसिस्टम', '#ecosystem'],
     ],
-    tagline: 'Фрахтовый брокер теперь — это код',
-    slide1TitleLead: 'Добро пожаловать в будущее',
-    slide1TitleAccent: 'австралийской логистики',
+    tagline: 'फ्रेट ब्रोकर अब कोड है',
+    slide1TitleLead: 'भविष्य में आपका स्वागत है',
+    slide1TitleAccent: 'ऑस्ट्रेलियन लॉजिस्टिक्स',
     slide1Body:
-      'CLOX — децентрализованная автоматизированная 4PL-экосистема Австралии, напрямую соединяющая корпоративных отправителей с проверенными перевозчиками и автопарками.',
-    slide2TitleLead: 'Перевозите грузы',
-    slide2TitleAccent: 'быстро и безопасно',
+      'CLOX ऑस्ट्रेलिया का विकेंद्रीकृत, स्वचालित 4PL डिजिटल इकोसिस्टम है जो कॉर्पोरेट सेंडरों को सीधे जाँचे हुए हेवी व्हीकल ऑपरेटरों और ट्रांसपोर्ट फ़्लीट से जोड़ता है — पारंपरिक ब्रोकर और छिपे मार्जिन के बिना।',
+    slide2TitleLead: 'अपना माल भेजें',
+    slide2TitleAccent: 'तेज़ और सुरक्षित',
     slide2Body:
-      'Простая, прозрачная и эффективная логистика без сложных форм и бесконечных звонков — только то, что нужно для быстрой и безопасной перевозки.',
-    slide3TitleLead: 'Грузоперевозки',
-    slide3TitleAccent: 'без лишних сложностей',
+      'स्मार्ट फ्रेट फ़ॉरवर्डिंग — सरल, पारदर्शी और कुशल। जटिल फ़ॉर्म या अनगिनत कॉल की ज़रूरत नहीं — सिर्फ़ वह ज़रूरी चीज़ें जो माल को तेज़, सस्ता और सुरक्षित भेजने के लिए चाहिए।',
+    slide3TitleLead: 'बिना रुकावट का',
+    slide3TitleAccent: 'फ्रेट अनुभव',
     slide3Body:
-      'Связанная экосистема сокращает ручные операции, повышает прозрачность и помогает австралийским отправителям и перевозчикам работать увереннее.',
-    slide4TitleLead: 'Единая цифровая',
-    slide4TitleAccent: 'экосистема перевозок',
+      'एक जुड़ा हुआ फ्रेट अनुभव जो मैन्युअल हैंडऑफ़ घटाता है, दृश्यता बढ़ाता है, और ऑस्ट्रेलियन सेंडर व ट्रांसपोर्ट ऑपरेटरों को आत्मविश्वास से आगे बढ़ाता है।',
+    slide4TitleLead: 'एक जुड़ा हुआ',
+    slide4TitleAccent: 'फ्रेट इकोसिस्टम',
     slide4Body:
-      'CLOX объединит корпоративных отправителей, проверенных перевозчиков, прозрачные торги, отслеживание и защищённые платежи в одном цифровом процессе.',
-    explore: 'Открыть платформу',
-    preLaunch: 'Присоединиться',
-    overviewTitle: 'О компании',
+      'CLOX कॉर्पोरेट सेंडर, जाँचे हुए कैरियर, पारदर्शी बिडिंग, ट्रैकिंग और सुरक्षित भुगतान को एक सुव्यवस्थित डिजिटल यात्रा में लाने के लिए बनाया जा रहा है।',
+    explore: 'प्लेटफ़ॉर्म देखें',
+    preLaunch: 'प्री-लॉन्च में शामिल हों',
+    overviewTitle: 'कंपनी अवलोकन',
     overviewBody:
-      'CLOX — умный способ перевозить грузы в Австралии. Мы меняем логистику через простоту, прозрачность и полную видимость, соединяя отправителей с проверенными перевозчиками и планируя защиту платежей через эскроу.',
-    nextTitle: 'Новое поколение логистики',
+      'CLOX में आपका स्वागत है — ऑस्ट्रेलिया में फ्रेट भेजने का स्मार्ट तरीका। हम सरलता, पारदर्शिता और पूर्ण दृश्यता के साथ लॉजिस्टिक्स बदल रहे हैं। उच्च-लागत मैन्युअल मिडलवेयर की जगह एक कुशल डिजिटल इकोसिस्टम लाकर CLOX कॉर्पोरेट सेंडरों को सीधे जाँचे हुए ऑपरेटरों से जोड़ता है और नियोजित अपफ़्रंट एस्क्रो से लेन-देन सुरक्षित करता है।',
+    nextTitle: 'लॉजिस्टिक्स की अगली पीढ़ी',
     nextBody:
-      'CLOX — следующее поколение автономной 4PL-логистики. Платформа соединяет отправителей, ищущих конкурентные цены, и перевозчиков, стремящихся эффективнее использовать транспорт.',
-    discover: 'Открыть экосистему',
-    legacyTitle: 'Традиционные посредники',
-    legacySub: 'Медленно. Вручную. С ошибками.',
+      'CLOX स्वायत्त 4PL लॉजिस्टिक्स की अगली पीढ़ी है। विकेंद्रीकृत, स्वचालित डिजिटल इकोसिस्टम के ज़रिए यह प्रतिस्पर्धी मूल्य चाहने वाले शिपरों और एसेट उपयोग बढ़ाना चाहने वाले कैरियरों के बीच पुल बनाता है। हमारी तकनीक पारंपरिक घर्षण लागत हटाती है और नियंत्रण, गति व दृश्यता वापस व्यवसायों को देती है।',
+    discover: 'इकोसिस्टम जानें',
+    legacyTitle: 'पारंपरिक मिडलवेयर',
+    legacySub: 'धीमा। मैन्युअल। त्रुटि-प्रवण।',
     legacy: [
-      'Ручной ввод',
-      'Ошибки тарифов',
-      'Медленный ответ',
-      'Мало прозрачности',
-      'Высокие расходы',
-      'Много ручного труда',
+      'मैन्युअल डेटा एंट्री',
+      'रेट त्रुटियाँ',
+      'धीमा जवाब',
+      'सीमित दृश्यता',
+      'उच्च परिचालन लागत',
+      'श्रम-गहन',
     ],
     legacyStats: [
-      'Часы на котировку',
-      'Высокий процент ошибок',
-      'Высокие расходы',
-      'Реактивные решения',
-      'Трудоёмкий процесс',
+      'कोट में घंटे',
+      'उच्च त्रुटि दर',
+      'उच्च परिचालन लागत',
+      'प्रतिक्रियाशील समस्या समाधान',
+      'श्रम-गहन',
     ],
-    futureTitle: 'Автономная 4PL-экосистема',
-    futureSub: 'Быстро. Автоматизированно. Умнее.',
+    futureTitle: 'स्वायत्त 4PL इकोसिस्टम',
+    futureSub: 'तेज़। स्वचालित। स्मार्ट।',
     future: [
-      'Видимость в реальном времени',
-      'Автоматические торги',
-      'Умный подбор ставок',
-      'Сквозное отслеживание',
-      'Ниже расходы',
-      'Аналитика данных',
+      'रियल-टाइम दृश्यता',
+      'स्वचालित बिडिंग',
+      'स्मार्ट रेट मैचिंग',
+      'एंड-टू-एंड ट्रैकिंग',
+      'कम लागत, अधिक दक्षता',
+      'डेटा-आधारित अंतर्दृष्टि',
     ],
     futureStats: [
-      'Минуты на котировку',
-      'Высокая точность',
-      'Ниже расходы',
-      'Проактивный контроль',
-      'Масштабируемый рост',
+      'कोट में मिनट',
+      'उच्च सटीकता',
+      'कम लागत',
+      'सक्रिय नियंत्रण और अंतर्दृष्टि',
+      'स्केलेबल वृद्धि',
     ],
-    futureFooter: 'Будущее фрахта — автономное',
-    joinEcosystem: 'Присоединиться',
-    featuresTitle: 'Как CLOX помогает перевозить умнее',
+    futureFooter: 'फ्रेट का भविष्य स्वायत्त है',
+    joinEcosystem: 'इकोसिस्टम से जुड़ें',
+    featuresTitle: 'हम कैसे स्मार्ट शिपिंग में मदद करते हैं',
     features: [
-      ['Мгновенное сравнение', 'Сравнивайте перевозчиков, сроки, рейтинг и цены по мере запуска маркетплейса.'],
-      ['Простое бронирование', 'Бронируйте перевозку онлайн за несколько шагов после открытия платформы.'],
-      ['Отслеживание', 'Контролируйте груз от отправки до доставки с плановым live tracking.'],
-      ['Защита эскроу', 'Безопасные платежи через планируемую эскроу-инфраструктуру.'],
+      [
+        'तुरंत तुलना',
+        'मार्केटप्लेस लाइव होने पर फ्रेट प्रदाता, डिलीवरी समय, विश्वसनीयता और कीमत की तुलना करें।',
+      ],
+      [
+        'सरल बुकिंग',
+        'प्लेटफ़ॉर्म खुलने पर कुछ क्लिक में डिजिटल शिपमेंट बुक करें।',
+      ],
+      [
+        'रियल-टाइम ट्रैकिंग',
+        'नियोजित लाइव ट्रैकिंग अपडेट के साथ डिस्पैच से डिलीवरी तक फ्रेट मॉनिटर करें।',
+      ],
+      [
+        'एस्क्रो सुरक्षा',
+        'नियोजित स्वचालित अपफ़्रंट एस्क्रो इन्फ़्रास्ट्रक्चर के माध्यम से सुरक्षित भुगतान।',
+      ],
     ],
-    journeyTitle: 'Путь автономной 4PL-перевозки',
-    journeySub: 'Четыре простых шага',
+    journeyTitle: 'स्वायत्त 4PL शिपिंग यात्रा',
+    journeySub: 'सरल चार-चरण प्रक्रिया',
     steps: [
-      ['Введите данные', 'Создание заявки', 'Укажите размеры, маршрут и требования доступа.'],
-      ['Сравните и выберите', 'Торги и эскроу', 'Перевозчики делают ставки, средства резервируются.'],
-      ['Перевозите', 'Исполнение в реальном времени', 'GPS поддерживает управление маршрутом.'],
-      ['Доставьте', 'Цифровая проверка', 'После подтверждения доставки запускается выплата.'],
+      [
+        'विवरण दर्ज करें',
+        'तुरंत कंसाइनमेंट पोस्टिंग',
+        'फ्रेट आयाम, रूट और साइट-एक्सेस आवश्यकताएँ दर्ज करें।',
+      ],
+      [
+        'तुलना करें और बुक करें',
+        'पारदर्शी बिडिंग और एस्क्रो सुरक्षा',
+        'कैरियर बोली लगाते हैं, और डिस्पैच से पहले ग्राहक फंड सुरक्षित होते हैं।',
+      ],
+      [
+        'मूव और ट्रैक',
+        'रियल-टाइम निष्पादन और ट्रैकिंग',
+        'स्वचालित रूट प्रबंधन के साथ लाइव GPS ट्रैकिंग।',
+      ],
+      [
+        'डिलीवर',
+        'डिजिटल सत्यापन और तुरंत रिलीज़',
+        'प्रूफ़ ऑफ़ डिलीवरी के बाद एस्क्रो फंड स्वचालित रूप से कैरियर को जारी होते हैं।',
+      ],
     ],
-    ecosystemEyebrow: 'Двусторонний маркетплейс',
-    ecosystemTitle: 'Для всей экосистемы',
-    senderTitle: 'Для отправителей',
-    senderSub: 'Без посреднической наценки. Напрямую.',
+    ecosystemEyebrow: 'द्विपक्षीय मार्केटप्लेस',
+    ecosystemTitle: 'पूरे इकोसिस्टम के लिए',
+    senderTitle: 'सेंडरों के लिए अनुकूलित',
+    senderSub: 'मिडलमैन मार्जिन छोड़ें। सीधे भेजें।',
     sender: [
-      'Сравнение цен',
-      'GPS-отслеживание',
-      'Проверенные перевозчики',
-      'Меньше пустых рейсов',
-      'Прозрачные условия',
-      'Оценка поставщиков',
-      'Контроль цепочки поставок',
+      'तुरंत मूल्य तुलना',
+      'लाइव GPS ट्रैकिंग',
+      'जाँचे हुए कैरियर अनुपालन',
+      'व्यर्थ ट्रिप विवाद शून्य',
+      'पारदर्शी मूल्य और शर्तें',
+      'विश्वसनीय प्रदाता मूल्यांकन',
+      'बेहतर सप्लाई चेन नियंत्रण',
     ],
-    carrierTitle: 'Для перевозчиков',
-    carrierSub: 'Загрузите свободные мощности. Защитите оплату.',
+    carrierTitle: 'कैरियरों के लिए अनुकूलित',
+    carrierSub: 'खाली क्षमता खोलें। खराब कर्ज खत्म करें।',
     carrier: [
-      'Предоплатное эскроу',
-      'Автоматические выплаты',
-      'Доступ к рынку Австралии',
-      'Загрузка автопарка',
-      'Больше заказов',
-      'Региональная сеть',
-      'Гарантированные выплаты',
+      '100% अपफ़्रंट एस्क्रो सुरक्षा',
+      'तुरंत स्वचालित पेआउट',
+      'सीधा ऑस्ट्रेलियन बाज़ार एक्सेस',
+      'एसेट उपयोग अधिकतम करें',
+      'अधिक स्थिर फ्रेट अवसर',
+      'विस्तारित क्षेत्रीय नेटवर्क',
+      'हर बार गारंटीकृत भुगतान',
     ],
-    carrierSpotTitle: 'Загрузите свободные мощности. Забудьте о плохих долгах.',
-    carrierSpotQuestion: 'Устали ждать оплату 30–60 дней?',
+    carrierSpotTitle: 'खाली क्षमता खोलें। खराब कर्ज खत्म करें।',
+    carrierSpotQuestion: 'अपने फ्रेट का भुगतान पाने के लिए 30 से 60 दिन इंतज़ार से थक गए?',
     carrierSpotBody:
-      'На стороне перевозчиков экосистемы CLOX рейс начинается только после резервирования средств. Мы строим эскроу-инфраструктуру на Stripe Connect, чтобы средства проверялись до загрузки и выплачивались после доставки.',
-    carrierListTitle: 'Для проверенных австралийских перевозчиков:',
+      'CLOX इकोसिस्टम के सप्लाई साइड में आपका स्वागत है — जहाँ पैसे लॉक होने तक पहिए नहीं चलते। CLOX Stripe Connect पर आधारित 100% अपफ़्रंट एस्क्रो सुरक्षा इन्फ़्रास्ट्रक्चर पर बनाया जा रहा है ताकि लोडिंग से पहले फंड सुरक्षित हों और सफल डिलीवरी के बाद जारी हों।',
+    carrierListTitle: 'जाँचे हुए ऑस्ट्रेलियन ट्रांसपोर्ट प्रदाताओं के लिए:',
     carrierCards: [
-      ['Защита выплаты', 'Средства проверены в эскроу до начала рейса.'],
-      ['Биржа заказов', 'Ставки на региональные Per KM и почасовые блоки.'],
-      ['Прямой рынок', 'Заявки по типу транспорта и локации.'],
-      ['Статус перевозчика', 'Доступ только после проверки ABN, страховки и RWC.'],
+      [
+        '100% अपफ़्रंट पेआउट सुरक्षा',
+        'अवैतनिक या विलंबित इनवॉइस का पीछा न करें। ट्रिप शुरू होने से पहले फंड एस्क्रो में सत्यापित होते हैं।',
+      ],
+      [
+        'सीधे लाइव जॉब बोर्ड',
+        'क्षेत्रीय “Per KM” रूट या स्थानीय “Hourly” ब्लॉक पर तुरंत बोली लगाएँ (अनिवार्य 4-घंटे न्यूनतम सुरक्षा गारंटी के साथ)।',
+      ],
+      [
+        'सीधा मार्केटप्लेस एक्सेस',
+        'अपने सटीक वाहन प्रकार और स्थान से मेल खाते कॉर्पोरेट फ्रेट प्रस्तावों पर सीधे बोली लगाएँ।',
+      ],
+      [
+        'एलीट कैरियर स्टेटस',
+        'बिडिंग विशेषाधिकार वैध ABN, पब्लिक लायबिलिटी और सक्रिय वाहन अनुपालन वाले जाँचे हुए ऑपरेटरों के लिए आरक्षित हैं।',
+      ],
     ],
-    zeroDebt: 'БЕЗ ПЛОХИХ ДОЛГОВ.',
+    zeroDebt: 'खराब कर्ज शून्य।',
     zeroDebtNote:
-      '*State Master Admins вручную проверяют ранние регистрации, чтобы открыть доступ к торгам при запуске. Подготовьте ABN, страховку и RWC.*',
-    qrTitle: 'Сканируйте, чтобы зарегистрироваться бесплатно.',
-    cohortEyebrow: 'Веб-платформа и приложение скоро.',
-    cohortTitle: 'Присоединяйтесь к pre-launch сегодня',
-    benefitsTitle: 'Ранние участники получают:',
+      '*हमारे स्टेट मास्टर एडमिन गेट खुलने पर लाइव-बिडिंग विशेषाधिकार देने के लिए शुरुआती रजिस्ट्रेंट्स की मैन्युअल समीक्षा कर रहे हैं। अपना ABN, बीमा विवरण और RWC तैयार रखें।*',
+    qrTitle: 'स्कैन करें — पेआउट प्राथमिकता सुरक्षित करें और मुफ़्त रजिस्टर करें।',
+    cohortEyebrow: 'वेब और ऐप प्लेटफ़ॉर्म जल्द आ रहा है।',
+    cohortTitle: 'आज ही प्री-लॉन्च कोहॉर्ट से जुड़ें',
+    benefitsTitle: 'शुरुआती रजिस्ट्रेंट्स को मिलता है:',
     benefits: [
-      'Приоритетные уровни бронирования',
-      'Без стартовой комиссии 90 дней',
-      'Ускоренный корпоративный онбординг',
-      'Ранний доступ к торгам',
+      'प्राथमिकता बुकिंग स्तर',
+      'पहले 90 दिनों के लिए प्लेटफ़ॉर्म आरंभ शुल्क माफ़',
+      'तेज़ कॉर्पोरेट ऑनबोर्डिंग',
+      'अर्ली लाइव-बिडिंग एक्सेस',
     ],
-    iAm: 'Я...',
-    senderCta: 'Отправитель',
-    carrierCta: 'Перевозчик',
-    secureSpot: 'Забронировать место',
-    partnerCta: 'Партнёрский EOI',
-    investorCta: 'Инвесторам',
-    footerLine: '© 2026 CLOX Freight Forwarding. Все права защищены. | Австралия',
-    footerTag: 'Фрахтовый брокер теперь — это код.',
+    iAm: 'मैं हूँ...',
+    senderCta: 'सेंडर',
+    carrierCta: 'कैरियर',
+    secureSpot: 'अपनी जगह सुरक्षित करें',
+    partnerCta: 'पार्टनर EOI',
+    investorCta: 'इन्वेस्टर पोर्टल',
+    footerLine: '© 2026 CLOX Freight Forwarding. सर्वाधिकार सुरक्षित। | ऑस्ट्रेलिया आधारित',
+    footerTag: 'फ्रेट ब्रोकर अब कोड है।',
   },
 } as const;
 
@@ -402,13 +442,17 @@ export function HomePage() {
 
   return (
     <main className="overflow-x-hidden bg-clox-surface text-clox-ink">
-      <header className="fixed inset-x-0 top-0 z-[1000] bg-[rgba(10,31,60,0.95)] shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[12px]">
-        <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 px-5 py-4 sm:px-8">
-          <a href="#banner" className="inline-flex rounded-lg bg-white px-3.5 py-1.5" aria-label="CLOX home">
-            <img src="/landing/logo.jpeg" alt="CLOX" className="h-[45px] w-auto object-contain" />
+      <header className="fixed inset-x-0 top-0 z-[1000] border-b border-slate-200/80 bg-white/95 shadow-[0_4px_24px_rgba(10,31,60,0.08)] backdrop-blur-[12px]">
+        <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 px-5 py-3 sm:px-8 sm:py-3.5 lg:px-0">
+          <a href="#banner" className="inline-flex shrink-0" aria-label="CLOX home">
+            <img
+              src="/brand/clox_updated_logo.png"
+              alt="CLOX"
+              className="h-[48px] w-auto object-contain sm:h-[56px] lg:h-[52px]"
+            />
           </a>
 
-          <nav className="hidden items-center gap-10 lg:flex" aria-label="Main navigation">
+          <nav className="hidden items-center gap-8 xl:gap-10 lg:flex" aria-label="Main navigation">
             {c.nav.map(([label, href]) => (
               <a key={label} href={href} className="clox-nav-link">
                 {label}
@@ -417,13 +461,13 @@ export function HomePage() {
           </nav>
 
           <div className="flex items-center gap-3 sm:gap-5">
-            <LanguageSwitcher />
+            <LanguageSwitcher className="text-clox-navy" />
             <Link href={`/${locale}/registry`} className="clox-btn-primary hidden sm:inline-flex">
               {c.preLaunch}
             </Link>
             <button
               type="button"
-              className="inline-flex rounded-lg border border-white/20 px-3 py-2 text-white lg:hidden"
+              className="inline-flex rounded-lg border border-slate-200 px-3 py-2 text-clox-navy lg:hidden"
               aria-expanded={menuOpen}
               aria-label="Toggle navigation"
               onClick={() => setMenuOpen((value) => !value)}
@@ -434,13 +478,13 @@ export function HomePage() {
         </div>
 
         {menuOpen ? (
-          <div className="border-t border-white/10 bg-clox-navy px-5 py-4 lg:hidden">
+          <div className="border-t border-slate-200 bg-white px-5 py-4 sm:px-8 lg:hidden">
             <div className="mx-auto flex max-w-[1200px] flex-col gap-3">
               {c.nav.map(([label, href]) => (
                 <a
                   key={label}
                   href={href}
-                  className="rounded-lg px-3 py-2 text-white hover:bg-white/10"
+                  className="rounded-lg px-3 py-2 font-medium text-clox-navy hover:bg-slate-50 hover:text-clox-orange"
                   onClick={() => setMenuOpen(false)}
                 >
                   {label}
@@ -460,7 +504,7 @@ export function HomePage() {
 
       <section
         id="banner"
-        className="relative isolate flex min-h-[700px] items-center overflow-hidden bg-clox-navy pt-[140px] text-center text-white sm:min-h-screen sm:pt-[180px]"
+        className="relative isolate flex min-h-[700px] items-center overflow-hidden bg-clox-navy pt-[160px] text-center text-white sm:min-h-screen sm:pt-[200px] xl:min-h-[850px] xl:max-h-[920px] xl:items-start xl:pt-[180px] 2xl:min-h-[900px] 2xl:max-h-[980px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onFocusCapture={() => setPaused(true)}
@@ -474,21 +518,21 @@ export function HomePage() {
           {heroSlides.map((item, index) => (
             <div
               key={item.image}
-              className={`absolute -inset-2 scale-[1.02] bg-cover bg-center blur-[2px] transition-opacity duration-[1500ms] ease-in-out ${
+              className={`absolute -inset-2 scale-[1.02] bg-cover bg-center blur-[2px] transition-opacity duration-[1500ms] ease-in-out xl:blur-[1px] ${
                 index === slide ? 'opacity-100' : 'opacity-0'
               }`}
               style={{ backgroundImage: `url('${item.image}')` }}
             />
           ))}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-[rgba(5,20,40,0.55)] to-[rgba(0,7,17,0.5)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-[rgba(5,20,40,0.55)] to-[rgba(0,7,17,0.5)] xl:from-black/80 xl:via-[rgba(5,20,40,0.65)] xl:to-[rgba(0,7,17,0.6)]" />
         </div>
 
-        <div className="relative z-10 mx-auto w-full max-w-[900px] animate-hero-fade-up px-5 pb-20 pt-8 sm:px-8">
-          <span className="mb-8 inline-block rounded-full border border-clox-orange/60 bg-clox-navy/75 px-6 py-2 text-[0.9rem] font-bold uppercase tracking-[2px] text-clox-orange shadow-lg backdrop-blur-sm">
+        <div className="relative z-10 mx-auto w-full max-w-[900px] animate-hero-fade-up px-5 pb-20 pt-8 sm:px-8 xl:max-w-[1040px] xl:pb-24 xl:pt-10 2xl:max-w-[1120px]">
+          <span className="mb-8 inline-block rounded-full border border-clox-orange/60 bg-clox-navy/75 px-6 py-2 text-[0.9rem] font-bold uppercase tracking-[2px] text-clox-orange shadow-lg backdrop-blur-sm xl:mb-10 xl:text-base">
             {c.tagline}
           </span>
 
-          <div className="relative mx-auto mb-8 flex min-h-[250px] w-full items-center justify-center">
+          <div className="relative mx-auto mb-8 flex min-h-[250px] w-full items-center justify-center xl:mb-10 xl:min-h-[280px]">
             {heroSlides.map((item, index) => {
               const active = index === slide;
               return (
@@ -501,12 +545,12 @@ export function HomePage() {
                   }`}
                   aria-hidden={!active}
                 >
-                  <h1 className="mb-6 text-[2rem] font-extrabold leading-tight [text-shadow:0_4px_20px_rgba(0,0,0,0.5)] sm:text-[2.2rem] lg:text-[3.2rem]">
+                  <h1 className="mb-6 text-[2rem] font-extrabold leading-tight [text-shadow:0_4px_20px_rgba(0,0,0,0.5)] sm:text-[2.2rem] lg:text-[3.2rem] xl:mb-7 xl:text-[3.6rem] 2xl:text-[4rem]">
                     {c[item.titleLeadKey]}
                     <br />
                     <span className="text-clox-orange">{c[item.titleAccentKey]}</span>
                   </h1>
-                  <p className="mx-auto mb-0 max-w-[800px] text-[1.15rem] font-light leading-8 text-[#e2e8f0] sm:text-[1.25rem]">
+                  <p className="mx-auto mb-0 max-w-[800px] text-[1.15rem] font-light leading-8 text-[#e2e8f0] sm:text-[1.25rem] xl:max-w-[920px] xl:text-[1.35rem] xl:leading-9 2xl:text-[1.45rem]">
                     {c[item.bodyKey]}
                   </p>
                 </div>
@@ -514,11 +558,11 @@ export function HomePage() {
             })}
           </div>
 
-          <a href="#comparison" className="clox-btn-primary px-12 py-4 text-[1.15rem]">
+          <a href="#comparison" className="clox-btn-primary px-12 py-4 text-[1.15rem] xl:px-14 xl:py-4.5 xl:text-[1.2rem]">
             {c.explore}
           </a>
 
-          <div className="mt-8 flex justify-center gap-2" aria-label="Hero slides">
+          <div className="mt-8 flex justify-center gap-2 xl:mt-10" aria-label="Hero slides">
             {heroSlides.map((item, index) => (
               <button
                 key={item.image}
@@ -536,18 +580,20 @@ export function HomePage() {
       </section>
 
       <section id="aboutus" className="scroll-mt-28 px-5 py-28 sm:px-8">
-        <div className="mx-auto grid max-w-[1200px] items-center gap-16 lg:grid-cols-2">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
           <div>
-            <h2 className="mb-4 text-left text-[2.2rem] font-extrabold uppercase tracking-tight text-clox-navy sm:text-[2.8rem]">
+            <h2 className="mb-4 text-left text-[2.2rem] font-extrabold uppercase tracking-tight text-clox-navy sm:text-[2.8rem] lg:text-[3.1rem] xl:mb-5 xl:text-[3.35rem]">
               {c.overviewTitle}
             </h2>
-            <p className="text-[1.1rem] leading-8 text-slate-600">{c.overviewBody}</p>
+            <p className="text-[1.1rem] leading-8 text-slate-600 lg:text-[1.2rem] lg:leading-9 xl:text-[1.3rem] xl:leading-10">
+              {c.overviewBody}
+            </p>
           </div>
-          <div>
+          <div className="mx-auto w-full max-w-[480px] lg:max-w-none">
             <img
               src="/landing/overview.jpg"
               alt="Modern logistics"
-              className="h-full w-full rounded-2xl object-cover shadow-clox-card"
+              className="aspect-[4/3] w-full rounded-2xl object-cover shadow-clox-card max-h-[420px] xl:max-h-[480px]"
             />
           </div>
         </div>
@@ -752,9 +798,11 @@ export function HomePage() {
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/20" />
-          <div className="relative z-10 ml-[6%] max-w-[450px] rounded-xl bg-white p-6 text-clox-ink shadow-[0_15px_40px_rgba(0,0,0,0.3)] sm:ml-[10%] sm:p-8">
-            <h4 className="mb-1 text-[1.3rem] font-extrabold text-clox-navy">{c.zeroDebt}</h4>
-            <p className="text-[1rem] italic text-slate-500">{c.zeroDebtNote}</p>
+          <div className="relative z-10 mx-auto w-full max-w-[1200px] px-5 sm:px-8">
+            <div className="max-w-[450px] rounded-xl bg-white p-6 text-clox-ink shadow-[0_15px_40px_rgba(0,0,0,0.3)] sm:p-8 xl:max-w-[480px]">
+              <h4 className="mb-1 text-[1.3rem] font-extrabold text-clox-navy">{c.zeroDebt}</h4>
+              <p className="text-[1rem] italic text-slate-500">{c.zeroDebtNote}</p>
+            </div>
           </div>
         </div>
 
@@ -813,7 +861,11 @@ export function HomePage() {
             <BulletList items={c.benefits} />
           </div>
           <div className="flex-1 rounded-2xl border border-slate-200 bg-clox-surface p-8 sm:p-10">
-            <img src="/landing/logo.jpeg" alt="CLOX" className="mx-auto h-20 w-auto rounded bg-white p-2" />
+            <img
+              src="/brand/clox_updated_logo.png"
+              alt="CLOX"
+              className="mx-auto h-20 w-auto object-contain sm:h-24"
+            />
             <p className="mt-6 text-center text-lg font-semibold text-clox-navy">{c.tagline}</p>
             <div className="mx-auto mt-8 max-w-md border-t border-slate-200 pt-8">
               <p className="mb-4 text-center text-sm font-semibold uppercase tracking-wide text-slate-500">
@@ -854,8 +906,12 @@ export function HomePage() {
 
       <footer className="border-t-[5px] border-clox-orange bg-clox-navy px-5 py-12 text-center text-slate-400 sm:px-8">
         <div className="mx-auto max-w-[1200px]">
-          <a href="#banner" className="mx-auto mb-6 inline-flex rounded-lg bg-white px-4 py-2">
-            <img src="/landing/logo.jpeg" alt="CLOX" className="h-[45px] w-auto object-contain" />
+          <a href="#banner" className="mx-auto mb-6 inline-flex" aria-label="CLOX home">
+            <img
+              src="/brand/clox_updated_logo_light.png"
+              alt="CLOX"
+              className="h-[64px] w-auto object-contain sm:h-[68px]"
+            />
           </a>
           <p>{c.footerLine}</p>
           <p className="mt-2.5 text-[0.9rem]">{c.footerTag}</p>

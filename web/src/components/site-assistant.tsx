@@ -16,15 +16,15 @@ const copy = {
     empty: 'I can point you to the right pre-launch form.',
     error: 'Something went wrong. Please try again.',
   },
-  ru: {
-    open: 'Спросить CLOX',
-    title: 'Гид по сайту CLOX',
-    disclaimer: 'Ответы ИИ только по одобренным материалам сайта. Без персональных данных.',
-    placeholder: 'Спросите про registry, партнёров или инвесторов…',
-    send: 'Отправить',
-    close: 'Закрыть',
-    empty: 'Я подскажу нужную pre-launch форму.',
-    error: 'Что-то пошло не так. Попробуйте ещё раз.',
+  hi: {
+    open: 'CLOX से पूछें',
+    title: 'CLOX साइट गाइड',
+    disclaimer: 'स्वीकृत साइट सामग्री से AI उत्तर। कोई व्यक्तिगत लीड विवरण नहीं।',
+    placeholder: 'रजिस्ट्री, पार्टनर या इन्वेस्टर के बारे में पूछें…',
+    send: 'भेजें',
+    close: 'सहायक बंद करें',
+    empty: 'मैं आपको सही प्री-लॉन्च फ़ॉर्म दिखा सकता हूँ।',
+    error: 'कुछ गलत हो गया। कृपया फिर से कोशिश करें।',
   },
 } as const;
 
