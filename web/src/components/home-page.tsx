@@ -23,7 +23,7 @@ const copy = {
     slide2TitleLead: 'Move Your Goods',
     slide2TitleAccent: 'Quickly & Securely',
     slide2Body:
-      'Smart freight forwarding made simple, transparent, and efficient. No more complicated forms or endless phone calls to chase down quotes—just the essentials you need to move your goods quickly, affordably, and securely.',
+      'Smart freight forwarding made simple, transparent, and efficient. No more complicated forms or endless phone calls to chase down quotes — just the essentials you need to move your goods quickly, affordably, and securely.',
     slide3TitleLead: 'Freight Without',
     slide3TitleAccent: 'the Friction',
     slide3Body:
