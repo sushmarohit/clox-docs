@@ -24,6 +24,7 @@ export default async function Page({
   const locale = raw as AppLocale;
   const t = getDictionary(locale);
   const jsonLd = buildJsonLd(locale, 'terms');
+  const terms = t.legal.terms;
 
   return (
     <>
@@ -33,20 +34,10 @@ export default async function Page({
       />
       <LegalPage
         title={t.terms}
-        sections={[
-          {
-            heading: t.legal.terms.submissionsHeading,
-            body: t.legal.terms.submissionsBody,
-          },
-          {
-            heading: t.legal.terms.accuracyHeading,
-            body: t.legal.terms.accuracyBody,
-          },
-          {
-            heading: t.legal.terms.confidentialityHeading,
-            body: t.legal.terms.confidentialityBody,
-          },
-        ]}
+        phase={t.legal.phase}
+        meta={terms.meta}
+        intro={terms.intro}
+        sections={terms.sections}
       />
     </>
   );

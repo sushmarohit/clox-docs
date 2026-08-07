@@ -20,7 +20,14 @@ function swapLocaleInPath(pathname: string, locale: AppLocale) {
 const options: { locale: AppLocale; label: string }[] = [
   { locale: 'en', label: 'English' },
   { locale: 'hi', label: 'हिन्दी (Hindi)' },
+  { locale: 'pa', label: 'ਪੰਜਾਬੀ (Punjabi)' },
 ];
+
+const localeBadge: Record<AppLocale, string> = {
+  en: 'EN',
+  hi: 'HI',
+  pa: 'PA',
+};
 
 export function LanguageSwitcher({ className = '' }: { className?: string }) {
   const { i18n, t } = useTranslation('common');
@@ -78,7 +85,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
           <line x1="2" y1="12" x2="22" y2="12" />
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
         </svg>
-        <span>{current === 'hi' ? 'HI' : 'EN'}</span>
+        <span>{localeBadge[current]}</span>
         <svg
           width="14"
           height="14"

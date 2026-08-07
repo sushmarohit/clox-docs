@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { resolveLeadLocale } from '@/locales';
 import {
   capitalAllocationSchema,
   ecosystemFocusSchema,
@@ -139,7 +140,7 @@ export function InvestorsPage() {
       abn: values.abn || undefined,
       acn: values.acn || undefined,
       contactPersonName: values.contactPersonName || undefined,
-      locale: i18n.language?.startsWith('hi') ? 'hi' : 'en',
+      locale: resolveLeadLocale(i18n.language),
       source: 'web:/investors',
     });
 

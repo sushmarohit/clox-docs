@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { resolveLeadLocale } from '@/locales';
 import { registryLeadSchema } from '@/shared/types';
 import {
   FieldError,
@@ -143,7 +144,7 @@ export function RegistryPage() {
         infraAcknowledged: values.infraAcknowledged,
         email: values.email,
         phone: values.phone,
-        locale: i18n.language?.startsWith('hi') ? ('hi' as const) : ('en' as const),
+        locale: resolveLeadLocale(i18n.language),
         honeypot: values.honeypot,
       };
     }
@@ -159,7 +160,7 @@ export function RegistryPage() {
       infraAcknowledged: values.infraAcknowledged,
       email: values.email,
       phone: values.phone,
-      locale: i18n.language?.startsWith('hi') ? ('hi' as const) : ('en' as const),
+      locale: resolveLeadLocale(i18n.language),
       honeypot: values.honeypot,
     };
   }

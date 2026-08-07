@@ -24,6 +24,7 @@ export default async function Page({
   const locale = raw as AppLocale;
   const t = getDictionary(locale);
   const jsonLd = buildJsonLd(locale, 'privacy');
+  const privacy = t.legal.privacy;
 
   return (
     <>
@@ -33,18 +34,10 @@ export default async function Page({
       />
       <LegalPage
         title={t.privacy}
-        sections={[
-          { heading: t.legal.privacy.whoHeading, body: t.legal.privacy.whoBody },
-          { heading: t.legal.privacy.whatHeading, body: t.legal.privacy.whatBody },
-          {
-            heading: t.legal.privacy.purposeHeading,
-            body: t.legal.privacy.purposeBody,
-          },
-          {
-            heading: t.legal.privacy.contactHeading,
-            body: t.legal.privacy.contactBody,
-          },
-        ]}
+        phase={t.legal.phase}
+        meta={privacy.meta}
+        intro={privacy.intro}
+        sections={privacy.sections}
       />
     </>
   );

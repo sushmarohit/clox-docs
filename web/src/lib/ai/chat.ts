@@ -8,7 +8,7 @@ import {
 } from '@/lib/ai/providers';
 
 export const chatRequestSchema = z.object({
-  locale: z.enum(['en', 'hi']).default('en'),
+  locale: z.enum(['en', 'hi', 'pa']).default('en'),
   messages: z
     .array(
       z.object({
@@ -36,6 +36,18 @@ export function throttleIp(ip: string, limit = 20, windowMs = 60_000) {
   return true;
 }
 
+const respondLanguage: Record<AppLocale, string> = {
+  en: 'English',
+  hi: 'Hindi',
+  pa: 'Punjabi',
+};
+
+const weakFallback: Record<AppLocale, string> = {
+  en: 'I can only use approved CLOX site content. Open /en/registry for senders/carriers, /en/partner/eoi for partners, or /en/investors for investors.',
+  hi: 'मैं केवल CLOX साइट की स्वीकृत सामग्री का उपयोग कर सकता हूँ। सेंडर/कैरियर के लिए /hi/registry, पार्टनर के लिए /hi/partner/eoi, या इन्वेस्टर के लिए /hi/investors खोलें।',
+  pa: 'ਮੈਂ ਸਿਰਫ਼ CLOX ਸਾਈਟ ਦੀ ਮਨਜ਼ੂਰ ਸਮੱਗਰੀ ਵਰਤ ਸਕਦਾ ਹਾਂ। ਸੈਂਡਰ/ਕੈਰੀਅਰ ਲਈ /pa/registry, ਪਾਰਟਨਰ ਲਈ /pa/partner/eoi, ਜਾਂ ਨਿਵੇਸ਼ਕ ਲਈ /pa/investors ਖੋਲ੍ਹੋ।',
+};
+
 export function buildSystemPrompt(locale: AppLocale, context: string, weak: boolean) {
   return [
     'You are the CLOX pre-launch site guide.',
@@ -44,7 +56,7 @@ export function buildSystemPrompt(locale: AppLocale, context: string, weak: bool
     'Never collect or ask for personal lead details (email, phone, ABN, capital amounts).',
     'Never invent pricing, ETAs, matching, legal advice, or investment advice.',
     'If the passages are weak or insufficient, say you are unsure and link the most likely funnel.',
-    `Respond in ${locale === 'hi' ? 'Hindi' : 'English'}.`,
+    `Respond in ${respondLanguage[locale]}.`,
     `Retrieval confidence: ${weak ? 'weak' : 'ok'}.`,
     'Approved passages:',
     context,
@@ -75,9 +87,7 @@ export function prepareChat(request: ChatRequest) {
     retrieval,
     fallback:
       retrieval.weak && retrieval.chunks.length === 0
-        ? request.locale === 'hi'
-          ? 'मैं केवल CLOX साइट की स्वीकृत सामग्री का उपयोग कर सकता हूँ। सेंडर/कैरियर के लिए /hi/registry, पार्टनर के लिए /hi/partner/eoi, या इन्वेस्टर के लिए /hi/investors खोलें।'
-          : 'I can only use approved CLOX site content. Open /en/registry for senders/carriers, /en/partner/eoi for partners, or /en/investors for investors.'
+        ? weakFallback[request.locale]
         : null,
   };
 }

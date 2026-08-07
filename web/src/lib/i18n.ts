@@ -4,6 +4,7 @@ import {
   defaultLocale,
   enCommon,
   hiCommon,
+  paCommon,
   LOCALE_STORAGE_KEY,
   type AppLocale,
 } from '@/locales';
@@ -18,6 +19,7 @@ export function createAppI18n(locale: AppLocale) {
     resources: {
       en: { common: enCommon },
       hi: { common: hiCommon },
+      pa: { common: paCommon },
     },
     interpolation: {
       escapeValue: false,

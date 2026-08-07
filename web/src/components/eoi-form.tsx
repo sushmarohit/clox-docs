@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { resolveLeadLocale } from '@/locales';
 import { eoiLeadSchema } from '@/shared/types';
 import {
   FieldError,
@@ -70,7 +71,7 @@ export function EoiPage() {
     const parsed = eoiLeadSchema.safeParse({
       ...values,
       role: values.role || undefined,
-      locale: i18n.language?.startsWith('hi') ? 'hi' : 'en',
+      locale: resolveLeadLocale(i18n.language),
       acn: values.acn || undefined,
     });
 

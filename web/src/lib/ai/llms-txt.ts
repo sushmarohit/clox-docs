@@ -16,6 +16,7 @@ export function buildLlmsTxt(full = false) {
     '## Primary pages',
     `- English home: ${siteUrl}/en`,
     `- Hindi home: ${siteUrl}/hi`,
+    `- Punjabi home: ${siteUrl}/pa`,
     `- Registry: ${siteUrl}/en/registry`,
     `- Partner EOI: ${siteUrl}/en/partner/eoi`,
     `- Investors: ${siteUrl}/en/investors`,

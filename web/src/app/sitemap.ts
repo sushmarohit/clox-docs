@@ -16,10 +16,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: path === '' ? 'weekly' : 'monthly',
         priority: path === '' ? 1 : 0.7,
         alternates: {
-          languages: {
-            en: `${siteUrl}/en${path}`,
-            hi: `${siteUrl}/hi${path}`,
-          },
+          languages: Object.fromEntries(
+            supportedLocales.map((item) => [item, `${siteUrl}/${item}${path}`]),
+          ),
         },
       });
     }

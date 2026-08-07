@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
-import { Noto_Sans_Devanagari, Poppins } from 'next/font/google';
+import { Noto_Sans_Devanagari, Noto_Sans_Gurmukhi, Poppins } from 'next/font/google';
 import { getAppName, getSiteUrl } from '@/lib/env';
 import './globals.css';
 
@@ -15,6 +15,13 @@ const notoDevanagari = Noto_Sans_Devanagari({
   subsets: ['devanagari'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-noto-devanagari',
+  display: 'swap',
+});
+
+const notoGurmukhi = Noto_Sans_Gurmukhi({
+  subsets: ['gurmukhi'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-noto-gurmukhi',
   display: 'swap',
 });
 
@@ -50,7 +57,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${poppins.variable} ${notoDevanagari.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${poppins.variable} ${notoDevanagari.variable} ${notoGurmukhi.variable}`}
+    >
       <body className="font-sans antialiased">{children}</body>
     </html>
   );

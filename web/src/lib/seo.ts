@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import type { AppLocale } from '@/locales';
-import { getDictionary } from '@/locales';
+import { getDictionary, supportedLocales } from '@/locales';
 import { getAppName, getSiteUrl } from '@/lib/env';
 
 const routeMeta: Record<
@@ -25,14 +25,20 @@ const routeMeta: Record<
   },
   privacy: {
     titleKey: 'privacy',
-    descriptionKey: 'legal.privacy.purposeBody',
+    descriptionKey: 'legal.privacy.description',
     path: '/privacy',
   },
   terms: {
     titleKey: 'terms',
-    descriptionKey: 'legal.terms.submissionsBody',
+    descriptionKey: 'legal.terms.description',
     path: '/terms',
   },
+};
+
+const ogLocaleMap: Record<AppLocale, string> = {
+  en: 'en_AU',
+  hi: 'hi_IN',
+  pa: 'pa_IN',
 };
 
 function readNested(dict: Record<string, unknown>, path: string): string {
@@ -43,6 +49,16 @@ function readNested(dict: Record<string, unknown>, path: string): string {
     return undefined;
   }, dict);
   return typeof value === 'string' ? value : path;
+}
+
+function languageAlternates(siteUrl: string, path: string) {
+  const languages: Record<string, string> = {
+    'x-default': `${siteUrl}/en${path}`,
+  };
+  for (const locale of supportedLocales) {
+    languages[locale] = `${siteUrl}/${locale}${path}`;
+  }
+  return languages;
 }
 
 export function buildPageMetadata(
@@ -60,23 +76,20 @@ export function buildPageMetadata(
   const siteUrl = getSiteUrl();
   const canonicalPath = `/${locale}${meta.path}`;
   const url = `${siteUrl}${canonicalPath}`;
-  const alternateLocale = locale === 'en' ? 'hi' : 'en';
 
   return {
     title,
     description,
     alternates: {
       canonical: url,
-      languages: {
-        en: `${siteUrl}/en${meta.path}`,
-        hi: `${siteUrl}/hi${meta.path}`,
-        'x-default': `${siteUrl}/en${meta.path}`,
-      },
+      languages: languageAlternates(siteUrl, meta.path),
     },
     openGraph: {
       type: 'website',
-      locale: locale === 'hi' ? 'hi_IN' : 'en_AU',
-      alternateLocale: [alternateLocale === 'hi' ? 'hi_IN' : 'en_AU'],
+      locale: ogLocaleMap[locale],
+      alternateLocale: supportedLocales
+        .filter((item) => item !== locale)
+        .map((item) => ogLocaleMap[item]),
       url,
       siteName: appName,
       title,
