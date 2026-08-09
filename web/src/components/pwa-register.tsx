@@ -40,11 +40,11 @@ export function PwaRegister() {
   if (!updateReady && !deferredPrompt) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 z-40 flex max-w-sm flex-col gap-2">
+    <div className="pointer-events-none fixed bottom-4 left-4 z-40 flex max-w-sm flex-col gap-2">
       {deferredPrompt ? (
         <button
           type="button"
-          className="rounded-full bg-clox-orange px-4 py-2 text-sm font-semibold text-white shadow-lg"
+          className="pointer-events-auto rounded-full bg-clox-orange px-4 py-2 text-sm font-semibold text-white shadow-lg"
           onClick={async () => {
             await deferredPrompt.prompt();
             setDeferredPrompt(null);
@@ -56,7 +56,7 @@ export function PwaRegister() {
       {updateReady ? (
         <button
           type="button"
-          className="rounded-full border border-white/30 bg-clox-navy px-4 py-2 text-sm font-semibold text-white shadow-lg"
+          className="pointer-events-auto rounded-full border border-white/30 bg-clox-navy px-4 py-2 text-sm font-semibold text-white shadow-lg"
           onClick={() => window.location.reload()}
         >
           Update available — reload

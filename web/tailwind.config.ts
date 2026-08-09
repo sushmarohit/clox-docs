@@ -7,7 +7,7 @@ const config: Config = {
       colors: {
         clox: {
           navy: '#0A1F3C',
-          orange: '#FF7200',
+          orange: '#FF560E',
           blue: '#133A6B',
           surface: '#F8FAFC',
           ink: '#2C3E50',
@@ -29,7 +29,7 @@ const config: Config = {
         ],
       },
       boxShadow: {
-        'clox-orange': '0 8px 25px rgba(255, 114, 0, 0.45)',
+        'clox-orange': '0 8px 25px rgba(255, 86, 14, 0.45)',
         'clox-card': '0 20px 40px rgba(0, 0, 0, 0.12)',
       },
       keyframes: {

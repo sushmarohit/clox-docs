@@ -30,7 +30,7 @@ export function LegalPage({
     <main className="min-h-screen bg-clox-surface px-6 py-16 text-slate-900 sm:px-10">
       <div className="mx-auto max-w-3xl lg:max-w-4xl">
         <Link href={`/${locale}`} className="text-sm font-semibold text-clox-orange">
-          {t('legal.back')}
+          {t('legal.back')} {"->"}
         </Link>
         <p className="mt-4 inline-flex rounded-full bg-clox-navy/10 px-3 py-1 text-xs font-semibold text-clox-navy">
           {phase}

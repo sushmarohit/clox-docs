@@ -6,7 +6,7 @@ export default {
       colors: {
         clox: {
           navy: '#1A2F4C',
-          orange: '#F26E22',
+          orange: '#FF560E',
           surface: '#F8FAFC',
         },
       },

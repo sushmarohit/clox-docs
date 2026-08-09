@@ -37,13 +37,13 @@ export function PublicShell({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="relative z-10 mx-auto max-w-3xl px-4 pb-8 text-center text-[0.7rem] text-white/50 sm:px-6 lg:max-w-4xl">
+      <footer className="relative z-10 mx-auto max-w-3xl px-4 pb-28 text-center text-[0.7rem] text-white/50 sm:px-6 sm:pb-24 lg:max-w-4xl">
         {t('footerRights')} ·{' '}
-        <Link href={`/${locale}/privacy`} className="underline-offset-2 hover:underline">
+        <Link href={`/${locale}/privacy`} className="relative z-10 underline-offset-2 hover:underline">
           {t('shell.privacyShort')}
         </Link>{' '}
         ·{' '}
-        <Link href={`/${locale}/terms`} className="underline-offset-2 hover:underline">
+        <Link href={`/${locale}/terms`} className="relative z-10 underline-offset-2 hover:underline">
           {t('shell.termsShort')}
         </Link>
       </footer>

@@ -57,7 +57,7 @@
 
 @layer components {
   .clox-btn-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-gradient-to-br from-clox-orange to-[#E65C00] px-8 py-3.5 text-[1.05rem] font-semibold text-white shadow-[0_4px_15px_rgba(255,114,0,0.3)] transition duration-300;
+    @apply inline-flex items-center justify-center rounded-full bg-gradient-to-br from-clox-orange to-[#E04808] px-8 py-3.5 text-[1.05rem] font-semibold text-white shadow-[0_4px_15px_rgba(255,86,14,0.3)] transition duration-300;
   }
 
   .clox-btn-primary:hover {

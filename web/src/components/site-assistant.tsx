@@ -114,10 +114,10 @@ export function SiteAssistant({ locale }: { locale: AppLocale }) {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2">
+    <div className="pointer-events-none fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2">
       {open ? (
         <section
-          className="flex h-[28rem] w-[min(100vw-2rem,22rem)] flex-col overflow-hidden rounded-2xl border border-white/15 bg-clox-navy text-white shadow-2xl"
+          className="pointer-events-auto flex h-[28rem] w-[min(100vw-2rem,22rem)] flex-col overflow-hidden rounded-2xl border border-white/15 bg-clox-navy text-white shadow-2xl"
           aria-label={t.title}
         >
           <header className="flex items-start justify-between gap-3 border-b border-white/10 px-4 py-3">
@@ -188,7 +188,7 @@ export function SiteAssistant({ locale }: { locale: AppLocale }) {
 
       <button
         type="button"
-        className="rounded-full bg-clox-orange px-4 py-2.5 text-sm font-semibold text-white shadow-lg"
+        className="pointer-events-auto rounded-full bg-clox-orange px-4 py-2.5 text-sm font-semibold text-white shadow-lg"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
       >
