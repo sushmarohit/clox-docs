@@ -6,28 +6,18 @@ import { heroSlides } from '@/components/home/types';
 
 export function HomeHero({ copy }: { copy: HomeCopy }) {
   const [slide, setSlide] = useState(0);
-  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (paused) return;
     const timer = window.setInterval(() => {
       setSlide((current) => (current + 1) % heroSlides.length);
     }, 5000);
     return () => window.clearInterval(timer);
-  }, [paused]);
+  }, []);
 
   return (
     <section
       id="banner"
       className="relative isolate flex min-h-[700px] items-center overflow-hidden bg-clox-navy pt-[160px] text-center text-white sm:min-h-screen sm:pt-[200px] xl:min-h-[850px] xl:max-h-[920px] xl:items-start xl:pt-[180px] 2xl:min-h-[900px] 2xl:max-h-[980px]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-          setPaused(false);
-        }
-      }}
     >
       <div className="absolute inset-0 z-0" aria-hidden>
         {heroSlides.map((item, index) => (
