@@ -43,18 +43,19 @@ const respondLanguage: Record<AppLocale, string> = {
 };
 
 const weakFallback: Record<AppLocale, string> = {
-  en: 'I can only use approved CLOX site content. Open /en/registry for senders/carriers, /en/partner/eoi for partners, or /en/investors for investors.',
-  hi: 'मैं केवल CLOX साइट की स्वीकृत सामग्री का उपयोग कर सकता हूँ। सेंडर/कैरियर के लिए /hi/registry, पार्टनर के लिए /hi/partner/eoi, या इन्वेस्टर के लिए /hi/investors खोलें।',
-  pa: 'ਮੈਂ ਸਿਰਫ਼ CLOX ਸਾਈਟ ਦੀ ਮਨਜ਼ੂਰ ਸਮੱਗਰੀ ਵਰਤ ਸਕਦਾ ਹਾਂ। ਸੈਂਡਰ/ਕੈਰੀਅਰ ਲਈ /pa/registry, ਪਾਰਟਨਰ ਲਈ /pa/partner/eoi, ਜਾਂ ਨਿਵੇਸ਼ਕ ਲਈ /pa/investors ਖੋਲ੍ਹੋ।',
+  en: 'I can only use approved CLOX site content. Open /en/registry for senders/carriers, or /en/partner/eoi for partners.',
+  hi: 'मैं केवल CLOX साइट की स्वीकृत सामग्री का उपयोग कर सकता हूँ। सेंडर/कैरियर के लिए /hi/registry, या पार्टनर के लिए /hi/partner/eoi खोलें।',
+  pa: 'ਮੈਂ ਸਿਰਫ਼ CLOX ਸਾਈਟ ਦੀ ਮਨਜ਼ੂਰ ਸਮੱਗਰੀ ਵਰਤ ਸਕਦਾ ਹਾਂ। ਸੈਂਡਰ/ਕੈਰੀਅਰ ਲਈ /pa/registry, ਜਾਂ ਪਾਰਟਨਰ ਲਈ /pa/partner/eoi ਖੋਲ੍ਹੋ।',
 };
 
 export function buildSystemPrompt(locale: AppLocale, context: string, weak: boolean) {
   return [
     'You are the CLOX pre-launch site guide.',
     'Answer only from the approved retrieved passages below.',
-    'Guide users to the correct page: Registry, Partner EOI, Investors, Privacy, or Terms.',
+    'Guide users to the correct page: Registry, Partner EOI, Privacy, or Terms.',
     'Never collect or ask for personal lead details (email, phone, ABN, capital amounts).',
     'Never invent pricing, ETAs, matching, legal advice, or investment advice.',
+    'Do not mention or direct users to an investor portal.',
     'If the passages are weak or insufficient, say you are unsure and link the most likely funnel.',
     `Respond in ${respondLanguage[locale]}.`,
     `Retrieval confidence: ${weak ? 'weak' : 'ok'}.`,

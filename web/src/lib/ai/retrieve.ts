@@ -66,6 +66,7 @@ export function retrieveKnowledge(
 ): RetrievalResult {
   const queryTokens = tokenize(query);
   const scored = knowledgeChunks
+    .filter((chunk) => chunk.public !== false)
     .filter((chunk) => chunk.locale === locale || chunk.locale === 'both')
     .map((chunk) => ({ chunk, score: scoreChunk(queryTokens, chunk) }))
     .filter((item) => item.score > 0)

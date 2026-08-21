@@ -13,6 +13,7 @@ export function HomeFooter({ copy, locale }: HomeSectionProps) {
           />
         </a>
         <p>{copy.footerLine}</p>
+        <p className="mt-2.5 text-[0.85rem] text-slate-500">{copy.footerEntity}</p>
         <p className="mt-2.5 text-[0.9rem]">{copy.footerTag}</p>
         <div className="relative z-10 mt-6 flex flex-wrap justify-center gap-5 pb-2 text-sm">
           <Link href={`/${locale}/privacy`} className="hover:text-white">
@@ -21,11 +22,11 @@ export function HomeFooter({ copy, locale }: HomeSectionProps) {
           <Link href={`/${locale}/terms`} className="hover:text-white">
             {copy.termsShort}
           </Link>
+          <a href={copy.contactHref} className="hover:text-white">
+            {copy.contactShort}
+          </a>
           <Link href={`/${locale}/partner/eoi`} className="hover:text-white">
             {copy.partnerCta}
-          </Link>
-          <Link href={`/${locale}/investors`} className="hover:text-white">
-            {copy.investorCta}
           </Link>
         </div>
       </div>

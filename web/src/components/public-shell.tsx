@@ -38,14 +38,23 @@ export function PublicShell({ children }: { children: ReactNode }) {
       </main>
 
       <footer className="relative z-10 mx-auto max-w-3xl px-4 pb-28 text-center text-[0.7rem] text-white/50 sm:px-6 sm:pb-24 lg:max-w-4xl">
-        {t('footerRights')} ·{' '}
+        {t('footerRights')}
+        <br />
+        <span className="mt-1 inline-block text-white/40">
+          Achieve Global Enterprises Pty Ltd · ABN 48 626 269 387
+        </span>
+        <br />
         <Link href={`/${locale}/privacy`} className="relative z-10 underline-offset-2 hover:underline">
           {t('shell.privacyShort')}
         </Link>{' '}
         ·{' '}
         <Link href={`/${locale}/terms`} className="relative z-10 underline-offset-2 hover:underline">
           {t('shell.termsShort')}
-        </Link>
+        </Link>{' '}
+        ·{' '}
+        <a href="mailto:privacy@clox.com.au" className="relative z-10 underline-offset-2 hover:underline">
+          {t('shell.contactShort')}
+        </a>
       </footer>
     </div>
   );

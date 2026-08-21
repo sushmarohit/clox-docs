@@ -25,9 +25,7 @@ async function* mockStream(messages: ChatMessage[]): AsyncIterable<string> {
     ? 'registry'
     : /partner|eoi/i.test(context)
       ? 'partner EOI'
-      : /investor/i.test(context)
-        ? 'investor'
-        : 'home';
+      : 'home';
   const answer =
     `Based on approved CLOX content: ${lastUser?.content ?? 'your question'} relates to the ${funnelHint} path. ` +
     'I can only guide you using site content and will not collect personal details. Open the matching form from the links in this answer.';

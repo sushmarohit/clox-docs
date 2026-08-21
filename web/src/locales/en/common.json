@@ -23,14 +23,15 @@
   "close": "Close",
   "gotIt": "Got it",
   "draftLegal": "Pre-Launch & Early Access Phase",
-  "footerRights": "© 2026 CLOX Logistics. All rights reserved.",
+  "footerRights": "© 2026 CLOX Freight Forwarding. All rights reserved.",
   "selectAllThatApply": "Select all that apply.",
   "shell": {
     "stepRole": "Role",
     "stepDetails": "Details",
     "stepVerify": "Verify",
     "privacyShort": "Privacy",
-    "termsShort": "Terms"
+    "termsShort": "Terms",
+    "contactShort": "Contact"
   },
   "home": {
     "eyebrow": "Pre-Launch"
@@ -69,7 +70,7 @@
     "selectState": "Select State...",
     "fleetComposition": "Active Fleet Composition",
     "capabilities": "Specialized Capability & Permits",
-    "complianceAuth": "Compliance & Payout Escrow Gateway Authorization",
+    "complianceAuth": "Compliance & Protected Payout Gateway Authorization",
     "complianceAuthBody": "I authorize compliance verification of our ABN, Public Liability Insurance ($10M-$20M), and vehicle Roadworthy Certificates (RWC) for live system bidding.",
     "verifyTitle": "Verification & Payout Infrastructure",
     "infraAckHint": "Acknowledge this infrastructure component for launch readiness.",
@@ -106,7 +107,7 @@
     },
     "infra": {
       "easyAml": "easyAML Portal",
-      "stripe": "Stripe Connect Escrow",
+      "stripe": "Protected Upfront Payments (Stripe Connect)",
       "monoova": "Monoova NPP PayTo"
     }
   },
@@ -117,7 +118,7 @@
     "pageSubtitle": "Administrative & Revenue Partner Program — Australian Road Freight Network",
     "cardTitle": "Expression of Interest",
     "introStrong": "Code Forwarding Revolution:",
-    "introBody": "CLOX shifts the high-markup traditional freight broker paradigm into fully automated code. We isolate regional operations through a multi-tier administration framework, incentivizing active ecosystem partners with direct automated gross revenue splits managed natively via programmatic escrow settlements.",
+    "introBody": "CLOX shifts the high-markup traditional freight broker paradigm into fully automated code. We isolate regional operations through a multi-tier administration framework, incentivizing active ecosystem partners with direct automated gross revenue splits managed natively via programmatic protected payment settlements.",
     "section1": "1. DESIRED PLATFORM ROLE & TARGET TERRITORY",
     "section2": "2. APPLICANT PRIMARY INFORMATION",
     "section3": "3. LOGISTICS NETWORK & PROFESSIONAL EXPERIENCE",

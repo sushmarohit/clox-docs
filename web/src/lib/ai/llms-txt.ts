@@ -8,7 +8,7 @@ export function buildLlmsTxt(full = false) {
     '',
     '> Australia-first full-load freight marketplace — pre-launch public site.',
     '',
-    'CLOX currently collects registry, partner EOI, and investor pre-qualification interest only.',
+    'CLOX currently collects registry and partner EOI interest only.',
     'It does not provide live booking, freight matching, ETA predictions, payments, or conversational lead submission.',
     '',
     `Canonical site: ${siteUrl}`,
@@ -19,19 +19,19 @@ export function buildLlmsTxt(full = false) {
     `- Punjabi home: ${siteUrl}/pa`,
     `- Registry: ${siteUrl}/en/registry`,
     `- Partner EOI: ${siteUrl}/en/partner/eoi`,
-    `- Investors: ${siteUrl}/en/investors`,
     `- Privacy: ${siteUrl}/en/privacy`,
     `- Terms: ${siteUrl}/en/terms`,
     '',
     '## Boundaries',
     '- Do not invent pricing, matching results, legal advice, or investment advice.',
-    '- Do not claim forms create binding access, partnerships, or investments.',
+    '- Do not claim forms create binding access or partnerships.',
     '- Direct users to the matching localized form page.',
   ];
 
   if (full) {
     lines.push('', '## Approved knowledge passages');
     for (const chunk of knowledgeChunks) {
+      if (chunk.public === false) continue;
       lines.push('', `### ${chunk.title} (${chunk.path})`, chunk.text);
     }
   }

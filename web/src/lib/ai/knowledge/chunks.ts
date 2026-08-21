@@ -7,6 +7,8 @@ export type KnowledgeChunk = {
   path: string;
   text: string;
   tags: string[];
+  /** When false, chunk is kept for re-enable but not used by the public site guide. */
+  public?: boolean;
 };
 
 export const knowledgeChunks: KnowledgeChunk[] = [
@@ -16,7 +18,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'About CLOX',
     path: '/en',
     tags: ['about', 'product', 'freight', 'australia'],
-    text: 'CLOX is an Australia-first full-load freight marketplace in pre-launch. The public site collects registry, partner expression of interest, and investor pre-qualification leads. It does not yet offer live freight booking, matching, payments, or chat-based lead submission.',
+    text: 'CLOX is an Australia-first full-load freight marketplace in pre-launch. The public site collects registry and partner expression of interest leads. It does not yet offer live freight booking, matching, payments, or chat-based lead submission.',
   },
   {
     id: 'about-hi',
@@ -24,7 +26,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'CLOX के बारे में',
     path: '/hi',
     tags: ['about', 'product', 'freight', 'australia'],
-    text: 'CLOX ऑस्ट्रेलिया-फर्स्ट फुल-लोड फ्रेट मार्केटप्लेस है जो प्री-लॉन्च चरण में है। सार्वजनिक साइट रजिस्ट्री, पार्टनर EOI और इन्वेस्टर प्री-क्वालीफ़िकेशन लीड एकत्र करती है। अभी लाइव बुकिंग, मैचिंग, भुगतान या चैट के माध्यम से लीड जमा उपलब्ध नहीं है।',
+    text: 'CLOX ऑस्ट्रेलिया-फर्स्ट फुल-लोड फ्रेट मार्केटप्लेस है जो प्री-लॉन्च चरण में है। सार्वजनिक साइट रजिस्ट्री और पार्टनर EOI लीड एकत्र करती है। अभी लाइव बुकिंग, मैचिंग, भुगतान या चैट के माध्यम से लीड जमा उपलब्ध नहीं है।',
   },
   {
     id: 'about-pa',
@@ -32,7 +34,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'CLOX ਬਾਰੇ',
     path: '/pa',
     tags: ['about', 'product', 'freight', 'australia'],
-    text: 'CLOX ਆਸਟ੍ਰੇਲੀਆ-ਪਹਿਲਾਂ ਫੁੱਲ-ਲੋਡ ਫਰੇਟ ਮਾਰਕੀਟਪਲੇਸ ਹੈ ਜੋ ਪ੍ਰੀ-ਲਾਂਚ ਪੜਾਅ ਵਿੱਚ ਹੈ। ਜਨਤਕ ਸਾਈਟ ਰਜਿਸਟਰੀ, ਪਾਰਟਨਰ EOI ਅਤੇ ਨਿਵੇਸ਼ਕ ਪ੍ਰੀ-ਕੁਆਲੀਫਿਕੇਸ਼ਨ ਲੀਡ ਇਕੱਠੀਆਂ ਕਰਦੀ ਹੈ। ਅਜੇ ਲਾਈਵ ਬੁਕਿੰਗ, ਮੈਚਿੰਗ, ਭੁਗਤਾਨ ਜਾਂ ਚੈਟ ਰਾਹੀਂ ਲੀਡ ਜਮ੍ਹਾਂ ਉਪਲਬਧ ਨਹੀਂ।',
+    text: 'CLOX ਆਸਟ੍ਰੇਲੀਆ-ਪਹਿਲਾਂ ਫੁੱਲ-ਲੋਡ ਫਰੇਟ ਮਾਰਕੀਟਪਲੇਸ ਹੈ ਜੋ ਪ੍ਰੀ-ਲਾਂਚ ਪੜਾਅ ਵਿੱਚ ਹੈ। ਜਨਤਕ ਸਾਈਟ ਰਜਿਸਟਰੀ ਅਤੇ ਪਾਰਟਨਰ EOI ਲੀਡ ਇਕੱਠੀਆਂ ਕਰਦੀ ਹੈ। ਅਜੇ ਲਾਈਵ ਬੁਕਿੰਗ, ਮੈਚਿੰਗ, ਭੁਗਤਾਨ ਜਾਂ ਚੈਟ ਰਾਹੀਂ ਲੀਡ ਜਮ੍ਹਾਂ ਉਪਲਬਧ ਨਹੀਂ।',
   },
   {
     id: 'registry-en',
@@ -40,7 +42,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'Pre-launch registry',
     path: '/en/registry',
     tags: ['registry', 'sender', 'carrier', 'shipper', 'transport'],
-    text: 'Use the Pre-launch registry if you are a sender/corporate shipper or a carrier/transport company. The wizard captures company or fleet details, ABN, contact email/phone, operational preferences, and infrastructure acknowledgements (easyAML, Stripe Connect Escrow, Monoova NPP PayTo). Submitting does not grant platform access yet.',
+    text: 'Use the Pre-launch registry if you are a sender/corporate shipper or a carrier/transport company. The wizard captures company or fleet details, ABN, contact email/phone, operational preferences, and infrastructure acknowledgements (easyAML, Protected Upfront Payments via Stripe Connect, Monoova NPP PayTo). Submitting does not grant platform access yet.',
   },
   {
     id: 'registry-hi',
@@ -88,6 +90,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'Investor portal',
     path: '/en/investors',
     tags: ['investor', 'equity', 'capital', 'accreditation'],
+    public: false,
     text: 'The Investor portal is an early-access equity round registration and pre-qualification form. Classifications include sophisticated investor, professional investor, and strategic industry partner. Capital bands start at AUD 25,000. Information is protected under NDA-style acknowledgements and used only for accreditation review. Questions: invest@clox.com.au.',
   },
   {
@@ -96,6 +99,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'इन्वेस्टर पोर्टल',
     path: '/hi/investors',
     tags: ['investor', 'equity', 'capital'],
+    public: false,
     text: 'इन्वेस्टर पोर्टल अर्ली-एक्सेस इक्विटी राउंड के लिए प्री-क्वालीफ़िकेशन फ़ॉर्म है। वर्ग: परिष्कृत, पेशेवर और रणनीतिक उद्योग पार्टनर। पूंजी बैंड AUD 25,000 से शुरू होते हैं। प्रश्न: invest@clox.com.au।',
   },
   {
@@ -104,6 +108,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'ਨਿਵੇਸ਼ਕ ਪੋਰਟਲ',
     path: '/pa/investors',
     tags: ['investor', 'equity', 'capital'],
+    public: false,
     text: 'ਨਿਵੇਸ਼ਕ ਪੋਰਟਲ ਅਰਲੀ-ਐਕਸੈਸ ਇਕਵਿਟੀ ਰਾਊਂਡ ਲਈ ਪ੍ਰੀ-ਕੁਆਲੀਫਿਕੇਸ਼ਨ ਫਾਰਮ ਹੈ। ਵਰਗ: ਸੋਫਿਸਟੀਕੇਟਡ, ਪੇਸ਼ੇਵਰ ਅਤੇ ਰਣਨੀਤਕ ਉਦਯੋਗ ਪਾਰਟਨਰ। ਪੂੰਜੀ ਬੈਂਡ AUD 25,000 ਤੋਂ ਸ਼ੁਰੂ ਹੁੰਦੇ ਹਨ। ਸਵਾਲ: invest@clox.com.au।',
   },
   {

@@ -52,7 +52,7 @@ const CAPABILITY = [
 
 const INFRA = [
   { value: 'easyAML Portal', labelKey: 'registry.infra.easyAml' },
-  { value: 'Stripe Connect Escrow', labelKey: 'registry.infra.stripe' },
+  { value: 'Protected Upfront Payments (Stripe Connect)', labelKey: 'registry.infra.stripe' },
   { value: 'Monoova NPP PayTo', labelKey: 'registry.infra.monoova' },
 ] as const;
 

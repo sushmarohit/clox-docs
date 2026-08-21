@@ -5,18 +5,21 @@ test.describe('Public smoke', () => {
     await page.goto('/');
     await expect(page).toHaveURL(/\/en\/?$/);
     await expect(
-      page.getByRole('heading', { name: /future of australian logistics/i }),
+      page.getByRole('heading', { name: /digital full-load/i }),
     ).toBeVisible();
+    await expect(page.getByText(/coming soon/i).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /send freight/i }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /join as carrier/i }).first()).toBeVisible();
     await expect(page.getByRole('link', { name: /join pre-launch/i }).first()).toBeVisible();
     await expect(page.getByRole('link', { name: /partner eoi/i }).first()).toBeVisible();
-    await expect(page.getByRole('link', { name: /investor/i }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /investor/i })).toHaveCount(0);
   });
 
   test('hero carousel and globe language dropdown work', async ({ page }) => {
     await page.goto('/en');
     await expect(page.locator('header')).toHaveCSS('position', 'fixed');
     await expect(
-      page.getByRole('heading', { name: /future of australian logistics/i }),
+      page.getByRole('heading', { name: /digital full-load/i }),
     ).toBeVisible();
     await expect(
       page.getByRole('heading', { name: /move your goods/i }),
@@ -30,17 +33,17 @@ test.describe('Public smoke', () => {
     expect(Number(layerStackIndex)).toBeGreaterThanOrEqual(0);
 
     await page.getByRole('button', { name: /language/i }).click();
-    await page.getByRole('option', { name: /russian/i }).click();
-    await expect(page).toHaveURL(/\/ru\/?$/);
+    await page.getByRole('option', { name: /hindi/i }).click();
+    await expect(page).toHaveURL(/\/hi\/?$/);
     await expect(
-      page.getByRole('heading', { name: /будущее австралийской логистики/i }),
+      page.getByRole('heading', { name: /डिजिटल फुल-लोड/i }),
     ).toBeVisible();
   });
 
-  test('russian locale home loads', async ({ page }) => {
-    await page.goto('/ru');
+  test('hindi locale home loads', async ({ page }) => {
+    await page.goto('/hi');
     await expect(
-      page.getByRole('heading', { name: /будущее австралийской логистики/i }),
+      page.getByRole('heading', { name: /डिजिटल फुल-लोड/i }),
     ).toBeVisible();
   });
 
@@ -63,14 +66,13 @@ test.describe('Public smoke', () => {
     await expect(page.getByText(/State Master/i).first()).toBeVisible();
   });
 
-  test('investor form loads', async ({ page }) => {
-    await page.goto('/en/investors');
-    await expect(page.getByRole('heading', { name: /investor portal/i })).toBeVisible();
-    await expect(page.getByText(/Sophisticated Investor/i)).toBeVisible();
+  test('investor portal is not public', async ({ page }) => {
+    const response = await page.goto('/en/investors');
+    expect(response?.status()).toBe(404);
   });
 
-  test('privacy draft page loads', async ({ page }) => {
+  test('privacy page loads', async ({ page }) => {
     await page.goto('/en/privacy');
-    await expect(page.getByText(/Draft — legal review pending/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: /privacy/i }).first()).toBeVisible();
   });
 });

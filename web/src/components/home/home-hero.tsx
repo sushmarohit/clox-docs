@@ -1,10 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import type { HomeCopy } from '@/components/home/copy';
+import type { HomeSectionProps } from '@/components/home/types';
 import { heroSlides } from '@/components/home/types';
 
-export function HomeHero({ copy }: { copy: HomeCopy }) {
+export function HomeHero({ copy, locale }: HomeSectionProps) {
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {
@@ -17,7 +18,7 @@ export function HomeHero({ copy }: { copy: HomeCopy }) {
   return (
     <section
       id="banner"
-      className="relative isolate flex min-h-[700px] items-center overflow-hidden bg-clox-navy pt-[160px] text-center text-white sm:min-h-screen sm:pt-[200px] xl:min-h-[850px] xl:max-h-[920px] xl:items-start xl:pt-[180px] 2xl:min-h-[900px] 2xl:max-h-[980px]"
+      className="relative isolate flex min-h-[700px] items-center overflow-hidden bg-clox-navy pt-[190px] text-center text-white sm:min-h-screen sm:pt-[220px] xl:min-h-[850px] xl:max-h-[920px] xl:items-start xl:pt-[200px] 2xl:min-h-[900px] 2xl:max-h-[980px]"
     >
       <div className="absolute inset-0 z-0" aria-hidden>
         {heroSlides.map((item, index) => (
@@ -63,9 +64,20 @@ export function HomeHero({ copy }: { copy: HomeCopy }) {
           })}
         </div>
 
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <Link href={`/${locale}/registry`} className="clox-btn-primary px-8 py-3.5 text-[1.05rem] xl:px-10 xl:py-4 xl:text-[1.15rem]">
+            {copy.sendFreightCta}
+          </Link>
+          <Link
+            href={`/${locale}/registry`}
+            className="inline-flex items-center justify-center rounded-full border-2 border-white/80 bg-white/10 px-8 py-3.5 text-[1.05rem] font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-clox-navy xl:px-10 xl:py-4 xl:text-[1.15rem]"
+          >
+            {copy.joinCarrierCta}
+          </Link>
+        </div>
         <a
           href="#comparison"
-          className="clox-btn-primary px-12 py-4 text-[1.15rem] xl:px-14 xl:py-4.5 xl:text-[1.2rem]"
+          className="mt-5 inline-block text-sm font-semibold text-white/80 underline-offset-4 hover:text-clox-orange hover:underline"
         >
           {copy.explore}
         </a>

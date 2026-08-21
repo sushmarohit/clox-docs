@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getSiteUrl } from '@/lib/env';
 import { supportedLocales } from '@/locales';
 
-const paths = ['', '/registry', '/partner/eoi', '/investors', '/privacy', '/terms'];
+const paths = ['', '/registry', '/partner/eoi', '/privacy', '/terms'];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();
