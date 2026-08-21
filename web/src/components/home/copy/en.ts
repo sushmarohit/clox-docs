@@ -30,6 +30,7 @@ export const homeCopyEn = {
   sendFreightCta: 'Send Freight',
   joinCarrierCta: 'Join as Carrier',
   preLaunch: 'Join Pre-Launch',
+  preLaunchShort: 'Join Pre-Launch',
   overviewTitle: 'Company Overview',
   overviewBody:
     "Welcome to CLOX — Australia's digital full-load freight marketplace. We are transforming logistics by bringing simplicity, transparency, and visibility to the modern supply chain. By replacing high-overhead manual middleware with a high-efficiency digital ecosystem, CLOX connects corporate senders directly with vetted heavy vehicle operators while securing transactions via planned protected upfront payments.",

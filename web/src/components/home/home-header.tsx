@@ -17,31 +17,37 @@ export function HomeHeader({ copy, locale }: HomeSectionProps) {
         </span>
         {copy.announceBar}
       </div>
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 px-5 py-3 sm:px-8 sm:py-3.5 lg:px-0">
+      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-3.5 lg:px-6 xl:px-0">
         <a href="#banner" className="inline-flex shrink-0" aria-label="CLOX home">
           <img
             src="/brand/clox_updated_logo.png"
             alt="CLOX"
-            className="h-[48px] w-auto object-contain sm:h-[56px] lg:h-[52px]"
+            className="h-[44px] w-auto object-contain sm:h-[52px] lg:h-[48px]"
           />
         </a>
 
-        <nav className="hidden items-center gap-8 lg:flex xl:gap-10" aria-label="Main navigation">
+        <nav
+          className="hidden min-w-0 flex-1 items-center justify-center gap-4 lg:flex xl:gap-7 2xl:gap-9"
+          aria-label="Main navigation"
+        >
           {copy.nav.map(([label, href]) => (
-            <a key={label} href={href} className="clox-nav-link">
+            <a key={label} href={href} className="clox-nav-link whitespace-nowrap text-[0.95rem] xl:text-[1.05rem]">
               {label}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3 sm:gap-5">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <LanguageSwitcher className="text-clox-navy" />
-          <Link href={`/${locale}/registry`} className="clox-btn-primary hidden sm:inline-flex">
-            {copy.preLaunch}
+          <Link
+            href={`/${locale}/registry`}
+            className="clox-btn-primary hidden whitespace-nowrap px-4 py-2.5 text-sm shadow-[0_3px_12px_rgba(255,86,14,0.28)] lg:inline-flex lg:px-5 lg:text-[0.95rem] xl:px-6 xl:py-3 xl:text-[1.05rem]"
+          >
+            {copy.preLaunchShort}
           </Link>
           <button
             type="button"
-            className="inline-flex rounded-lg border border-slate-200 px-3 py-2 text-clox-navy lg:hidden"
+            className="inline-flex shrink-0 items-center justify-center rounded-lg border border-slate-200 px-3 py-2 text-clox-navy lg:hidden"
             aria-expanded={menuOpen}
             aria-label="Toggle navigation"
             onClick={() => setMenuOpen((value) => !value)}
@@ -66,7 +72,7 @@ export function HomeHeader({ copy, locale }: HomeSectionProps) {
             ))}
             <Link
               href={`/${locale}/registry`}
-              className="clox-btn-primary"
+              className="clox-btn-primary whitespace-nowrap"
               onClick={() => setMenuOpen(false)}
             >
               {copy.preLaunch}
