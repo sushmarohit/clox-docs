@@ -44,6 +44,8 @@
 
 **Production engineering rules:** [engineering/production-development-rules.md](../engineering/production-development-rules.md) · Cursor: `.cursor/rules/`
 
+**Gate 0 (locked):** [adr/G0-gate-0-phase1-decisions.md](../adr/G0-gate-0-phase1-decisions.md)
+
 ---
 
 ## TPM consolidated analysis

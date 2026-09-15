@@ -1,8 +1,9 @@
 # CLOX Phase 1 — Full Milestone Implementation Plan
 
-**Version:** 1.0  
-**Date:** 2026-09-14  
-**Status:** Canonical build plan for Gate 0 + M0–M12  
+**Version:** 1.3  
+**Date:** 2026-09-15  
+**Status:** Canonical build plan for Gate 0 + M0–M12 — **Gate 0 locked**  
+**Gate 0 ADR:** [adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md)  
 **Parent catalogs:** [MILESTONES.md](MILESTONES.md) · [MILESTONES-AUSTRALIA.md](MILESTONES-AUSTRALIA.md)  
 **Phase 0 (done / parallel foundation):** [PRE-LAUNCH-IMPLEMENTATION-PLAN.md](PRE-LAUNCH-IMPLEMENTATION-PLAN.md)  
 **Backend architecture:** [architecture/backend-architecture.md](architecture/backend-architecture.md) (modular monolith → microservices-ready)  
@@ -33,20 +34,30 @@ For **each milestone** below:
 
 ---
 
-## Locked platform decisions (apply to all milestones)
+## Locked platform decisions (Gate 0 — accepted 2026-09-15)
+
+Canonical detail: **[adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md)**.
 
 | ID | Decision | Locked choice |
 |----|----------|---------------|
-| G0-1 | Payment model | **Model A** — 100% pay on accept (AUD) |
-| G0-2 | KYB/KYC | **Manual Ops review** — **no easyAML / Trulioo** in Phase 1 |
-| G0-6 | Payout rail | **Stripe Connect only** (Monoova deferred) |
-| Docs upload | Malware scan | **Deferred** — mime/size/hash only; Ops reviews files manually |
-| Geo / routing | Routing engine | **Valhalla** (self-hosted / OSM) for distance, TSP, HV constraints |
-| Geo / dwell | Geofencing | **PostGIS** (`ST_DWithin` / enter-exit) for Phase 1; Radar optional later |
-| Stack | Backend | NestJS modular monolith + Prisma + PostgreSQL |
-| Stack | Web | Existing `web/` + `admin/`; expand roles |
-| Stack | Mobile | Per G0-7 (record choice before M8) |
-| Currency | AUD | All money fields AUD; Stripe AU |
+| G0-1 | Payment model | **Model A** — 100% on accept (AUD / Stripe) |
+| G0-2 | KYB/KYC | **Manual Ops** — no easyAML/Trulioo |
+| G0-3 | Carrier unlock | **Always manual** (State in-state / Super) |
+| G0-4 | Local BDE compliance | View + escalate only |
+| G0-5 | Pilot geography | **VIC first** (`enabled_states=[VIC]`); AU-wide later via config |
+| G0-6 | Payout rail | **Stripe Connect only** |
+| G0-7 | Mobile | **Flutter** (external mobile team); API owned by web/backend |
+| G0-8 | Tariffs | Versioned DB tables; Super publishes |
+| G0-9 | Frontend | Next = pre-launch only; **one Vite app** @ `app.clox.com.au` for all logged-in roles |
+| G0-10 | Stripe pattern | **Separate charges + transfers** |
+| G0-11 | GST | Charge **inc-GST total**; store ex/GST/inc; splits on inc-GST gross (Finance confirm) |
+| G0-12 | Vehicle floor | **Ute / 1–2T+**; no courier motorbike/car tier |
+| G0-13 | Sender verify approvers | Super + State; Local escalate only |
+| G0-14 | Routing / geo | **Valhalla** + **PostGIS** |
+| G0-15 | Malware scan | Deferred |
+| G0-16 | Fleet+ SaaS | **Out of Phase 1** |
+| G0-17 | Receiver | Mandatory email; email notify; driver SOG POD |
+| G0-18 | Vacant State/Local | Super operates; 10%/5% → HQ holding |
 
 ---
 
@@ -55,9 +66,9 @@ For **each milestone** below:
 ```
 clox/
 ├── api/          # NestJS — expand modules per milestone
-├── web/          # Public + sender/carrier web
-├── admin/        # Ops portal (Super → State → Local)
-├── mobile/       # Sender + Driver apps (create at M8)
+├── web/          # Next.js — public pre-launch ONLY (do not rewrite)
+├── admin/        # Vite — grow into all logged-in roles (rename → app/ optional); prod app.clox.com.au
+├── mobile/       # Flutter — external team (Sender + Driver apps); contracts from api OpenAPI
 ├── docs/
 └── docker/
 ```
@@ -70,54 +81,62 @@ clox/
 
 # GATE 0 — Decisions before M0
 
-**Duration:** 1–2 weeks  
-**Owner:** TPM + Product + Finance + Eng lead  
-**Blocks:** M0 kickoff
-
-## What to decide
-
-Record ADRs (or BRD addendum) for G0-1 … G0-8.
-
-## How to implement (process)
-
-1. Workshop with Product / Finance / Legal / Eng.  
-2. Write one ADR per decision (or single Gate-0 ADR with table).  
-3. Update BRD/PRD only where defaults change.  
-4. Sign-off in repo `docs/adr/` (create folder if missing).
+**Status:** **LOCKED** — see [adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md)  
+**Duration:** Complete  
+**Blocks:** None for M0 kickoff (Finance written confirm on G0-11 recommended)
 
 ## Checklist
 
-- [ ] **G0-1** Payment model = Model A (confirmed)
-- [ ] **G0-2** KYB/KYC = **manual Ops** (easyAML/Trulioo **out of Phase 1**)
-- [ ] **G0-3** Carrier approval: docs complete → Ops/State queue (no paid IDV vendor); optional later auto-heuristics only
-- [ ] **G0-4** Local BDE compliance = view + escalate (no approve) unless policy flip
-- [ ] **G0-5** Pilot geography = single state (recommended VIC) *or* national AU
-- [ ] **G0-6** Stripe Connect only for pilot (confirmed)
-- [ ] **G0-7** Mobile stack chosen (native / RN / Flutter)
-- [ ] **G0-8** Tariffs = versioned DB tables; Super publishes
-- [ ] Valhalla hosting plan (Hetzner/AWS) sketched
-- [ ] PostGIS geofence radius default = **200 m** (legal)
-- [ ] Gate 0 signed; M0 unblocked
+- [x] **G0-1** Model A
+- [x] **G0-2** Manual KYB/KYC
+- [x] **G0-3** Manual carrier unlock always
+- [x] **G0-4** Local BDE view + escalate
+- [x] **G0-5** VIC pilot
+- [x] **G0-6** Stripe Connect only
+- [x] **G0-7** Flutter (external team)
+- [x] **G0-8** Versioned tariff DB tables
+- [x] **G0-9** Next pre-launch + Vite logged-in app
+- [x] **G0-10** Separate charges + transfers
+- [x] **G0-11** GST inc-GST charge (Finance confirm pending)
+- [x] **G0-12** Ute/1–2T+ vehicle floor
+- [x] **G0-13** Sender approve = Super + State
+- [x] **G0-14** Valhalla + PostGIS
+- [x] **G0-15** No malware scan Phase 1
+- [x] **G0-16** No Fleet+ billing Phase 1
+- [x] **G0-17** Receiver email mandatory
+- [x] **G0-18** Super-only operable if no State/Local
+- [x] Gate 0 ADR filed; **M0 unblocked**
 
 ---
 
 # M0 — Foundation & engineering baseline
 
 **Duration:** 2–3 weeks  
-**Depends on:** Gate 0  
-**Goal:** Runnable API + DB + CI on staging; ERD v0; ADRs filed
+**Depends on:** Gate 0 (**locked**)  
+**Goal:** Runnable API + local DB; ERD v0; module skeleton; thin CI; Gate 0 ADR already filed
+
+**M0 operating model (agreed):**
+
+| Item | Phase 1 start approach |
+|------|------------------------|
+| **Docker** | **Local development only** — Postgres (+ PostGIS). Not required as prod runtime. |
+| **CI** | **Thin** — PR/`main` checks: lint + TypeScript (+ tests when present). **Not** full auto-deploy. |
+| **CD / stage** | **Manual deploy** to a shared stage API when needed (before multi-dev / Flutter). OK to defer a few days into M0/M1. |
+| **Prod hosting** | Managed Postgres later; not “Docker on laptop = production.” |
 
 ## What to implement
 
 | Area | Deliverable |
 |------|-------------|
 | Repo | Modular Nest modules skeleton for all bounded contexts |
-| Infra | Docker Postgres (+ PostGIS extension), object storage stub, queue stub, secrets via env |
-| CI/CD | Lint, test, build, migrate, deploy stage |
+| Infra (local) | Docker Compose Postgres (+ PostGIS); `.env.example`; secrets via env only |
+| Infra (later in M0/M1) | Object storage stub/config; queue stub optional until M7 |
+| CI | Thin pipeline: `npm ci` → lint / `tsc` (api + touched FE apps) |
+| CD | Manual stage deploy playbook (short README) — no mandatory auto-CD |
 | API | `/v1` prefix, health, OpenAPI stub, correlation IDs |
 | Data | ERD v0 entities (see below) |
-| Design | Shared UI tokens (CTA, cards, status pills) |
-| Docs | ADR: Model A, module boundaries, outbox pattern, Valhalla+PostGIS, Stripe Connect |
+| Design | Shared UI tokens (CTA, cards, status pills) for Vite app |
+| Docs | Gate 0 ADR already accepted; add module-boundaries note if needed |
 
 ### ERD v0 entities (minimum)
 
@@ -125,34 +144,34 @@ Record ADRs (or BRD addendum) for G0-1 … G0-8.
 
 ## How to implement
 
-1. Enable PostGIS on Postgres (`CREATE EXTENSION postgis`).  
+1. Docker Compose: Postgres; enable PostGIS (`CREATE EXTENSION postgis`) for local.  
 2. Scaffold Nest modules with empty controllers + health.  
 3. Prisma schema v0 → migrate → seed Super Admin (reuse Phase 0).  
 4. Add OpenAPI (`/v1/docs` non-prod).  
-5. CI pipeline: `npm ci` → lint → test → `prisma migrate deploy`.  
-6. Deploy API health to stage.  
-7. File ADRs under `docs/adr/`.
+5. Thin CI: lint + typecheck on PR (deploy stays manual).  
+6. Document manual stage deploy steps when a stage host exists.  
+7. Confirm Gate 0 ADR path in README.
 
 ## Implementation checklist
 
-- [ ] PostGIS enabled in docker + stage
+- [ ] Local Docker Postgres (+ PostGIS) via Compose
 - [ ] Nest modules created for identity, compliance, jobs, trips, payments, notifications, geolocation, documents, ops, settlements, audit
-- [ ] Prisma ERD v0 migrated
-- [ ] `GET /v1/health` returns DB up
+- [ ] Prisma ERD v0 migrated locally
+- [ ] `GET /v1/health` returns DB up (local)
 - [ ] Correlation ID middleware
-- [ ] OpenAPI stub published
-- [ ] CI green on `main`
-- [ ] Stage deploy of API
+- [ ] OpenAPI stub available locally
+- [ ] Thin CI: lint/tsc green on PR
+- [ ] Manual stage deploy playbook (when stage exists) — auto-CD **not** required
 - [ ] Seed Super Admin works
-- [ ] ADRs: G0-1…G0-8 + Valhalla/PostGIS + Stripe pattern (separate charges + transfers)
-- [ ] Currency enums / money as integer cents AUD
+- [ ] Gate 0 ADR linked; money fields = integer cents AUD
+- [ ] `.env.example` complete; no secrets in git
 
 ## Exit / QA checklist
 
-- [ ] Health check green on stage
-- [ ] Finance + backend reviewed payment-related ERD fields
+- [ ] New developer can `docker compose up` + migrate + seed + hit health locally
+- [ ] Payment-related ERD fields reviewed (ex/GST/inc cents)
 - [ ] No production secrets in repo
-- [ ] README runbook for local docker + migrate + seed
+- [ ] README: local Docker + migrate + seed + thin CI notes
 
 ---
 
@@ -554,8 +573,10 @@ Invite → OTP → password → licence + NHVR acknowledgement → active
 # M8 — Trip execution (Driver + Sender mobile)
 
 **Duration:** 5–6 weeks  
-**Depends on:** M7 + G0-7 mobile stack  
+**Depends on:** M7 + Flutter apps from mobile team (G0-7)  
 **Goal:** Safety → mass OK → Start Trip; sender tracking after start
+
+> Mobile implementation is owned by the **Flutter team**. Backend/web deliver OpenAPI contracts, webhooks/push payloads, and stage environments.
 
 ## What to implement
 
@@ -940,3 +961,5 @@ Territory dashboard · growth pipeline · carrier support (view/escalate) · fir
 | 1.0 | 2026-09-14 | Full Gate 0 + M0–M12 what/how/checklists; Stripe + Valhalla/PostGIS locked |
 | 1.1 | 2026-09-14 | Phase 1: manual KYB/KYC (no easyAML); no malware scan |
 | 1.2 | 2026-09-15 | Receiver: mandatory email on job; email notifications; driver-device POD |
+| 1.3 | 2026-09-15 | **Gate 0 fully locked** — ADR G0; VIC; Flutter; Vite app; Stripe SCT; GST; vehicle floor |
+| 1.4 | 2026-09-15 | M0: local Docker only; thin CI; manual stage (no full auto-CD required) |

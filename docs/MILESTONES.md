@@ -6,8 +6,8 @@
 
 **Source of truth:** [PRD](PRD.md) · [BRD](BRD.md) · [system-design](system-design.md) · [screen-flows](screen-flows/README.md) · onboarding & integration specs
 
-**Detailed implementation (what / how / checklists per milestone):** [PHASE-1-IMPLEMENTATION-PLAN.md](PHASE-1-IMPLEMENTATION-PLAN.md)
-
+**Detailed implementation (what / how / checklists per milestone):** [PHASE-1-IMPLEMENTATION-PLAN.md](PHASE-1-IMPLEMENTATION-PLAN.md)  
+**Gate 0 ADR (locked 2026-09-15):** [adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md)  
 **Australia-only summary (13 gates, M0–M12 list):** [MILESTONES-AUSTRALIA.md](MILESTONES-AUSTRALIA.md)
 
 ---
@@ -82,20 +82,22 @@ flowchart TB
 
 ---
 
-## 3. Gate 0 — Decisions before M0 (1–2 weeks)
+## 3. Gate 0 — Decisions before M0 (LOCKED)
 
-Block engineering kickoff until these are recorded (ADR or BRD addendum):
+**Canonical ADR:** [adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md) · **Accepted:** 2026-09-15  
+**M0 status:** Unblocked
 
-| # | Decision | Options | Default recommendation | Impacts |
-|---|----------|---------|------------------------|---------|
-| G0-1 | Payment model for Phase 1 launch | A: pay on accept · B: deposit + balance | **Model A** | M7, M12, sender publish UX |
-| G0-2 | KYB/KYC approach | easyAML · Trulioo · **manual Ops** | **Manual Ops review** (no paid IDV in Phase 1) | M2, M3, M4 |
-| G0-3 | Ops auto-approve vs manual for carriers | Auto path per [transportcompanyonboarding-sequence](transportcompanyonboarding-sequence.md) | Auto for clean KYB+docs; else queue | M4, M11 |
-| G0-4 | Local BDE compliance approve | View+escalate vs approve | View + escalate (README default) | M11 |
-| G0-5 | Pilot geography | Single state vs national | Single state (e.g. VIC) | Radar polygons, admin RBAC scope |
-| G0-6 | Monoova in Phase 1 | Stripe-only payouts vs Stripe+Monoova | Stripe Connect only for pilot | M12 |
-| G0-7 | Mobile stack | Native iOS/Android · React Native · Flutter | Team skill decision | M8, sender mobile |
-| G0-8 | Tariff source of truth | DB policy tables vs config service | Versioned DB tables (Super edit) | M6, M11 |
+| # | Decision | Locked choice | Impacts |
+|---|----------|---------------|---------|
+| G0-1 | Payment model | **Model A** | M7, M12 |
+| G0-2 | KYB/KYC | **Manual Ops** (no easyAML) | M2–M4 |
+| G0-3 | Carrier unlock | **Always manual** (State/Super) | M4, M11 |
+| G0-4 | Local BDE approve | **View + escalate** | M11 |
+| G0-5 | Pilot geography | **VIC first** | M9, M11, M12 |
+| G0-6 | Payout rail | **Stripe Connect only** | M12 |
+| G0-7 | Mobile | **Flutter** (external team) | M8+ |
+| G0-8 | Tariffs | Versioned DB tables | M6, M11 |
+| G0-9–G0-18 | See ADR | Vite app, SCT Stripe, GST, vehicle floor, etc. | — |
 
 ---
 

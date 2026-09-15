@@ -27,6 +27,8 @@ This document is the **source of truth for Phase 1 payment engineering**. Legal 
 |----------|--------|-------|
 | Collection rail | **Stripe** | Cards / AU payment methods via Stripe |
 | Payout rail (pilot) | **Stripe Connect** | Carrier (+ admin) Transfers |
+| Charge pattern (**G0-10**) | **Separate charges + transfers** | Platform PI → ledger → Transfer; not destination-charge-primary |
+| GST (**G0-11**) | Charge **inc-GST total** cents | Persist ex_gst, gst, inc_gst; splits on **inc-GST gross** pending Finance written confirm |
 | Monetization model | **Model A** | No deposit at publish; 100% at accept |
 | Model B (deposit + balance) | **Out of Phase 1** | Spec retained below for later |
 | Monoova NPP / PayTo | **Deferred (M12+)** | Optional cost optimization later |
@@ -35,6 +37,8 @@ This document is the **source of truth for Phase 1 payment engineering**. Legal 
 | Carrier clearing | **7-day** clearing before withdraw/payout (product default) | Configurable policy |
 | Admin payout cycle | Fortnightly **“4th night”** | Accrue on complete; disburse on cycle |
 | Vacant territory | Unassigned State/Local share → **HQ / holding** | Configurable |
+
+**Gate 0 ADR:** [adr/G0-gate-0-phase1-decisions.md](../adr/G0-gate-0-phase1-decisions.md)
 
 ---
 
@@ -114,7 +118,7 @@ Net Admin Share = Gross Admin Share − (Management Fees + Pro-Rata Regional Mar
 
 Alternative: **Destination charges** with `application_fee_amount` ≈ 30% — valid if finance prefers fee-at-charge-time. Pick one pattern in an ADR and do not mix per job.
 
-**ADR recommendation:** Separate charges + transfers for Phase 1 (easier surcharge/refund/reversal accounting).
+**ADR recommendation (LOCKED G0-10):** Separate charges + transfers for Phase 1.
 
 ---
 

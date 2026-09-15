@@ -28,20 +28,19 @@ Record the choice in **Gate 0 (G0-5)** before M0 starts.
 
 ---
 
-## Gate 0 — Australia decisions (before M0)
+## Gate 0 — Australia decisions (LOCKED)
 
-**Duration:** ~1–2 weeks  
-**Purpose:** Lock AU-specific product and vendor choices so engineering does not rework M6–M12.
+**ADR:** [adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md) · **Accepted:** 2026-09-15
 
-| ID | Decision | Australia default |
-|----|----------|-------------------|
+| ID | Decision | Locked |
+|----|----------|--------|
 | G0-1 | Payment at launch | **Model A** — pay 100% on proposal accept (AUD via Stripe) |
-| G0-2 | KYB/KYC | **Manual Ops review** — easyAML/Trulioo deferred |
-| G0-3 | Carrier approval | Auto when clean; else Ops queue |
-| G0-4 | Local BDE can approve compliance | View + escalate (not approve) unless policy changes |
-| G0-5 | Pilot geography | **One AU state** (e.g. VIC) *or* **national Australia** |
-| G0-6 | Payout rail for pilot | **Stripe Connect only** (Monoova optional later) |
-| G0-7 | Mobile apps | Team choice (native / React Native / Flutter) |
+| G0-2 | KYB/KYC | **Manual Ops** — no easyAML/Trulioo |
+| G0-3 | Carrier approval | **Always manual** (State/Super) |
+| G0-4 | Local BDE compliance | View + escalate |
+| G0-5 | Pilot geography | **VIC first**; enable other AU states later |
+| G0-6 | Payout rail | **Stripe Connect only** |
+| G0-7 | Mobile apps | **Flutter** (external team) |
 | G0-8 | Tariffs & rules | Versioned DB tables; Super Admin edits (AUD) |
 
 ---

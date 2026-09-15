@@ -8,8 +8,9 @@ alwaysApply: false
 
 ## Stack
 
-- `web/`: Next.js + React + TS
-- `admin/`: Vite + React + TS
+- `web/`: Next.js + React + TS — **public pre-launch only** (do not rewrite for marketplace)
+- `admin/` (Vite + React + TS): **all logged-in roles** — Super, State, Local, Sender, Carrier, Driver web → prod **`app.clox.com.au`** (G0-9)
+- Mobile: **Flutter** (external team) — Sender track/approve + Driver execution (G0-7)
 - Zustand = **client** state only
 - TanStack Query = **server** state
 - Axios via centralized client → services → hooks → components
