@@ -41,6 +41,7 @@ Define the business objectives, operating model, regulatory constraints, and sco
   - Local BDE Admin: 5% of gross
 - State/Local payouts run on fortnightly (14-day) cycle ("4th night" operating phrase).
 - If no regional admin exists, regional share defaults to HQ or holding policy (configurable).
+- **Phase 1 payment rail:** Stripe Connect — see [payments/stripe-payment-specification.md](payments/stripe-payment-specification.md).
 
 ## Regulatory and Compliance Requirements
 - KYB/KYC verification for onboarding.

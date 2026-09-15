@@ -6,6 +6,8 @@
 
 **Source of truth:** [PRD](PRD.md) · [BRD](BRD.md) · [system-design](system-design.md) · [screen-flows](screen-flows/README.md) · onboarding & integration specs
 
+**Detailed implementation (what / how / checklists per milestone):** [PHASE-1-IMPLEMENTATION-PLAN.md](PHASE-1-IMPLEMENTATION-PLAN.md)
+
 **Australia-only summary (13 gates, M0–M12 list):** [MILESTONES-AUSTRALIA.md](MILESTONES-AUSTRALIA.md)
 
 ---
@@ -87,7 +89,7 @@ Block engineering kickoff until these are recorded (ADR or BRD addendum):
 | # | Decision | Options | Default recommendation | Impacts |
 |---|----------|---------|------------------------|---------|
 | G0-1 | Payment model for Phase 1 launch | A: pay on accept · B: deposit + balance | **Model A** | M7, M12, sender publish UX |
-| G0-2 | KYB/KYC vendor | easyAML · Trulioo · other | Pick one + sandbox | M2, M3, M4 |
+| G0-2 | KYB/KYC approach | easyAML · Trulioo · **manual Ops** | **Manual Ops review** (no paid IDV in Phase 1) | M2, M3, M4 |
 | G0-3 | Ops auto-approve vs manual for carriers | Auto path per [transportcompanyonboarding-sequence](transportcompanyonboarding-sequence.md) | Auto for clean KYB+docs; else queue | M4, M11 |
 | G0-4 | Local BDE compliance approve | View+escalate vs approve | View + escalate (README default) | M11 |
 | G0-5 | Pilot geography | Single state vs national | Single state (e.g. VIC) | Radar polygons, admin RBAC scope |
@@ -503,6 +505,8 @@ Phase 1 is **done** when:
 
 ## Related links
 
+- [PHASE-1-IMPLEMENTATION-PLAN.md](PHASE-1-IMPLEMENTATION-PLAN.md) — **Canonical** what/how/checklists for Gate 0 + M0–M12
+- [PRE-LAUNCH-IMPLEMENTATION-PLAN.md](PRE-LAUNCH-IMPLEMENTATION-PLAN.md) — Phase 0 leads / Super console
 - [MILESTONES-AUSTRALIA.md](MILESTONES-AUSTRALIA.md) — Australia-only milestone count and quick reference
 - Lifecycle diagram: [Sender and Carrier Job](../Sender%20and%20Carrier%20Job-2026-05-14-024513.png)
 - Visual overview: [basic-flow-visual](basic-flow-visual.md)

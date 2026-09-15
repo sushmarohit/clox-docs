@@ -23,7 +23,8 @@
 - Input validation and schema enforcement on all public endpoints.
 - Idempotency requirements for payment and assignment-critical endpoints.
 - Rate limiting and abuse protection per role and endpoint category.
-- Secure file upload pipeline with mime/type checks and malware scanning.
+- Secure file upload pipeline with mime/type/size checks and content hashing.
+- **Phase 1:** no automated malware scanning — Ops reviews uploads manually; add scanner in a later phase.
 
 ## Payment and Financial Security
 - Use PCI-compliant provider boundaries (no raw card handling in Clox services).

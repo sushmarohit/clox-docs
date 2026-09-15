@@ -1,0 +1,37 @@
+---
+description: Git, dependencies, refactoring, API compatibility for Clox
+alwaysApply: true
+---
+
+# Git, deps, refactoring, compatibility
+
+## Git
+
+- Focused commits: `feat:`, `fix:`, `refactor:`, `chore:` — not “update stuff”.
+- Never commit `.env`, secrets, `node_modules`, dumps, or build artifacts.
+
+## Dependencies
+
+- Prefer existing code; add packages only when justified and maintained.
+
+## Refactoring
+
+- Understand architecture first; no drive-by rewrites.
+- Preserve behavior unless the task requires change.
+- Match existing sound conventions before inventing new ones.
+
+## API compatibility
+
+- Prefer backward-compatible changes; version `/v1` when breaking.
+- Do not silently rename/remove response fields.
+
+## Report format (when finishing tasks)
+
+```text
+Implemented: ...
+Files changed: ...
+API changes: ...
+Database changes: ...
+Validation: TypeScript / Lint / Tests (only if actually run)
+Notes: ...
+```

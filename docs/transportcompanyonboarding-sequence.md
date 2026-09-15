@@ -4,9 +4,9 @@ Visual companion to [transportcompanyonboarding.md](transportcompanyonboarding.m
 
 ## Configuration (product policy)
 
-- **Auto path:** Use when `automated_gates_all_pass` and no risk/manual-review flags (e.g., KYB verified, documents valid, Stripe payout verified, min one compliant vehicle + driver).
-- **Ops path:** Use when policy requires human sign-off for all new carriers, or when any gate is inconclusive, KYB fails, document mismatch, Stripe `requires_action`, or fraud/risk score exceeds threshold.
-- **Hybrid (recommended):** Default to auto when clean; route to Ops whenever any exception applies.
+- **Auto path:** Deferred for Phase 1 paid-IDV; do not auto-activate on vendor KYB.
+- **Ops path (Phase 1 default):** Human sign-off for new carriers after docs + Stripe + fleet gates; use when KYB would have been inconclusive, document mismatch, Stripe `requires_action`, or risk flags.
+- **Hybrid (later):** Reintroduce auto when a KYB vendor is added; until then **manual Ops unlock** is required.
 
 ---
 

@@ -2,7 +2,7 @@
 
 Audience: TPM, architects, backend/mobile/web leads.
 
-Related: [PRD.md](PRD.md) · [BRD.md](BRD.md) · [basic-workflow.md](basic-workflow.md) · [thirdparty-integration.md](thirdparty-integration.md) · [security.md](security.md) · [useronboarding.md](useronboarding.md)
+Related: [PRD.md](PRD.md) · [BRD.md](BRD.md) · [basic-workflow.md](basic-workflow.md) · [thirdparty-integration.md](thirdparty-integration.md) · [payments/stripe-payment-specification.md](payments/stripe-payment-specification.md) · [security.md](security.md) · [useronboarding.md](useronboarding.md)
 
 ---
 
@@ -12,7 +12,7 @@ Related: [PRD.md](PRD.md) · [BRD.md](BRD.md) · [basic-workflow.md](basic-workf
 
 | Layer | Recommendation |
 |-------|----------------|
-| Backend | **Modular monolith** — one deployable, **bounded contexts** as modules/packages |
+| Backend | **Modular monolith** — one deployable, **bounded contexts** as Nest modules; designed to extract into **microservices later** without rewrite — see [architecture/backend-architecture.md](architecture/backend-architecture.md) |
 | Sync vs async | **Transactional APIs** for money, assignment, trip gates; **queue + workers** for webhooks, notifications, reconciliation, scheduled jobs |
 | Microservices | **Defer** until team size/load forces a split (candidates later: payouts/workers, Fleet+ analytics) |
 | Event style | **Domain events internally** (+ outbox); not “everything async” |
@@ -98,10 +98,11 @@ flowchart LR
 
   Pay <--> Stripe[Stripe_Connect]
   Comp <--> AML[KYB_KYC_provider]
-  GeoIn <--> Radar[Radar_com]
-  Jobs --> Maps[Google_Maps_Routes]
+  GeoIn <--> PostGIS[PostGIS_geofence]
+  Jobs --> Valhalla[Valhalla_routing]
 ```
 
+> Phase 1: KYB/KYC is manual Ops (no AML provider in diagram). Geofence = PostGIS; routing = Valhalla. Radar/Monoova/easyAML deferred.
 ---
 
 ## 2. Deep dive A — End-to-end request flow

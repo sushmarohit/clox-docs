@@ -2,6 +2,7 @@
 
 **Scope:** Australia full-load freight marketplace only — no multi-country rollout in this plan.  
 **Parent plan:** [MILESTONES.md](MILESTONES.md) (full detail, exit criteria, risks, FR traceability)  
+**Build checklists:** [PHASE-1-IMPLEMENTATION-PLAN.md](PHASE-1-IMPLEMENTATION-PLAN.md)  
 **Last updated:** 2026-06-04
 
 ---
@@ -35,7 +36,7 @@ Record the choice in **Gate 0 (G0-5)** before M0 starts.
 | ID | Decision | Australia default |
 |----|----------|-------------------|
 | G0-1 | Payment at launch | **Model A** — pay 100% on proposal accept (AUD via Stripe) |
-| G0-2 | KYB/KYC vendor | One AU-capable provider (e.g. easyAML or Trulioo) |
+| G0-2 | KYB/KYC | **Manual Ops review** — easyAML/Trulioo deferred |
 | G0-3 | Carrier approval | Auto when clean; else Ops queue |
 | G0-4 | Local BDE can approve compliance | View + escalate (not approve) unless policy changes |
 | G0-5 | Pilot geography | **One AU state** (e.g. VIC) *or* **national Australia** |
@@ -82,9 +83,9 @@ Record the choice in **Gate 0 (G0-5)** before M0 starts.
 
 **Australia-specific:**
 
-- Business: **ABN/ACN** verification  
-- Individual: government **ID + KYC**  
-- Carrier: **public liability**, **cargo insurance**, **RWC**, permits (e.g. DG)  
+- Business: **ABN/ACN** + docs → **manual Ops** verification (no easyAML Phase 1)  
+- Individual: government **ID upload** → **manual Ops** KYC  
+- Carrier: **public liability**, **cargo insurance**, **RWC**, permits (e.g. DG) → **manual Ops** unlock  
 - No non-AU document types in Phase 1  
 
 ---

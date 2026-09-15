@@ -5,7 +5,7 @@
 **Status:** Approved for execution (updated for investor PDF + simple npm layout)  
 **Stack:** React · Zustand · Tailwind · PWA · i18n (en first, ru later) · NestJS · PostgreSQL · **npm** (no monorepo)
 
-**Related:** [partners/pre-launch-strategy.md](partners/pre-launch-strategy.md) · [partners/admin-eoi-form.md](partners/admin-eoi-form.md) · [partners/investor-portal-form.md](partners/investor-portal-form.md) · [partners/pre-launch-registry.md](partners/pre-launch-registry.md) · [TPM-DOCUMENT-ANALYSIS.md](TPM-DOCUMENT-ANALYSIS.md) · [MILESTONES.md](MILESTONES.md)
+**Related:** [partners/pre-launch-strategy.md](partners/pre-launch-strategy.md) · [partners/admin-eoi-form.md](partners/admin-eoi-form.md) · [partners/investor-portal-form.md](partners/investor-portal-form.md) · [partners/pre-launch-registry.md](partners/pre-launch-registry.md) · [TPM-DOCUMENT-ANALYSIS.md](TPM-DOCUMENT-ANALYSIS.md) · [MILESTONES.md](MILESTONES.md) · **[PHASE-1-IMPLEMENTATION-PLAN.md](PHASE-1-IMPLEMENTATION-PLAN.md)** (Gate 0 + M0–M12 detailed build)
 
 ---
 
@@ -20,6 +20,8 @@
 | Infra | `api.clox.com.au` · `dev.clox.com.au` · `clox.com.au` | Single API from day one; pre-launch on marketing domain |
 
 This plan ships **Pre-Launch (Phase 0)** first, on foundations that **M0–M12 reuse without rework**.
+
+> **Phase 1 (marketplace) build plan:** For every milestone’s *what / how / checklists*, use **[PHASE-1-IMPLEMENTATION-PLAN.md](PHASE-1-IMPLEMENTATION-PLAN.md)**.
 
 ---
 
@@ -520,7 +522,7 @@ Provider: SendGrid / AWS SES / Resend — env-configured.
 - Public forms: **no** live easyAML/ABR API calls.
 - Step 3 “infrastructure acknowledgment” cards remain **informational only** (UX unchanged).
 - Super Admin manually marks lead/EOI: e.g. `kyb_pending` → `qualified` / `rejected` with internal notes.
-- easyAML integration deferred to **M2 Compliance** when full onboarding ships.
+- easyAML integration deferred past Phase 1 marketplace onboarding — **Phase 1 uses manual Ops KYB/KYC** ([PHASE-1-IMPLEMENTATION-PLAN.md](PHASE-1-IMPLEMENTATION-PLAN.md)).
 
 ### Email (Phase 0)
 

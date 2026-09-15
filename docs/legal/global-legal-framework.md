@@ -1,12 +1,13 @@
 # CLOX Global Legal Framework — Summary
 
-**Source:** `clox_global_legal_framework.pdf` (CLOX-LEGAL-MFT-V2.0)  
+**Full platform suite transcription:** [clox-platform-suite.md](clox-platform-suite.md) ← from `CLOX PLATFORM SUITE.pdf` (CLOX-LEGAL-MFT-V2.0)  
+**Source:** `clox_global_legal_framework.pdf` / `CLOX PLATFORM SUITE.pdf` (CLOX-LEGAL-MFT-V2.0)  
 **Entity:** Achieve Global Enterprises Pty Ltd · ABN 48 626 269 387  
 **Jurisdiction:** Victoria, Australia  
 **Date:** 20 July 2026  
 **Classification:** Proprietary & legally binding — **not a substitute for legal counsel**
 
-**Related:** [BRD.md](../BRD.md) · [global-legal-framework.md](global-legal-framework.md) · [administrative-hierarchy-revenue-flow.md](../operations/administrative-hierarchy-revenue-flow.md)
+**Related:** [BRD.md](../BRD.md) · [clox-platform-suite.md](clox-platform-suite.md) · [administrative-hierarchy-revenue-flow.md](../operations/administrative-hierarchy-revenue-flow.md) · [hosting-infrastructure-blueprint.md](../infrastructure/hosting-infrastructure-blueprint.md)
 
 ---
 

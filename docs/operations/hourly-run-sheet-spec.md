@@ -1,8 +1,10 @@
 # Hourly Run Sheet — Developer Specification
 
-**Source:** `For day hourly basis (minimum 4 hours) must create.pdf`  
+**Canonical transcription:** [clox-run-sheet.md](clox-run-sheet.md) ← from `Clox Run Sheet.pdf`  
+**Also in:** [app-workflows-by-all-user-roles.md](../workflows/app-workflows-by-all-user-roles.md)  
+**Source (legacy note):** `For day hourly basis (minimum 4 hours) must create.pdf`  
 **Applies to:** Hourly local jobs (minimum 4 hours, max 4 stops)  
-**Related:** [PRD.md](../PRD.md) FR-6 · [driver screen flows](../screen-flows/driver.md) · [technical-operational-specification.md](../product/technical-operational-specification.md)
+**Related:** [PRD.md](../PRD.md) FR-6 · [driver screen flows](../screen-flows/driver.md) · [technical-operational-specification.md](../product/technical-operational-specification.md) · [hourly-job-related.md](../product/hourly-job-related.md)
 
 ---
 

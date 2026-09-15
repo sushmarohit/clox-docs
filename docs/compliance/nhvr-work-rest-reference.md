@@ -1,8 +1,9 @@
 # NHVR Work & Rest Requirements — Reference
 
+**Full transcription:** [fatigue-work-and-rest-requirements.md](fatigue-work-and-rest-requirements.md) ← from `Fatigue - Work and rest requirements-1.pdf`  
 **Source:** `Work and rest requirements.pdf` (NHVR regulatory reference)  
 **Applies to:** Phase 1 planning guardrails; full automation deferred to Phase 2  
-**Related:** [BRD.md](../BRD.md) · [ai-strategy-clarification.md](../product/ai-strategy-clarification.md)
+**Related:** [BRD.md](../BRD.md) · [ai-strategy-clarification.md](../product/ai-strategy-clarification.md) · [hourly-job-related.md](../product/hourly-job-related.md)
 
 ---
 

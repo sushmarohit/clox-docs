@@ -90,8 +90,9 @@ See [sources/README.md](sources/README.md) for full conversion index.
 
 | Service | Use |
 |---------|-----|
-| Stripe Connect | Sender charge + carrier payout |
-| easyAML or Trulioo | KYB/KYC |
+| Stripe Connect | AU | Required | Sender charge + carrier payout |
+| ABR Web Services | AU | Optional assist | Free ABN active-status for Ops |
+| easyAML / Trulioo | — | **Out of Phase 1** | Manual Ops KYB/KYC instead |
 | Radar.com | Geofence + dwell |
 | Google Maps/Routes | Address + routing + TSP input |
 | ABR Web Services | ABN validation (free) |

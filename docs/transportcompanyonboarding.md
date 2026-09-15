@@ -65,10 +65,12 @@ stateDiagram-v2
 1. **Account Registration**
 - OTP/email signup, credential setup, legal consent capture.
 
-2. **Legal Entity and KYB**
+2. **Legal Entity and KYB (Phase 1 — manual)**
 - Submit company legal name, ABN, ACN, address, contact person.
-- Run KYB via integration provider.
-- Route failures to manual review queue.
+- Optional ABR active-status lookup to assist Ops.
+- Upload supporting identity/company docs as required.
+- **Ops/State Master** verifies manually (no easyAML/Trulioo in Phase 1).
+- Route all new carriers to compliance review queue (default).
 
 3. **Compliance Document Upload**
 - Mandatory uploads:

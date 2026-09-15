@@ -1,8 +1,9 @@
 # Vehicle Pricing, Selection Flow & Load Types
 
-**Source:** `Clox Freight Forwarding.pdf` / `.docx`  
+**Full transcription:** [vehicle-type-average-pricing.md](vehicle-type-average-pricing.md) ← from `Vehicle Type Average Pricing.pdf`  
+**Source:** `Clox Freight Forwarding.pdf` / `.docx` / `Vehicle Type Average Pricing.pdf`  
 **Currency:** AUD (ex-GST) · Metro & regional averages  
-**Related:** [BRD.md](../BRD.md) · [PRD.md](../PRD.md) FR-3 · [technical-operational-specification.md](technical-operational-specification.md)
+**Related:** [BRD.md](../BRD.md) · [PRD.md](../PRD.md) FR-3 · [technical-operational-specification.md](technical-operational-specification.md) · [app-workflows-by-all-user-roles.md](../workflows/app-workflows-by-all-user-roles.md)
 
 ---
 

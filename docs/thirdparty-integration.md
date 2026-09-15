@@ -9,6 +9,8 @@
 ## Integration Inventory
 
 ### 1) Stripe Connect
+**Canonical spec:** [payments/stripe-payment-specification.md](payments/stripe-payment-specification.md)
+
 **Purpose**
 - Upfront payment capture from senders.
 - Conditional surcharge/incremental authorization flows.
@@ -30,18 +32,26 @@
 
 ---
 
-### 2) easyAML / Trulioo
-**Purpose**
+### 2) easyAML / Trulioo (deferred — not Phase 1)
+
+**Phase 1 decision:** KYB/KYC is **manual Ops review** of uploaded documents. Do **not** integrate easyAML/Trulioo until a later phase.
+
+**Purpose (future)**
 - KYC/KYB verification for individuals and businesses.
 - Document verification and anti-fraud checks.
 
-**Core Flows**
+**Core Flows (future)**
 - Sender onboarding (business/individual branches).
 - Carrier company onboarding and periodic re-verification.
 
 **Data Considerations**
 - Store verification status, reference IDs, and expiry metadata.
 - Avoid storing excess PII; use tokenized/provider IDs when feasible.
+
+**Phase 1 substitute**
+- Upload docs → compliance queue → Super/State Approve / Request info / Reject.
+- Optional free **ABR** ABN status check to assist Ops (not auto-approve).
+- No malware/virus scanning — mime/type/size + hash + Ops visual review.
 
 ---
 
@@ -107,5 +117,5 @@
 - Jurisdiction-aware invoice and tax requirements (AU-first).
 
 ## Phase Guidance
-- Phase 1: Stripe, easyAML/Trulioo, Radar, Google Maps (Twilio optional).
-- Phase 2: Monoova expansion + deeper multi-rail payout orchestration.
+- Phase 1: **Stripe Connect**, optional **ABR** (ABN assist), **Valhalla** + **PostGIS** (routing/geo). KYB/KYC = **manual Ops**. No easyAML/Trulioo. No malware scan. Twilio optional.
+- Phase 2+: easyAML/Trulioo (or equivalent), malware scanning, Monoova expansion, deeper multi-rail payout orchestration.

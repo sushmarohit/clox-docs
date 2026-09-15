@@ -36,9 +36,12 @@ stateDiagram-v2
 
 1. **Registration** — Email/phone, OTP, credential setup, Terms & Privacy.
 2. **Account type** — Business vs Individual branch.
-3. **Verification**
-   - Business: entity details → KYB (e.g. easyAML / Trulioo).
-   - Individual: ID upload / liveness → KYC.
+3. **Verification (Phase 1 — manual)**
+   - Business: entity details + ABN/ACN (+ supporting uploads) → Ops compliance queue.
+   - Individual: government ID upload → Ops compliance queue.
+   - Optional: ABR free ABN status shown to Ops (not auto-approve).
+   - **No easyAML/Trulioo in Phase 1.**
+   - Ops Approve → continue; Request info / Reject as needed.
 4. **Invoice profile** — Legal name, AU address, GST flags for invoicing compliance (business rules ≥ threshold per product policy).
 5. **Payment prerequisites** — Stripe customer + default payment method as required before first booking.
 6. **Activation** — `sender_active` → can create jobs / accept proposals per product rules.
@@ -47,7 +50,7 @@ stateDiagram-v2
 
 | Check | Sender business | Sender individual |
 |-------|-----------------|-------------------|
-| KYB / KYC | verified | verified |
+| KYB / KYC | Ops verified (manual) | Ops verified (manual) |
 | Invoice fields | complete | complete |
 | Payment | ready | ready |
 | Account state | active | active |

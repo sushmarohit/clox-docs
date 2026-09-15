@@ -1,0 +1,49 @@
+---
+description: Frontend rules — Next.js/React, Zustand, React Query, Axios
+globs: web/**/*.{ts,tsx},admin/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Frontend (web + admin)
+
+## Stack
+
+- `web/`: Next.js + React + TS
+- `admin/`: Vite + React + TS
+- Zustand = **client** state only
+- TanStack Query = **server** state
+- Axios via centralized client → services → hooks → components
+
+## Architecture
+
+Prefer feature folders: `features/<domain>/{components,hooks,services,types,schemas}`.
+
+Flow: `Component → Hook → Service → apiClient → API`
+
+## React / Next.js
+
+- Server Components by default in `web/` where appropriate; `"use client"` only when needed.
+- Thin components: render + interaction + hooks. No large API/business logic in JSX.
+- Centralize role/permission checks; do not scatter `role === ...` across UI.
+- Loading / empty / error states for every async view.
+- Accessible, responsive UI (button not clickable div).
+
+## Zustand
+
+- Auth UI, sidebar, theme, wizard step, global filters only.
+- Do **not** mirror React Query entity caches in Zustand.
+
+## React Query
+
+- Centralize query keys (`queryKeys.users.detail(id)`).
+- Invalidate only affected queries after mutations.
+- Set sensible `staleTime` / retry; no blind refetch-everything.
+
+## Axios
+
+- One shared `apiClient` with interceptors (auth, errors).
+- No `axios.get` inside components.
+
+## Forms
+
+- Schema validation (Zod), clear errors, submit loading/disabled, server error mapping.

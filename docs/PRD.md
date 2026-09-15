@@ -40,6 +40,7 @@ Current freight booking and dispatch processes are fragmented, manual, and dispu
 
 ### FR-2 Job Creation (Sender)
 - Enter pickup/drop points and load details.
+- **Receiver contact required:** name + **email** (notifications and POD receipt; Phase 1 — no receiver login).
 - Select pricing mode:
   - Hourly (local, 4-hour minimum)
   - Per-km (regional/interstate)
@@ -86,6 +87,7 @@ Current freight booking and dispatch processes are fragmented, manual, and dispu
 - Capture receiver SOG and photo evidence.
 - Attach server-side timestamp and GPS metadata.
 - Auto-generate POD and tax invoice payload.
+- Email POD receipt to **receiver email** (mandatory on job) and to sender with tax invoice.
 
 ## Non-Functional Requirements
 - Availability target: 99.9% monthly (Phase 1 target, excluding planned maintenance).
