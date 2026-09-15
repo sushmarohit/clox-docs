@@ -31,9 +31,16 @@ export const homeCopyEn = {
   joinCarrierCta: 'Join as Carrier',
   preLaunch: 'Join Pre-Launch',
   preLaunchShort: 'Join Pre-Launch',
+  overviewEyebrow: 'Transforming Australian Logistics',
   overviewTitle: 'Company Overview',
   overviewBody:
     "Welcome to CLOX — Australia's digital full-load freight marketplace. We are transforming logistics by bringing simplicity, transparency, and visibility to the modern supply chain. By replacing high-overhead manual middleware with a high-efficiency digital ecosystem, CLOX connects corporate senders directly with vetted heavy vehicle operators while securing transactions via planned protected upfront payments.",
+  visionTab: 'Our Vision',
+  missionTab: 'Our Mission',
+  visionBody:
+    "CLOX is Australia's smartest freight solution. We replace manual middleware with a digital marketplace, connecting corporate senders directly with vetted heavy vehicle operators via planned protected upfront payments.",
+  missionBody:
+    'Our mission is to empower shippers and carriers through a digital full-load freight marketplace. We eliminate frictional costs and operational bottlenecks to deliver fast, automated, and clearer logistics.',
   nextTitle: 'The Next Generation of Logistics',
   nextBody:
     'CLOX represents the next generation of digital full-load logistics. By modernizing Australian freight through an automated marketplace, the platform bridges the gap between shippers looking for competitive pricing and carriers looking to optimize asset utilization. Our technology removes traditional frictional costs, returning control, speed, and visibility to the businesses that drive our economy.',

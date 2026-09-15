@@ -37,9 +37,30 @@ const config: Config = {
           from: { opacity: '0', transform: 'translateY(20px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
+        'about-float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-15px)' },
+        },
+        'about-truck-bg': {
+          '0%': { transform: 'translateX(-150px)' },
+          '100%': { transform: 'translateX(110vw)' },
+        },
+        'about-truck-scroll': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(110vw)' },
+        },
+        'about-tab-in': {
+          from: { opacity: '0', transform: 'translateY(10px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'hero-fade-up': 'hero-fade-up 1s ease-out',
+        'about-float': 'about-float 6s ease-in-out infinite',
+        'about-float-delayed': 'about-float 6s ease-in-out -3s infinite',
+        'about-truck-bg': 'about-truck-bg 25s linear infinite',
+        'about-truck-scroll': 'about-truck-scroll 14s linear infinite',
+        'about-tab-in': 'about-tab-in 0.5s ease-out forwards',
       },
     },
   },
