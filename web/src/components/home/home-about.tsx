@@ -110,7 +110,7 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
                 textAnchor="middle"
                 letterSpacing="1"
               >
-                4PL FREIGHT
+                FULL LOAD
               </text>
               <rect x="22" y="38" width="90" height="3" fill="#334155" />
               <rect x="44" y="38" width="30" height="4" rx="1" fill="#1e293b" />

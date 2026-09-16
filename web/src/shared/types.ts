@@ -60,15 +60,27 @@ const localeField = z.enum(['en', 'hi', 'pa']).default('en');
 const abnField = z
   .string()
   .trim()
-  .regex(/^\d{2}\s?\d{3}\s?\d{3}\s?\d{3}$|^\d{9,11}$/, 'Invalid ABN format');
+  .regex(/^\d{2}\s?\d{3}\s?\d{3}\s?\d{3}$|^\d{9,11}$/, 'Enter a valid Australian ABN (11 digits)');
 const emailField = z
   .string()
   .trim()
-  .email()
+  .email('Enter a valid email address')
   .transform((value) => value.toLowerCase());
+/** AU-friendly phone: +61… / 0… with spaces/dashes; rejects obvious junk. */
+const phoneField = z
+  .string()
+  .trim()
+  .min(8, 'Enter a valid Australian phone number (e.g. 04xx xxx xxx or +61…)')
+  .max(30, 'Enter a valid Australian phone number (e.g. 04xx xxx xxx or +61…)')
+  .refine((value) => {
+    const digits = value.replace(/\D/g, '');
+    if (/^61\d{8,10}$/.test(digits)) return true;
+    if (/^0\d{8,10}$/.test(digits)) return true;
+    return false;
+  }, 'Enter a valid Australian phone number (e.g. 04xx xxx xxx or +61…)');
 const acceptedTrue = z.preprocess(
   (value) => value === true || value === 'true' || value === 'on' || value === 1 || value === '1',
-  z.literal(true),
+  z.literal(true, { message: 'You must accept to continue' }),
 );
 
 export const leadTypeSchema = z.enum([
@@ -105,7 +117,7 @@ export const registrySenderSchema = z.object({
   monthlyVolume: z.string().trim().min(1),
   infraAcknowledged: z.array(z.string()).default([]),
   email: emailField,
-  phone: z.string().trim().min(8).max(30),
+  phone: phoneField,
   locale: localeField,
   source: z.string().trim().max(200).optional(),
   honeypot: honeypotField,
@@ -121,7 +133,7 @@ export const registryCarrierSchema = z.object({
   complianceAuthorized: acceptedTrue,
   infraAcknowledged: z.array(z.string()).default([]),
   email: emailField,
-  phone: z.string().trim().min(8).max(30),
+  phone: phoneField,
   locale: localeField,
   source: z.string().trim().max(200).optional(),
   honeypot: honeypotField,
@@ -143,7 +155,7 @@ export const eoiLeadSchema = z.object({
   abn: abnField,
   acn: z.string().trim().max(20).optional(),
   email: emailField,
-  phone: z.string().trim().min(8).max(30),
+  phone: phoneField,
   corporateAddress: z.string().trim().min(5).max(300),
   networkExperience: z.string().trim().min(10).max(4000),
   executionStrategy: z.string().trim().min(10).max(4000),
@@ -183,7 +195,7 @@ export const investorLeadSchema = z.object({
     z.string().trim().max(120).optional(),
   ),
   email: emailField,
-  phone: z.string().trim().min(8).max(30),
+  phone: phoneField,
   abn: z.preprocess(
     (value) =>
       typeof value === 'string' && value.trim().length === 0 ? undefined : value,

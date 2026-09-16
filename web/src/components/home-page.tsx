@@ -11,6 +11,7 @@ import { HomeFooter } from '@/components/home/home-footer';
 import { HomeHeader } from '@/components/home/home-header';
 import { HomeHero } from '@/components/home/home-hero';
 import { HomeJourney } from '@/components/home/home-journey';
+import { HomeMatching } from '@/components/home/home-matching';
 import { HomeNextGen } from '@/components/home/home-next-gen';
 import { HomeVerification } from '@/components/home/home-verification';
 import { useLocaleParam } from '@/lib/use-locale-param';
@@ -27,6 +28,7 @@ export function HomePage() {
       <HomeNextGen copy={copy} />
       <HomeComparison copy={copy} />
       <HomeFeatures copy={copy} />
+      <HomeMatching copy={copy} />
       <HomeJourney copy={copy} />
       <HomeEcosystem copy={copy} locale={locale} />
       <HomeVerification copy={copy} />

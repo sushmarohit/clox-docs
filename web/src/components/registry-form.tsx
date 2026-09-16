@@ -74,10 +74,11 @@ type FormValues = {
   infraAcknowledged: string[];
   email: string;
   phone: string;
+  termsAccepted: boolean;
   honeypot: string;
 };
 
-type FieldErrors = Partial<Record<keyof FormValues | 'userType', string>>;
+type FieldErrors = Partial<Record<keyof FormValues | 'userType' | 'termsAccepted', string>>;
 
 function mapZodErrors(issues: { path: PropertyKey[]; message: string }[]): FieldErrors {
   const errors: FieldErrors = {};
@@ -86,6 +87,31 @@ function mapZodErrors(issues: { path: PropertyKey[]; message: string }[]): Field
     if (!errors[key]) errors[key] = issue.message;
   }
   return errors;
+}
+
+function focusFirstError(errors: FieldErrors) {
+  const order: (keyof FieldErrors)[] = [
+    'userType',
+    'companyLegalName',
+    'fleetEntityName',
+    'abn',
+    'shippingOrigin',
+    'depotState',
+    'operationalModels',
+    'biddingType',
+    'monthlyVolume',
+    'fleetComposition',
+    'complianceAuthorized',
+    'email',
+    'phone',
+    'infraAcknowledged',
+    'termsAccepted',
+  ];
+  const first = order.find((key) => errors[key]);
+  if (!first) return;
+  const el = document.querySelector<HTMLElement>(`[name="${first}"], [data-error-field="${first}"]`);
+  el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (el instanceof HTMLElement && 'focus' in el) el.focus();
 }
 
 export function RegistryPage() {
@@ -110,6 +136,7 @@ export function RegistryPage() {
       infraAcknowledged: [],
       email: '',
       phone: '',
+      termsAccepted: false,
       honeypot: '',
     }),
     [],
@@ -167,12 +194,20 @@ export function RegistryPage() {
 
   function validateCurrentStep(forSubmit = false) {
     if (!userType) {
-      setFieldErrors({ userType: t('registry.selectRoleError') });
+      const errors = { userType: t('registry.selectRoleError') };
+      setFieldErrors(errors);
+      focusFirstError(errors);
       return false;
     }
 
     const parsed = registryLeadSchema.safeParse(buildPayload());
     if (parsed.success) {
+      if (forSubmit && !values.termsAccepted) {
+        const errors = { termsAccepted: t('registry.termsRequired') };
+        setFieldErrors(errors);
+        focusFirstError(errors);
+        return false;
+      }
       setFieldErrors({});
       return true;
     }
@@ -186,9 +221,12 @@ export function RegistryPage() {
         setFieldErrors({});
         return true;
       }
+    } else if (!values.termsAccepted) {
+      errors.termsAccepted = t('registry.termsRequired');
     }
 
     setFieldErrors(errors);
+    focusFirstError(errors);
     return false;
   }
 
@@ -344,6 +382,37 @@ export function RegistryPage() {
                   {getErrorDetail(mutation.error)}
                 </p>
               ) : null}
+
+              <div
+                className="mb-4 rounded-xl border border-slate-200 bg-slate-50 p-3"
+                data-error-field="termsAccepted"
+              >
+                <label className="flex items-start gap-2 text-xs leading-relaxed text-slate-600">
+                  <input type="checkbox" {...form.register('termsAccepted')} />
+                  <span>
+                    {t('registry.termsAcceptPrefix')}{' '}
+                    <a
+                      href={`/${resolveLeadLocale(i18n.language)}/privacy`}
+                      className="font-semibold text-clox-navy underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {t('privacy')}
+                    </a>{' '}
+                    {t('registry.termsAcceptAnd')}{' '}
+                    <a
+                      href={`/${resolveLeadLocale(i18n.language)}/terms`}
+                      className="font-semibold text-clox-navy underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {t('terms')}
+                    </a>
+                    .
+                  </span>
+                </label>
+                <FieldError message={fieldErrors.termsAccepted} />
+              </div>
 
               <div className="flex flex-col gap-3">
                 <button

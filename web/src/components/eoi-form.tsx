@@ -231,33 +231,10 @@ export function EoiPage() {
             <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
               {t('eoi.section4')}
             </h3>
-            <div className="overflow-x-auto rounded-xl border border-slate-200">
-              <table className="min-w-full text-left text-xs text-slate-600">
-                <thead className="bg-slate-50 text-clox-navy">
-                  <tr>
-                    <th className="p-2">{t('eoi.tableTier')}</th>
-                    <th className="p-2">{t('eoi.tableRevenue')}</th>
-                    <th className="p-2">{t('eoi.tableSettlement')}</th>
-                    <th className="p-2">{t('eoi.tableMandate')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-t border-slate-200">
-                    <td className="p-2 font-semibold">{t('eoi.tableStateMaster')}</td>
-                    <td className="p-2">{t('eoi.tableStateShare')}</td>
-                    <td className="p-2">{t('eoi.tableCycle')}</td>
-                    <td className="p-2">{t('eoi.tableStateMandate')}</td>
-                  </tr>
-                  <tr className="border-t border-slate-200">
-                    <td className="p-2 font-semibold">{t('eoi.tableLocalBde')}</td>
-                    <td className="p-2">{t('eoi.tableLocalShare')}</td>
-                    <td className="p-2">{t('eoi.tableCycle')}</td>
-                    <td className="p-2">{t('eoi.tableLocalMandate')}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-600">
+              <p>{t('eoi.commercialOverview')}</p>
+              <p className="mt-2 text-[0.75rem] italic text-slate-500">{t('eoi.settlementNote')}</p>
             </div>
-            <p className="mt-2 text-[0.7rem] italic text-slate-500">{t('eoi.settlementNote')}</p>
           </section>
 
           <section>

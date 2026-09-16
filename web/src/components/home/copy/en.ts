@@ -4,16 +4,18 @@ export const homeCopyEn = {
     ['About', '#aboutus'],
     ['Compare', '#comparison'],
     ['Features', '#features'],
+    ['Matching', '#matching'],
     ['Journey', '#process'],
     ['Ecosystem', '#ecosystem'],
     ['FAQ', '#faq'],
   ],
-  announceBar: 'Pre-launch site — marketplace coming soon. Register early for priority access.',
+  announceBar:
+    'Launching first on key Australian freight corridors, then expanding. Register early for priority access.',
   tagline: 'Australia’s Digital Full-Load Freight Marketplace',
   slide1TitleLead: "Australia's Digital Full-Load",
   slide1TitleAccent: 'Freight Marketplace',
   slide1Body:
-    'CLOX is a pre-launch digital marketplace connecting corporate senders with vetted heavy-vehicle operators and transport fleets — built for transparent bidding, visibility, and protected payments.',
+    'CLOX is a pre-launch digital marketplace connecting corporate senders with vetted heavy-vehicle operators and transport fleets — built for transparent bidding, visibility, and Protected Upfront Payments.',
   slide2TitleLead: 'Move Your Goods',
   slide2TitleAccent: 'Quickly & Securely',
   slide2Body:
@@ -25,25 +27,25 @@ export const homeCopyEn = {
   slide4TitleLead: 'One Connected',
   slide4TitleAccent: 'Freight Ecosystem',
   slide4Body:
-    'CLOX is being built to bring corporate senders, vetted carriers, transparent bidding, tracking, and protected payments into one streamlined digital journey.',
+    'CLOX is being built to bring corporate senders, vetted carriers, transparent bidding, tracking, and Protected Upfront Payments into one streamlined digital journey.',
   explore: 'Explore the Platform',
   sendFreightCta: 'Send Freight',
   joinCarrierCta: 'Join as Carrier',
   preLaunch: 'Join Pre-Launch',
   preLaunchShort: 'Join Pre-Launch',
-  overviewEyebrow: 'Transforming Australian Logistics',
+  overviewEyebrow: 'Modernising Australian Logistics',
   overviewTitle: 'Company Overview',
   overviewBody:
-    "Welcome to CLOX — Australia's digital full-load freight marketplace. We are transforming logistics by bringing simplicity, transparency, and visibility to the modern supply chain. By replacing high-overhead manual middleware with a high-efficiency digital ecosystem, CLOX connects corporate senders directly with vetted heavy vehicle operators while securing transactions via planned protected upfront payments.",
+    "Welcome to CLOX — Australia's digital full-load freight marketplace. We are transforming logistics by bringing simplicity, transparency, and visibility to the modern supply chain. By replacing high-overhead manual middleware with a high-efficiency digital ecosystem, CLOX connects corporate senders directly with vetted heavy vehicle operators while securing transactions via planned Protected Upfront Payments.",
   visionTab: 'Our Vision',
   missionTab: 'Our Mission',
   visionBody:
-    "CLOX is Australia's smartest freight solution. We replace manual middleware with a digital marketplace, connecting corporate senders directly with vetted heavy vehicle operators via planned protected upfront payments.",
+    "CLOX is a smarter way to ship full-load freight in Australia. We replace manual middleware with a digital marketplace, connecting corporate senders directly with vetted heavy vehicle operators via planned Protected Upfront Payments.",
   missionBody:
-    'Our mission is to empower shippers and carriers through a digital full-load freight marketplace. We eliminate frictional costs and operational bottlenecks to deliver fast, automated, and clearer logistics.',
-  nextTitle: 'The Next Generation of Logistics',
+    'Our mission is to empower shippers and carriers through a digital full-load freight marketplace. We are designed to reduce frictional costs and operational bottlenecks to deliver faster, clearer logistics.',
+  nextTitle: 'Building Clearer Digital Logistics',
   nextBody:
-    'CLOX represents the next generation of digital full-load logistics. By modernizing Australian freight through an automated marketplace, the platform bridges the gap between shippers looking for competitive pricing and carriers looking to optimize asset utilization. Our technology removes traditional frictional costs, returning control, speed, and visibility to the businesses that drive our economy.',
+    'CLOX is building a clearer digital full-load logistics experience. By modernizing Australian freight through an automated marketplace, the platform bridges the gap between shippers looking for competitive pricing and carriers looking to optimize asset utilization. Our technology is designed to reduce traditional frictional costs, returning control, speed, and visibility to the businesses that drive our economy.',
   discover: 'Discover the Ecosystem',
   legacyTitle: 'Legacy Middleware',
   legacySub: 'Slow. Manual. Error-Prone.',
@@ -73,7 +75,7 @@ export const homeCopyEn = {
     'Data-Driven Insights',
   ],
   futureStats: [
-    'Minutes to Quote',
+    'Bid-Based Quotes',
     'High Accuracy',
     'Lower Costs',
     'Proactive Control & Insights',
@@ -81,7 +83,7 @@ export const homeCopyEn = {
   ],
   futureFooter: 'The Future of Freight Is Digital',
   joinEcosystem: 'Join the Ecosystem',
-  featuresTitle: 'How We Help You Ship Smarter',
+  featuresTitle: 'How We Help You Ship With Clarity',
   features: [
     [
       'Clear Comparisons',
@@ -97,9 +99,28 @@ export const homeCopyEn = {
     ],
     [
       'Protected Upfront Payments',
-      'Secure payments through planned automated protected upfront payment infrastructure.',
+      'Secure payments through planned Protected Upfront Payments before dispatch.',
     ],
   ],
+  matchingTitle: 'The Right Vehicle for the Job',
+  matchingBody:
+    'CLOX is designed to match shipment dimensions and payload to suitable transport options — so senders declare the load, the platform recommends a minimum vehicle class, and carriers propose a compliant vehicle and driver.',
+  matchingSteps: [
+    [
+      'Declare the load',
+      'Enter weight, dimensions, pallets, route, and site-access needs.',
+    ],
+    [
+      'See the minimum vehicle class',
+      'Undersized options are blocked; larger suitable vehicles can still be proposed.',
+    ],
+    [
+      'Carriers bid with a matching vehicle',
+      'Operators confirm a fleet vehicle and licence fit before award.',
+    ],
+  ],
+  matchingNote:
+    'Vehicle and load matching opens with live marketplace operations — register now for early access.',
   journeyTitle: 'The Digital Shipping Journey',
   journeySub: 'The Simple Four-Step Process',
   steps: [
@@ -110,7 +131,7 @@ export const homeCopyEn = {
     ],
     [
       'Compare & Book',
-      'Transparent Bidding & Protected Payments',
+      'Transparent Bidding & Protected Upfront Payments',
       'Carriers submit bids, and customer funds are secured before dispatch.',
     ],
     [
@@ -120,8 +141,8 @@ export const homeCopyEn = {
     ],
     [
       'Deliver',
-      'Digital Verification & Carrier Release',
-      'After proof of delivery, protected funds are automatically released to the carrier.',
+      'Digital Verification & Automated Carrier Payments',
+      'After proof of delivery, Protected Upfront Payments are released to the carrier.',
     ],
   ],
   ecosystemEyebrow: 'Dual-Sided Marketplace',
@@ -133,8 +154,6 @@ export const homeCopyEn = {
     'Live GPS Tracking',
     'Vetted Carrier Compliance',
     'Fewer Futile Trip Disputes',
-    'Transparent pricing and terms',
-    'Reliable provider evaluations',
     'Better supply chain control',
   ],
   carrierTitle: 'Optimized for Carriers',
@@ -144,18 +163,16 @@ export const homeCopyEn = {
     'Automated Carrier Payments',
     'Direct Australian Market Access',
     'Maximize Asset Utilization',
-    'More steady freight opportunities',
     'Expanded regional network',
-    'Funds secured before dispatch',
   ],
   carrierSpotTitle: 'Unlock Your Idle Capacity. Reduce Unpaid Freight Risk.',
   carrierSpotQuestion: 'Tired of Waiting 30 to 60 Days to Get Paid for Your Freight?',
   carrierSpotBody:
-    'Welcome to the supply side of the CLOX ecosystem—where dispatch is designed to follow confirmed payment security. CLOX is being built on planned protected upfront payment infrastructure powered by Stripe Connect so customer funds can be secured before loading and released after successful delivery.',
+    'Welcome to the supply side of the CLOX ecosystem—where dispatch is designed to follow confirmed Protected Upfront Payments. CLOX is being built so customer funds can be secured before loading and released after successful delivery via Automated Carrier Payments.',
   carrierListTitle: 'Built for Vetted Australian Transport Providers:',
   carrierCards: [
     [
-      'Protected Upfront Payout Security',
+      'Protected Upfront Payments',
       'Reduce chasing unpaid or delayed invoices. Funds are designed to be verified before the trip starts.',
     ],
     [
@@ -167,7 +184,7 @@ export const homeCopyEn = {
       'Bid directly on corporate freight proposals matching your precise vehicle type and location.',
     ],
     [
-      'Elite Carrier Status',
+      'Verified Carrier Status',
       'Bidding privileges are reserved for properly vetted operators with valid ABN, Public Liability, and active vehicle compliance.',
     ],
   ],
@@ -196,11 +213,27 @@ export const homeCopyEn = {
     ],
     [
       'How are payments protected?',
-      'The roadmap uses protected upfront payments so funds can be secured before dispatch and released to the carrier after proof of delivery.',
+      'The roadmap uses Protected Upfront Payments so funds can be secured before dispatch and released to the carrier after proof of delivery via Automated Carrier Payments.',
     ],
     [
       'Does registering create a binding contract?',
       'No. Pre-launch registration and partner EOI are expressions of interest only, subject to formal agreements at go-live.',
+    ],
+    [
+      'What type of freight can I book?',
+      'CLOX is built for full-load / full-truckload freight — not parcel or courier. Exact vehicle and load classes open with the marketplace.',
+    ],
+    [
+      'How does tracking work?',
+      'Once live, shipments are planned to support live GPS tracking from dispatch through delivery with digital proof of delivery.',
+    ],
+    [
+      'What happens if a truck breaks down?',
+      'Breakdown and recovery workflows are part of the operational roadmap. Pre-launch registration does not change roadside incident handling today.',
+    ],
+    [
+      'Where does CLOX operate?',
+      'CLOX is Australia-focused and launching first on key freight corridors (with an initial Melbourne–Sydney focus), then expanding progressively. National framing describes the product vision, not day-one coverage everywhere.',
     ],
   ],
   zeroDebt: 'BUILT TO REDUCE BAD DEBT RISK.',
@@ -211,10 +244,9 @@ export const homeCopyEn = {
   cohortTitle: 'Join the Pre-Launch Cohort Today',
   benefitsTitle: 'Early registrants receive:',
   benefits: [
-    'Priority booking tiers',
+    'Priority access when live bidding opens',
     'Waived platform initiation fees for the first 90 days',
     'Fast-tracked corporate onboarding',
-    'Early live-bidding access',
   ],
   iAm: 'I am a...',
   senderCta: 'Sender',
@@ -224,9 +256,11 @@ export const homeCopyEn = {
   investorCta: 'Investor Portal',
   privacyShort: 'Privacy',
   termsShort: 'Terms',
-  contactShort: 'Contact',
-  contactHref: 'mailto:privacy@clox.com.au',
+  contactShort: 'Enquiries',
+  contactHref: 'mailto:info@clox.com.au',
   footerLine: '© 2026 CLOX Freight Forwarding. All rights reserved. | Australia Based',
   footerEntity: 'Achieve Global Enterprises Pty Ltd · Trading as CLOX Freight Forwarding · ABN 48 626 269 387',
+  footerAddress: '18 Solferino Rd, Clyde North, VIC 3978, Australia',
   footerTag: 'Australia’s Digital Full-Load Freight Marketplace',
+  footerContactHint: 'Commercial interest: use Registry or Partner EOI. Enquiries: info@clox.com.au.',
 } as const;

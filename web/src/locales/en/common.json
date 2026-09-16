@@ -31,7 +31,9 @@
     "stepVerify": "Verify",
     "privacyShort": "Privacy",
     "termsShort": "Terms",
-    "contactShort": "Contact"
+    "contactShort": "Enquiries",
+    "footerAddress": "18 Solferino Rd, Clyde North, VIC 3978, Australia",
+    "footerContactHint": "Commercial interest: use Registry or Partner EOI. Enquiries: info@clox.com.au."
   },
   "home": {
     "eyebrow": "Pre-Launch"
@@ -77,6 +79,9 @@
     "successTitle": "Registry completed successfully!",
     "successBody": "You are now part of the CLOX System.",
     "finalize": "Finalize & Submit Registry",
+    "termsRequired": "Please accept the Privacy Policy and Terms to continue.",
+    "termsAcceptPrefix": "I agree to the",
+    "termsAcceptAnd": "and",
     "backToDetails": "← Back to Details",
     "continueArrow": "Continue →",
     "backArrow": "← Back",
@@ -115,20 +120,20 @@
     "title": "Partner expression of interest",
     "subtitle": "Apply for State Master or Local BDE partnership territory.",
     "pageTitle": "EXPRESSION OF INTEREST (EOI) FORM",
-    "pageSubtitle": "Administrative & Revenue Partner Program — Australian Road Freight Network",
+    "pageSubtitle": "Administrative Partner Program — Australian Road Freight Network",
     "cardTitle": "Expression of Interest",
-    "introStrong": "Code Forwarding Revolution:",
-    "introBody": "CLOX shifts the high-markup traditional freight broker paradigm into fully automated code. We isolate regional operations through a multi-tier administration framework, incentivizing active ecosystem partners with direct automated gross revenue splits managed natively via programmatic protected payment settlements.",
+    "introStrong": "Partner with CLOX:",
+    "introBody": "CLOX is building a multi-tier administration framework for Australian road freight. We invite experienced regional and local partners to help onboard senders and carriers, support compliance review, and grow corridor density — with attractive revenue-share opportunities discussed after application under NDA.",
     "section1": "1. DESIRED PLATFORM ROLE & TARGET TERRITORY",
     "section2": "2. APPLICANT PRIMARY INFORMATION",
     "section3": "3. LOGISTICS NETWORK & PROFESSIONAL EXPERIENCE",
-    "section4": "4. ADMINISTRATIVE & REVENUE FRAMEWORK OVERVIEW",
+    "section4": "4. COMMERCIAL FRAMEWORK OVERVIEW",
     "section5": "5. PARTNERSHIP DECLARATIONS & SIGNATURE BANDS",
     "stateMasterTitle": "State Master Admin (Regional Tier)",
-    "stateMasterBadge": "10% Gross Platform Fee Split",
+    "stateMasterBadge": "Regional partnership",
     "stateMasterDesc": "Responsible for regional compliance auditing, carrier verification safety nets (ABN, Insurances, RWCs), legislative alignment, and regional transport corridor management.",
     "localBdeTitle": "Local BDE Admin / Business Development Manager (Local Tier)",
-    "localBdeBadge": "5% Gross Platform Fee Split",
+    "localBdeBadge": "Local partnership",
     "localBdeDesc": "Responsible for regional sales generation, local shipper/carrier onboarding acquisition pipelines, lane density development, and local relationship management.",
     "targetState": "Target State / Region",
     "targetTerritory": "Target Suburbs / City",
@@ -141,18 +146,8 @@
     "corporateAddress": "Corporate Address",
     "networkExperience": "Briefly outline your existing network, industry footprint, or experience within the Australian logistics ecosystem",
     "executionStrategy": "Specify your target execution strategy (e.g., local shipper acquisition channels, corporate sender procurement networks, fleet onboarding resources)",
-    "tableTier": "Tier Position",
-    "tableRevenue": "Revenue Share",
-    "tableSettlement": "Settlement Cycle",
-    "tableMandate": "Core Administrative Mandate",
-    "tableStateMaster": "State Master Admin",
-    "tableStateShare": "10% Gross Fare",
-    "tableCycle": "Fortnightly (4th Night)",
-    "tableStateMandate": "Regional compliance audits, verify heavy vehicle RWC & ABN safety lockouts, dispute management intervention.",
-    "tableLocalBde": "Local BDE Admin (BDM)",
-    "tableLocalShare": "5% Gross Fare",
-    "tableLocalMandate": "Customer liquidity acquisition, onboard regional carrier owner-operators, accelerate lane velocity.",
-    "settlementNote": "*Note: As per the CLOX Settlement Logic, all administrative distributions are automatically generated over a rolling 14-day cycle and distributed via Monoova NPP splits, net of standardized platform management fees and corporate marketing cost recovery allocations.",
+    "commercialOverview": "Selected partners may access attractive revenue-share opportunities aligned to their tier and territory. Exact commercial terms, settlement mechanics, and fee allocations are provided after application and under the applicable CLOX NDA / Master Administration Agreement — not on this public form.",
+    "settlementNote": "*Submitting this EOI does not create a partnership or disclose binding commercial terms. Details are shared only with shortlisted applicants under confidentiality.",
     "declaration": "By executing this Expression of Interest (EOI), the applicant confirms that all information provided is true, accurate, and current. The applicant acknowledges that submission of this form does not guarantee admission into the CLOX administrative network, and that final selection is contingent upon strict KYB screening, manual executive board review, and execution of the formal CLOX Master Administration Agreement and non-compete frameworks. All discussions and proprietary operational disclosures remain strictly bound by the terms of the active CLOX Non-Disclosure Agreement (NDA).",
     "successTitle": "EOI submitted successfully!",
     "successBody": "We will be in touch shortly.",
@@ -185,7 +180,7 @@
     "successTitle": "Investor registration submitted.",
     "successBody": "Our team will review your accreditation and be in touch.",
     "submit": "Submit Investor Pre-Qualification",
-    "footerContact": "Questions: invest@clox.com.au · CLOX HQ · Clyde North, Victoria",
+    "footerContact": "Questions: info@clox.com.au · CLOX HQ · Clyde North, Victoria",
     "class": {
       "sophisticatedTitle": "Sophisticated Investor",
       "sophisticatedDesc": "Gross income ≥ $250k/yr for last 2 yrs OR net assets ≥ $2.5M with Accountant Certificate.",
@@ -261,8 +256,8 @@
             "We do not sell, trade, or rent your personal information to third parties. We may disclose your information only to the following trusted partners under strict confidentiality agreements:"
           ],
           "bullets": [
-            "Service Providers: Cloud hosting providers (e.g., AWS, Hetzner), email marketing platforms, and customer relationship management (CRM) systems.",
-            "Compliance & Verification APIs: In preparation for launch, we may run preliminary, non-invasive corporate identity checks using public databases (e.g., ABR Web Services) to verify ABN statuses. Note: Full KYC/KYB audits utilizing third-party services like easyAML or Trulioo will only occur at the time of official platform onboarding.",
+            "Service Providers: Cloud hosting providers, email marketing platforms, and customer relationship management (CRM) systems.",
+            "Compliance & Verification APIs: In preparation for launch, we may run preliminary, non-invasive corporate identity checks using public business registers to verify ABN statuses. Note: Full KYC/KYB audits utilizing third-party identity verification service providers will only occur at the time of official platform onboarding.",
             "Legal Obligations: If required by law, court order, or regulatory authority."
           ]
         },
@@ -286,7 +281,7 @@
         {
           "heading": "8. Changes to this Policy",
           "paragraphs": [
-            "As the CLOX platform transitions from the pre-launch phase to a live operational digital freight marketplace, this Privacy Policy will be significantly expanded to cover full telematics, geofencing, escrow payment handling (via Stripe Connect and Monoova), and driver safety sequences. We will notify registered users of any material updates."
+            "As the CLOX platform transitions from the pre-launch phase to a live operational digital freight marketplace, this Privacy Policy will be significantly expanded to cover full telematics, geofencing, Protected Upfront Payments handling (via payment infrastructure providers), and driver safety sequences. We will notify registered users of any material updates."
           ]
         },
         {
@@ -296,7 +291,7 @@
             "Achieve Global Enterprises Pty Ltd t/a CLOX"
           ],
           "bullets": [
-            "Email: privacy@clox.com.au"
+            "Email: info@clox.com.au"
           ]
         }
       ]
@@ -332,7 +327,7 @@
         {
           "heading": "4. Intellectual Property Rights",
           "paragraphs": [
-            "All content, designs, logos, graphics, text, UI elements, operational frameworks (including descriptions of our automated dispatch, upfront escrow architecture, and safety lockouts), and other materials on this Website are the exclusive intellectual property of Achieve Global Enterprises Pty Ltd, protected by Australian and international copyright and trademark laws.",
+            "All content, designs, logos, graphics, text, UI elements, operational frameworks (including descriptions of our automated dispatch, Protected Upfront Payments architecture, and safety lockouts), and other materials on this Website are the exclusive intellectual property of Achieve Global Enterprises Pty Ltd, protected by Australian and international copyright and trademark laws.",
             "You may not reproduce, distribute, reverse-engineer, modify, or create derivative works from any material on this Website without our express prior written consent."
           ]
         },
@@ -351,7 +346,7 @@
         {
           "heading": "6. Third-Party Links & Content",
           "paragraphs": [
-            "Our Website may contain links to external third-party websites or services (e.g., Stripe, Monoova, easyAML) to explain our upcoming platform architecture. These links are provided for informational purposes only. CLOX does not endorse or assume responsibility for the content, privacy policies, or practices of any third-party websites."
+            "Our Website may contain links to external third-party websites or services (for example, payment infrastructure providers and identity verification service providers) to explain our upcoming platform architecture. These links are provided for informational purposes only. CLOX does not endorse or assume responsibility for the content, privacy policies, or practices of any third-party websites."
           ]
         },
         {
@@ -359,7 +354,7 @@
           "paragraphs": [],
           "bullets": [
             "As-Is Basis: The Website and its content are provided on an \"as is\" and \"as available\" basis. While we strive to ensure the accuracy of the information provided regarding the future CLOX platform, we make no representations or warranties of any kind, express or implied, regarding the completeness, accuracy, or availability of the Website.",
-            "Future Features: Descriptions of the CLOX platform (including algorithmic pricing, Valhalla routing, and Stripe Connect escrow integrations) represent our development roadmap and are subject to change without notice prior to the official launch.",
+            "Future Features: Descriptions of the CLOX platform (including algorithmic pricing, our proprietary routing engine, and Protected Upfront Payments integrations) represent our development roadmap and are subject to change without notice prior to the official launch.",
             "Limitation of Liability: To the maximum extent permitted by the Australian Consumer Law (ACL), Achieve Global Enterprises Pty Ltd shall not be liable for any direct, indirect, incidental, consequential, or punitive damages arising out of your access to, or use of, the Website, or reliance on any information provided herein."
           ]
         },
@@ -389,7 +384,7 @@
             "Achieve Global Enterprises Pty Ltd t/a CLOX"
           ],
           "bullets": [
-            "Email: legal@clox.com.au"
+            "Email: info@clox.com.au"
           ]
         }
       ]

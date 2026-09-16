@@ -66,7 +66,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'Partner expression of interest',
     path: '/en/partner/eoi',
     tags: ['partner', 'eoi', 'state master', 'bde', 'admin'],
-    text: 'Partner EOI is for State Master Admin (regional tier, 10% gross platform fee split) or Local BDE Admin / BDM (local tier, 5% gross fee split). Applicants provide territory targets, company identity, network experience, and a declaration. Selection requires KYB and executive review; the EOI itself is not admission.',
+    text: 'Partner EOI is for State Master Admin (regional tier) or Local BDE Admin / BDM (local tier). Applicants provide territory targets, company identity, network experience, and a declaration. Attractive revenue-share opportunities are discussed after application under NDA. Selection requires KYB and executive review; the EOI itself is not admission.',
   },
   {
     id: 'eoi-hi',
@@ -74,7 +74,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'पार्टनर EOI',
     path: '/hi/partner/eoi',
     tags: ['partner', 'eoi', 'state master', 'bde'],
-    text: 'पार्टनर EOI स्टेट मास्टर एडमिन (क्षेत्रीय स्तर, 10%) या लोकल BDE एडमिन (स्थानीय स्तर, 5%) के लिए है। क्षेत्र, कंपनी डेटा, नेटवर्क अनुभव और घोषणा आवश्यक हैं। EOI प्रवेश की गारंटी नहीं है — KYB और कार्यकारी समीक्षा आवश्यक है।',
+    text: 'पार्टनर EOI स्टेट मास्टर एडमिन (क्षेत्रीय स्तर) या लोकल BDE एडमिन (स्थानीय स्तर) के लिए है। क्षेत्र, कंपनी डेटा, नेटवर्क अनुभव और घोषणा आवश्यक हैं। राजस्व-साझा अवसर आवेदन के बाद NDA के अंतर्गत साझा किए जाते हैं। EOI प्रवेश की गारंटी नहीं है — KYB और कार्यकारी समीक्षा आवश्यक है।',
   },
   {
     id: 'eoi-pa',
@@ -82,7 +82,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'ਪਾਰਟਨਰ EOI',
     path: '/pa/partner/eoi',
     tags: ['partner', 'eoi', 'state master', 'bde'],
-    text: 'ਪਾਰਟਨਰ EOI ਸਟੇਟ ਮਾਸਟਰ ਐਡਮਿਨ (ਖੇਤਰੀ ਪੱਧਰ, 10%) ਜਾਂ ਲੋਕਲ BDE ਐਡਮਿਨ (ਸਥਾਨਕ ਪੱਧਰ, 5%) ਲਈ ਹੈ। ਖੇਤਰ, ਕੰਪਨੀ ਡੇਟਾ, ਨੈਟਵਰਕ ਤਜਰਬਾ ਅਤੇ ਘੋਸ਼ਣਾ ਲੋੜੀਂਦੀ ਹੈ। EOI ਦਾਖਲੇ ਦੀ ਗਾਰੰਟੀ ਨਹੀਂ — KYB ਅਤੇ ਐਗਜ਼ੀਕਿਊਟਿਵ ਸਮੀਖਿਆ ਲੋੜੀਂਦੀ ਹੈ।',
+    text: 'ਪਾਰਟਨਰ EOI ਸਟੇਟ ਮਾਸਟਰ ਐਡਮਿਨ (ਖੇਤਰੀ ਪੱਧਰ) ਜਾਂ ਲੋਕਲ BDE ਐਡਮਿਨ (ਸਥਾਨਕ ਪੱਧਰ) ਲਈ ਹੈ। ਖੇਤਰ, ਕੰਪਨੀ ਡੇਟਾ, ਨੈਟਵਰਕ ਤਜਰਬਾ ਅਤੇ ਘੋਸ਼ਣਾ ਲੋੜੀਂਦੀ ਹੈ। ਰਾਜਸਵ-ਸਾਂਝ ਮੌਕੇ ਅਰਜ਼ੀ ਤੋਂ ਬਾਅਦ NDA ਅਧੀਨ ਸਾਂਝੇ ਕੀਤੇ ਜਾਂਦੇ ਹਨ। EOI ਦਾਖਲੇ ਦੀ ਗਾਰੰਟੀ ਨਹੀਂ — KYB ਅਤੇ ਐਗਜ਼ੀਕਿਊਟਿਵ ਸਮੀਖਿਆ ਲੋੜੀਂਦੀ ਹੈ।',
   },
   {
     id: 'investors-en',
@@ -91,7 +91,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     path: '/en/investors',
     tags: ['investor', 'equity', 'capital', 'accreditation'],
     public: false,
-    text: 'The Investor portal is an early-access equity round registration and pre-qualification form. Classifications include sophisticated investor, professional investor, and strategic industry partner. Capital bands start at AUD 25,000. Information is protected under NDA-style acknowledgements and used only for accreditation review. Questions: invest@clox.com.au.',
+    text: 'The Investor portal is an early-access equity round registration and pre-qualification form. Classifications include sophisticated investor, professional investor, and strategic industry partner. Capital bands start at AUD 25,000. Information is protected under NDA-style acknowledgements and used only for accreditation review. Questions: info@clox.com.au.',
   },
   {
     id: 'investors-hi',
@@ -100,7 +100,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     path: '/hi/investors',
     tags: ['investor', 'equity', 'capital'],
     public: false,
-    text: 'इन्वेस्टर पोर्टल अर्ली-एक्सेस इक्विटी राउंड के लिए प्री-क्वालीफ़िकेशन फ़ॉर्म है। वर्ग: परिष्कृत, पेशेवर और रणनीतिक उद्योग पार्टनर। पूंजी बैंड AUD 25,000 से शुरू होते हैं। प्रश्न: invest@clox.com.au।',
+    text: 'इन्वेस्टर पोर्टल अर्ली-एक्सेस इक्विटी राउंड के लिए प्री-क्वालीफ़िकेशन फ़ॉर्म है। वर्ग: परिष्कृत, पेशेवर और रणनीतिक उद्योग पार्टनर। पूंजी बैंड AUD 25,000 से शुरू होते हैं। प्रश्न: info@clox.com.au।',
   },
   {
     id: 'investors-pa',
@@ -109,7 +109,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     path: '/pa/investors',
     tags: ['investor', 'equity', 'capital'],
     public: false,
-    text: 'ਨਿਵੇਸ਼ਕ ਪੋਰਟਲ ਅਰਲੀ-ਐਕਸੈਸ ਇਕਵਿਟੀ ਰਾਊਂਡ ਲਈ ਪ੍ਰੀ-ਕੁਆਲੀਫਿਕੇਸ਼ਨ ਫਾਰਮ ਹੈ। ਵਰਗ: ਸੋਫਿਸਟੀਕੇਟਡ, ਪੇਸ਼ੇਵਰ ਅਤੇ ਰਣਨੀਤਕ ਉਦਯੋਗ ਪਾਰਟਨਰ। ਪੂੰਜੀ ਬੈਂਡ AUD 25,000 ਤੋਂ ਸ਼ੁਰੂ ਹੁੰਦੇ ਹਨ। ਸਵਾਲ: invest@clox.com.au।',
+    text: 'ਨਿਵੇਸ਼ਕ ਪੋਰਟਲ ਅਰਲੀ-ਐਕਸੈਸ ਇਕਵਿਟੀ ਰਾਊਂਡ ਲਈ ਪ੍ਰੀ-ਕੁਆਲੀਫਿਕੇਸ਼ਨ ਫਾਰਮ ਹੈ। ਵਰਗ: ਸੋਫਿਸਟੀਕੇਟਡ, ਪੇਸ਼ੇਵਰ ਅਤੇ ਰਣਨੀਤਕ ਉਦਯੋਗ ਪਾਰਟਨਰ। ਪੂੰਜੀ ਬੈਂਡ AUD 25,000 ਤੋਂ ਸ਼ੁਰੂ ਹੁੰਦੇ ਹਨ। ਸਵਾਲ: info@clox.com.au।',
   },
   {
     id: 'privacy-en',
@@ -117,7 +117,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'Privacy',
     path: '/en/privacy',
     tags: ['privacy', 'legal', 'data'],
-    text: 'Achieve Global Enterprises Pty Ltd (ABN 48 626 269 387) trading as CLOX Freight Forwarding collects pre-launch personal and corporate data under the Australian Privacy Principles / Privacy Act 1988 (Cth). Data may include identity/contact details, ABN/ACN and fleet info, technical usage data, and communications. Uses: early-access waitlist, ABN pre-validation, consented marketing, Shipper/Carrier segmentation, State Master and Local BDE Admin applications, and site improvement. Data is stored on AU-jurisdiction servers with encryption in transit and at rest. Not sold; may be shared with hosting/CRM providers, ABR checks, or as required by law. Full KYC/KYB (easyAML/Trulioo) only at official onboarding. Rights: access, correction, opt-out. Contact: privacy@clox.com.au · 18 Solferino Rd, Clyde North, VIC 3978.',
+    text: 'Achieve Global Enterprises Pty Ltd (ABN 48 626 269 387) trading as CLOX Freight Forwarding collects pre-launch personal and corporate data under the Australian Privacy Principles / Privacy Act 1988 (Cth). Data may include identity/contact details, ABN/ACN and fleet info, technical usage data, and communications. Uses: early-access waitlist, ABN pre-validation, consented marketing, Shipper/Carrier segmentation, State Master and Local BDE Admin applications, and site improvement. Data is stored on AU-jurisdiction servers with encryption in transit and at rest. Not sold; may be shared with hosting/CRM providers, ABR checks, or as required by law. Full KYC/KYB (easyAML/Trulioo) only at official onboarding. Rights: access, correction, opt-out. Contact: info@clox.com.au · 18 Solferino Rd, Clyde North, VIC 3978.',
   },
   {
     id: 'privacy-hi',
@@ -125,7 +125,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'गोपनीयता',
     path: '/hi/privacy',
     tags: ['privacy', 'legal', 'data'],
-    text: 'Achieve Global Enterprises Pty Ltd (ABN 48 626 269 387) ट्रेडिंग नाम CLOX Freight Forwarding Privacy Act 1988 (Cth) / APPs के अंतर्गत प्री-लॉन्च व्यक्तिगत और कॉर्पोरेट डेटा एकत्र करता है। उपयोग: वेटलिस्ट, ABN पूर्व-सत्यापन, सहमति के साथ मार्केटिंग, शिपर/कैरियर विभाजन, State Master और Local BDE Admin आवेदन। डेटा ऑस्ट्रेलियाई अधिकार क्षेत्र के सर्वरों पर एन्क्रिप्शन के साथ संग्रहीत। नहीं बेचा जाता। अधिकार: पहुँच, सुधार, ऑप्ट-आउट। संपर्क: privacy@clox.com.au · 18 Solferino Rd, Clyde North, VIC 3978.',
+    text: 'Achieve Global Enterprises Pty Ltd (ABN 48 626 269 387) ट्रेडिंग नाम CLOX Freight Forwarding Privacy Act 1988 (Cth) / APPs के अंतर्गत प्री-लॉन्च व्यक्तिगत और कॉर्पोरेट डेटा एकत्र करता है। उपयोग: वेटलिस्ट, ABN पूर्व-सत्यापन, सहमति के साथ मार्केटिंग, शिपर/कैरियर विभाजन, State Master और Local BDE Admin आवेदन। डेटा ऑस्ट्रेलियाई अधिकार क्षेत्र के सर्वरों पर एन्क्रिप्शन के साथ संग्रहीत। नहीं बेचा जाता। अधिकार: पहुँच, सुधार, ऑप्ट-आउट। संपर्क: info@clox.com.au · 18 Solferino Rd, Clyde North, VIC 3978.',
   },
   {
     id: 'privacy-pa',
@@ -133,7 +133,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'ਪਰਾਈਵੇਸੀ',
     path: '/pa/privacy',
     tags: ['privacy', 'legal', 'data'],
-    text: 'Achieve Global Enterprises Pty Ltd (ABN 48 626 269 387) ਟ੍ਰੇਡਿੰਗ ਨਾਮ CLOX Freight Forwarding Privacy Act 1988 (Cth) / APPs ਅਧੀਨ ਪ੍ਰੀ-ਲਾਂਚ ਨਿੱਜੀ ਅਤੇ ਕਾਰਪੋਰੇਟ ਡੇਟਾ ਇਕੱਠਾ ਕਰਦਾ ਹੈ। ਵਰਤੋਂ: ਵੇਟਲਿਸਟ, ABN ਪੂਰਵ-ਤਸਦੀਕ, ਸਹਿਮਤੀ ਨਾਲ ਮਾਰਕੀਟਿੰਗ, ਸ਼ਿਪਰ/ਕੈਰੀਅਰ ਵੰਡ, State Master ਅਤੇ Local BDE Admin ਅਰਜ਼ੀਆਂ। ਡੇਟਾ ਆਸਟ੍ਰੇਲੀਆਈ ਅਧਿਕਾਰ ਖੇਤਰ ਦੇ ਸਰਵਰਾਂ ਉੱਤੇ ਇਨਕ੍ਰਿਪਸ਼ਨ ਨਾਲ ਸੰਭਾਲਿਆ ਜਾਂਦਾ ਹੈ। ਨਹੀਂ ਵੇਚਿਆ ਜਾਂਦਾ। ਅਧਿਕਾਰ: ਪਹੁੰਚ, ਸੁਧਾਰ, ਆਪਟ-ਆਉਟ। ਸੰਪਰਕ: privacy@clox.com.au · 18 Solferino Rd, Clyde North, VIC 3978.',
+    text: 'Achieve Global Enterprises Pty Ltd (ABN 48 626 269 387) ਟ੍ਰੇਡਿੰਗ ਨਾਮ CLOX Freight Forwarding Privacy Act 1988 (Cth) / APPs ਅਧੀਨ ਪ੍ਰੀ-ਲਾਂਚ ਨਿੱਜੀ ਅਤੇ ਕਾਰਪੋਰੇਟ ਡੇਟਾ ਇਕੱਠਾ ਕਰਦਾ ਹੈ। ਵਰਤੋਂ: ਵੇਟਲਿਸਟ, ABN ਪੂਰਵ-ਤਸਦੀਕ, ਸਹਿਮਤੀ ਨਾਲ ਮਾਰਕੀਟਿੰਗ, ਸ਼ਿਪਰ/ਕੈਰੀਅਰ ਵੰਡ, State Master ਅਤੇ Local BDE Admin ਅਰਜ਼ੀਆਂ। ਡੇਟਾ ਆਸਟ੍ਰੇਲੀਆਈ ਅਧਿਕਾਰ ਖੇਤਰ ਦੇ ਸਰਵਰਾਂ ਉੱਤੇ ਇਨਕ੍ਰਿਪਸ਼ਨ ਨਾਲ ਸੰਭਾਲਿਆ ਜਾਂਦਾ ਹੈ। ਨਹੀਂ ਵੇਚਿਆ ਜਾਂਦਾ। ਅਧਿਕਾਰ: ਪਹੁੰਚ, ਸੁਧਾਰ, ਆਪਟ-ਆਉਟ। ਸੰਪਰਕ: info@clox.com.au · 18 Solferino Rd, Clyde North, VIC 3978.',
   },
   {
     id: 'terms-en',
@@ -141,7 +141,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'Terms',
     path: '/en/terms',
     tags: ['terms', 'legal'],
-    text: 'CLOX pre-launch website Terms & Conditions are operated by Achieve Global Enterprises Pty Ltd trading as CLOX Freight Forwarding (ABN 48 626 269 387), Victoria, Australia. Registration/EOI/mailing list signup is not a binding service contract. Early-access incentives are promotional and subject to formal Shipper/Carrier agreements at launch. Provide accurate ABN/ACN information. Site IP belongs to Achieve Global Enterprises. No scraping, false submissions, or unauthorized access. Third-party links (Stripe, Monoova, easyAML) are informational only. Content is as-is; roadmap features may change. Liability limited under ACL. Indemnity for misuse. Victorian law and exclusive jurisdiction. Pre-launch Terms will be superseded by Master Terms, Carrier Agreement, and Shipper Agreement at go-live. Contact: legal@clox.com.au.',
+    text: 'CLOX pre-launch website Terms & Conditions are operated by Achieve Global Enterprises Pty Ltd trading as CLOX Freight Forwarding (ABN 48 626 269 387), Victoria, Australia. Registration/EOI/mailing list signup is not a binding service contract. Early-access incentives are promotional and subject to formal Shipper/Carrier agreements at launch. Provide accurate ABN/ACN information. Site IP belongs to Achieve Global Enterprises. No scraping, false submissions, or unauthorized access. Third-party links (Stripe, Monoova, easyAML) are informational only. Content is as-is; roadmap features may change. Liability limited under ACL. Indemnity for misuse. Victorian law and exclusive jurisdiction. Pre-launch Terms will be superseded by Master Terms, Carrier Agreement, and Shipper Agreement at go-live. Contact: info@clox.com.au.',
   },
   {
     id: 'terms-hi',
@@ -149,7 +149,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'शर्तें',
     path: '/hi/terms',
     tags: ['terms', 'legal'],
-    text: 'CLOX प्री-लॉन्च वेबसाइट नियम Achieve Global Enterprises Pty Ltd (ट्रेडिंग नाम CLOX Freight Forwarding, ABN 48 626 269 387), विक्टोरिया द्वारा संचालित हैं। पंजीकरण/EOI बाध्यकारी सेवा अनुबंध नहीं है। प्रोत्साहन प्रचारक हैं और लॉन्च पर औपचारिक समझौतों के अधीन। सटीक ABN/ACN दें। IP Achieve Global की है। स्क्रैपिंग/गलत जानकारी/अनधिकृत पहुँच निषिद्ध। सामग्री जैसा-है; रोडमैप बदल सकता है। ACL के अंतर्गत दायित्व सीमित। विक्टोरिया कानून। संपर्क: legal@clox.com.au।',
+    text: 'CLOX प्री-लॉन्च वेबसाइट नियम Achieve Global Enterprises Pty Ltd (ट्रेडिंग नाम CLOX Freight Forwarding, ABN 48 626 269 387), विक्टोरिया द्वारा संचालित हैं। पंजीकरण/EOI बाध्यकारी सेवा अनुबंध नहीं है। प्रोत्साहन प्रचारक हैं और लॉन्च पर औपचारिक समझौतों के अधीन। सटीक ABN/ACN दें। IP Achieve Global की है। स्क्रैपिंग/गलत जानकारी/अनधिकृत पहुँच निषिद्ध। सामग्री जैसा-है; रोडमैप बदल सकता है। ACL के अंतर्गत दायित्व सीमित। विक्टोरिया कानून। संपर्क: info@clox.com.au।',
   },
   {
     id: 'terms-pa',
@@ -157,7 +157,7 @@ export const knowledgeChunks: KnowledgeChunk[] = [
     title: 'ਸ਼ਰਤਾਂ',
     path: '/pa/terms',
     tags: ['terms', 'legal'],
-    text: 'CLOX ਪ੍ਰੀ-ਲਾਂਚ ਵੈੱਬਸਾਈਟ ਨਿਯਮ Achieve Global Enterprises Pty Ltd (ਟ੍ਰੇਡਿੰਗ ਨਾਮ CLOX Freight Forwarding, ABN 48 626 269 387), ਵਿਕਟੋਰੀਆ ਵੱਲੋਂ ਸੰਚਾਲਿਤ ਹਨ। ਰਜਿਸਟਰੇਸ਼ਨ/EOI ਬਾਧਿਆਕਾਰੀ ਸੇਵਾ ਇਕਰਾਰਨਾਮਾ ਨਹੀਂ। ਪ੍ਰੋਤਸਾਹਨ ਪ੍ਰਚਾਰਕ ਹਨ ਅਤੇ ਲਾਂਚ ਉੱਤੇ ਰਸਮੀ ਇਕਰਾਰਨਾਮਿਆਂ ਅਧੀਨ। ਸਹੀ ABN/ACN ਦਿਓ। IP Achieve Global ਦੀ ਹੈ। ਸਕ੍ਰੈਪਿੰਗ/ਗਲਤ ਜਾਣਕਾਰੀ/ਅਣਅਧਿਕਾਰਤ ਪਹੁੰਚ ਮਨਾਹੀ। ਸਮੱਗਰੀ ਜਿਵੇਂ-ਹੈ; ਰੋਡਮੈਪ ਬਦਲ ਸਕਦਾ ਹੈ। ACL ਅਧੀਨ ਦਾਇਤਵ ਸੀਮਿਤ। ਵਿਕਟੋਰੀਆ ਕਾਨੂੰਨ। ਸੰਪਰਕ: legal@clox.com.au।',
+    text: 'CLOX ਪ੍ਰੀ-ਲਾਂਚ ਵੈੱਬਸਾਈਟ ਨਿਯਮ Achieve Global Enterprises Pty Ltd (ਟ੍ਰੇਡਿੰਗ ਨਾਮ CLOX Freight Forwarding, ABN 48 626 269 387), ਵਿਕਟੋਰੀਆ ਵੱਲੋਂ ਸੰਚਾਲਿਤ ਹਨ। ਰਜਿਸਟਰੇਸ਼ਨ/EOI ਬਾਧਿਆਕਾਰੀ ਸੇਵਾ ਇਕਰਾਰਨਾਮਾ ਨਹੀਂ। ਪ੍ਰੋਤਸਾਹਨ ਪ੍ਰਚਾਰਕ ਹਨ ਅਤੇ ਲਾਂਚ ਉੱਤੇ ਰਸਮੀ ਇਕਰਾਰਨਾਮਿਆਂ ਅਧੀਨ। ਸਹੀ ABN/ACN ਦਿਓ। IP Achieve Global ਦੀ ਹੈ। ਸਕ੍ਰੈਪਿੰਗ/ਗਲਤ ਜਾਣਕਾਰੀ/ਅਣਅਧਿਕਾਰਤ ਪਹੁੰਚ ਮਨਾਹੀ। ਸਮੱਗਰੀ ਜਿਵੇਂ-ਹੈ; ਰੋਡਮੈਪ ਬਦਲ ਸਕਦਾ ਹੈ। ACL ਅਧੀਨ ਦਾਇਤਵ ਸੀਮਿਤ। ਵਿਕਟੋਰੀਆ ਕਾਨੂੰਨ। ਸੰਪਰਕ: info@clox.com.au।',
   },
   {
     id: 'boundaries-both',

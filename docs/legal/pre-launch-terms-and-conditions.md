@@ -98,4 +98,4 @@ For inquiries regarding these Terms, please contact us at:
 **Achieve Global Enterprises Pty Ltd t/a CLOX**
 
 - **Address:** 18 Solferino Rd, Clyde North, VIC 3978, Australia
-- **Email:** legal@clox.com.au
+- **Email:** info@clox.com.au

@@ -11,5 +11,6 @@ export function getApiBaseUrl() {
 }
 
 export function getAppName() {
-  return process.env.NEXT_PUBLIC_APP_NAME || 'CLOX';
+  // Public brand is always CLOX — ignore staging/env values like "CLOX WEB".
+  return 'CLOX';
 }

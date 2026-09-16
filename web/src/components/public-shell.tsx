@@ -44,6 +44,10 @@ export function PublicShell({ children }: { children: ReactNode }) {
           Achieve Global Enterprises Pty Ltd · ABN 48 626 269 387
         </span>
         <br />
+        <span className="mt-1 inline-block text-white/40">{t('shell.footerAddress')}</span>
+        <br />
+        <span className="mt-1 inline-block text-white/35">{t('shell.footerContactHint')}</span>
+        <br />
         <Link href={`/${locale}/privacy`} className="relative z-10 underline-offset-2 hover:underline">
           {t('shell.privacyShort')}
         </Link>{' '}
@@ -52,7 +56,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
           {t('shell.termsShort')}
         </Link>{' '}
         ·{' '}
-        <a href="mailto:privacy@clox.com.au" className="relative z-10 underline-offset-2 hover:underline">
+        <a href="mailto:info@clox.com.au" className="relative z-10 underline-offset-2 hover:underline">
           {t('shell.contactShort')}
         </a>
       </footer>

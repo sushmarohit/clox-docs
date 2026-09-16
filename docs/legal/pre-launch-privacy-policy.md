@@ -87,7 +87,7 @@ Under the Privacy Act 1988 (Cth), you are entitled to:
 
 ### 8. Changes to this Policy
 
-As the CLOX platform transitions from the pre-launch phase to a live operational digital freight marketplace, this Privacy Policy will be significantly expanded to cover full telematics, geofencing, escrow payment handling (via Stripe Connect and Monoova), and driver safety sequences. We will notify registered users of any material updates.
+As the CLOX platform transitions from the pre-launch phase to a live operational digital freight marketplace, this Privacy Policy will be significantly expanded to cover full telematics, geofencing, Protected Upfront Payments handling (via payment infrastructure providers), and driver safety sequences. We will notify registered users of any material updates.
 
 ### 9. Contact Information
 
@@ -95,6 +95,6 @@ If you have any questions, concerns, or requests regarding this Privacy Policy o
 
 **Achieve Global Enterprises Pty Ltd t/a CLOX**
 
-- **Email:** privacy@clox.com.au
+- **Email:** info@clox.com.au
 - **Address:** 18 Solferino Rd, Clyde North, VIC 3978, Australia
 - **Phone:** [Insert Contact Number]

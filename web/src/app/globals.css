@@ -65,7 +65,7 @@
   }
 
   .clox-nav-link {
-    @apply relative text-[1.05rem] font-medium text-clox-navy transition-colors duration-300;
+    @apply relative font-medium text-clox-navy transition-colors duration-300;
   }
 
   .clox-nav-link::after {

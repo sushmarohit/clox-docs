@@ -2,11 +2,25 @@ import type { MetadataRoute } from 'next';
 import { getSiteUrl } from '@/lib/env';
 import { supportedLocales } from '@/locales';
 
-const paths = ['', '/registry', '/partner/eoi', '/privacy', '/terms'];
+/** Public indexable paths only — Partner EOI is noindex / robots-disallowed. */
+const paths = ['', '/registry', '/privacy', '/terms'];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();
-  const entries: MetadataRoute.Sitemap = [];
+  const entries: MetadataRoute.Sitemap = [
+    {
+      url: `${siteUrl}/llms.txt`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.4,
+    },
+    {
+      url: `${siteUrl}/llms-full.txt`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.3,
+    },
+  ];
 
   for (const locale of supportedLocales) {
     for (const path of paths) {

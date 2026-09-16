@@ -78,7 +78,7 @@ export function buildPageMetadata(
   const url = `${siteUrl}${canonicalPath}`;
 
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: {
       canonical: url,
@@ -96,9 +96,9 @@ export function buildPageMetadata(
       description,
       images: [
         {
-          url: `${siteUrl}/icons/icon-512.png`,
-          width: 512,
-          height: 512,
+          url: `${siteUrl}/brand/og-share.png`,
+          width: 1200,
+          height: 630,
           alt: appName,
         },
       ],
@@ -107,12 +107,12 @@ export function buildPageMetadata(
       card: 'summary_large_image',
       title,
       description,
-      images: [`${siteUrl}/icons/icon-512.png`],
+      images: [`${siteUrl}/brand/og-share.png`],
     },
-    robots: {
-      index: true,
-      follow: true,
-    },
+    robots:
+      route === 'eoi'
+        ? { index: false, follow: false }
+        : { index: true, follow: true },
   };
 }
 
@@ -128,30 +128,81 @@ export function buildJsonLd(locale: AppLocale, route: keyof typeof routeMeta) {
     '@graph': [
       {
         '@type': 'Organization',
+        '@id': `${siteUrl}/#organization`,
         name: appName,
+        legalName: 'Achieve Global Enterprises Pty Ltd',
+        alternateName: 'CLOX Freight Forwarding',
         url: siteUrl,
         logo: `${siteUrl}/brand/clox_updated_logo.png`,
         description: readNested(dict, 'tagline'),
+        foundingLocation: {
+          '@type': 'Place',
+          name: 'Victoria, Australia',
+        },
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: '18 Solferino Rd',
+          addressLocality: 'Clyde North',
+          addressRegion: 'VIC',
+          postalCode: '3978',
+          addressCountry: 'AU',
+        },
+        contactPoint: [
+          {
+            '@type': 'ContactPoint',
+            contactType: 'customer support',
+            email: 'info@clox.com.au',
+            availableLanguage: ['en', 'hi', 'pa'],
+          },
+        ],
+        areaServed: {
+          '@type': 'Country',
+          name: 'Australia',
+        },
+        knowsAbout: [
+          'full-load freight',
+          'freight marketplace',
+          'Protected Upfront Payments',
+          'carrier verification',
+          'vehicle load matching',
+        ],
       },
       {
         '@type': 'WebSite',
+        '@id': `${siteUrl}/#website`,
         name: appName,
         url: siteUrl,
-        inLanguage: locale,
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: `${siteUrl}/${locale}`,
-          'query-input': 'required name=search_term_string',
-        },
+        inLanguage: ['en', 'hi', 'pa'],
+        publisher: { '@id': `${siteUrl}/#organization` },
       },
       {
         '@type': 'WebPage',
+        '@id': `${siteUrl}${path}#webpage`,
         name: readNested(dict, meta.titleKey),
         description: readNested(dict, meta.descriptionKey),
         url: `${siteUrl}${path}`,
         inLanguage: locale,
-        isPartOf: { '@type': 'WebSite', url: siteUrl },
+        isPartOf: { '@id': `${siteUrl}/#website` },
+        about: { '@id': `${siteUrl}/#organization` },
       },
     ],
+  };
+}
+
+/** FAQPage graph for homepage GEO/AEO answer engines. */
+export function buildFaqJsonLd(faqs: readonly (readonly [string, string])[]) {
+  const siteUrl = getSiteUrl();
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${siteUrl}/en#faq`,
+    mainEntity: faqs.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: answer,
+      },
+    })),
   };
 }
