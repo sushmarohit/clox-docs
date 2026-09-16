@@ -14,7 +14,7 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
   return (
     <section
       id="aboutus"
-      className="relative scroll-mt-28 overflow-hidden bg-white px-5 py-28 sm:px-8"
+      className="relative scroll-mt-28 overflow-hidden bg-white px-5 py-14 sm:px-8 sm:py-28"
     >
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-[0.05] motion-reduce:hidden"
@@ -151,7 +151,7 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
           <p className="mb-2 text-[1.05rem] font-semibold tracking-wide text-clox-orange sm:text-[1.2rem]">
             {copy.overviewEyebrow}
           </p>
-          <h2 className="mb-4 text-left text-[2.2rem] font-extrabold uppercase tracking-tight text-clox-navy sm:text-[2.8rem] lg:text-[3.1rem]">
+          <h2 className="mb-4 text-left text-[1.65rem] font-extrabold uppercase tracking-tight text-clox-navy sm:text-[2.8rem] lg:text-[3.1rem]">
             {copy.overviewTitle}
           </h2>
           <p className="mb-8 text-[1.05rem] leading-7 text-slate-600 sm:text-[1.1rem] sm:leading-8">

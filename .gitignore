@@ -11,3 +11,5 @@ Thumbs.db
 *.log
 .turbo
 .pnpm-store
+.data/
+api/.data/

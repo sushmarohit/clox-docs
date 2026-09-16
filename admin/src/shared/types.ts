@@ -30,6 +30,8 @@ export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus];
 
 export const AdminRole = {
   SUPER_ADMIN: 'SUPER_ADMIN',
+  STATE_MASTER: 'STATE_MASTER',
+  LOCAL_BDE: 'LOCAL_BDE',
 } as const;
 
 export type AdminRole = (typeof AdminRole)[keyof typeof AdminRole];

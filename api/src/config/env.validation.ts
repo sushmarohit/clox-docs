@@ -36,6 +36,12 @@ export const envSchema = z.object({
   SEED_SUPER_ADMIN_NAME: z.string().default('CLOX Super Admin'),
   THROTTLE_TTL_MS: z.coerce.number().int().positive().default(60_000),
   THROTTLE_LIMIT: z.coerce.number().int().positive().default(10),
+  /** Local filesystem root for Phase 1 doc uploads (no S3 required yet). */
+  STORAGE_LOCAL_DIR: z.string().default('.data/uploads'),
+  /** Optional free ABR GUID — assist Ops only, never auto-approve. */
+  ABR_GUID: z.string().optional(),
+  /** Expiry watchdog interval ms (default 1h). Set 0 to disable. */
+  COMPLIANCE_WATCHDOG_MS: z.coerce.number().int().nonnegative().default(3_600_000),
 });
 
 export type AppEnv = z.infer<typeof envSchema>;

@@ -2,12 +2,12 @@ import type { HomeCopy } from '@/components/home/copy';
 
 export function HomeMatching({ copy }: { copy: HomeCopy }) {
   return (
-    <section id="matching" className="scroll-mt-28 bg-white px-5 py-24 sm:px-8 sm:py-28">
+    <section id="matching" className="scroll-mt-28 bg-white px-5 py-12 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-[1100px]">
-        <h2 className="mb-4 text-center text-[2.2rem] font-extrabold uppercase tracking-tight text-clox-navy sm:text-[2.8rem]">
+        <h2 className="mb-3 text-center text-[1.65rem] font-extrabold uppercase leading-tight tracking-tight text-clox-navy sm:mb-4 sm:text-[2.8rem]">
           {copy.matchingTitle}
         </h2>
-        <p className="mx-auto mb-12 max-w-3xl text-center text-[1.1rem] leading-8 text-slate-600">
+        <p className="mx-auto mb-8 max-w-3xl text-center text-base leading-7 text-slate-600 sm:mb-12 sm:text-[1.1rem] sm:leading-8">
           {copy.matchingBody}
         </p>
         <div className="grid gap-6 md:grid-cols-3">

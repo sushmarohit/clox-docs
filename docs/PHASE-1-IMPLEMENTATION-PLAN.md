@@ -1,8 +1,8 @@
 # CLOX Phase 1 — Full Milestone Implementation Plan
 
-**Version:** 1.3  
-**Date:** 2026-09-15  
-**Status:** Canonical build plan for Gate 0 + M0–M12 — **Gate 0 locked**  
+**Version:** 1.5  
+**Date:** 2026-09-16  
+**Status:** Canonical build plan for Gate 0 + M0–M12 — **Gate 0 locked**; **M0 foundation in progress**  
 **Gate 0 ADR:** [adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md)  
 **Parent catalogs:** [MILESTONES.md](MILESTONES.md) · [MILESTONES-AUSTRALIA.md](MILESTONES-AUSTRALIA.md)  
 **Phase 0 (done / parallel foundation):** [PRE-LAUNCH-IMPLEMENTATION-PLAN.md](PRE-LAUNCH-IMPLEMENTATION-PLAN.md)  
@@ -154,24 +154,24 @@ clox/
 
 ## Implementation checklist
 
-- [ ] Local Docker Postgres (+ PostGIS) via Compose
-- [ ] Nest modules created for identity, compliance, jobs, trips, payments, notifications, geolocation, documents, ops, settlements, audit
-- [ ] Prisma ERD v0 migrated locally
-- [ ] `GET /v1/health` returns DB up (local)
-- [ ] Correlation ID middleware
-- [ ] OpenAPI stub available locally
-- [ ] Thin CI: lint/tsc green on PR
-- [ ] Manual stage deploy playbook (when stage exists) — auto-CD **not** required
-- [ ] Seed Super Admin works
-- [ ] Gate 0 ADR linked; money fields = integer cents AUD
-- [ ] `.env.example` complete; no secrets in git
+- [x] Local Docker Postgres (+ PostGIS) via Compose
+- [x] Nest modules created for identity, compliance, jobs, trips, payments, notifications, geolocation, documents, ops, settlements, audit
+- [x] Prisma ERD v0 migrated locally
+- [x] `GET /v1/health` returns DB up (local)
+- [x] Correlation ID middleware
+- [x] OpenAPI stub available locally
+- [x] Thin CI: lint/tsc green on PR
+- [x] Manual stage deploy playbook (when stage exists) — auto-CD **not** required
+- [x] Seed Super Admin works
+- [x] Gate 0 ADR linked; money fields = integer cents AUD
+- [x] `.env.example` complete; no secrets in git
 
 ## Exit / QA checklist
 
-- [ ] New developer can `docker compose up` + migrate + seed + hit health locally
-- [ ] Payment-related ERD fields reviewed (ex/GST/inc cents)
-- [ ] No production secrets in repo
-- [ ] README: local Docker + migrate + seed + thin CI notes
+- [x] New developer can `docker compose up` + migrate + seed + hit health locally
+- [x] Payment-related ERD fields reviewed (ex/GST/inc cents)
+- [x] No production secrets in repo
+- [x] README: local Docker + migrate + seed + thin CI notes
 
 ---
 
@@ -221,23 +221,23 @@ clox/
 
 ## Implementation checklist
 
-- [ ] OTP request/verify with rate limits
-- [ ] Access + refresh rotation
-- [ ] Session revoke
-- [ ] Role guard on all `/v1` mutating routes
-- [ ] AdminScope tables + seed
-- [ ] Provision admin API (invite email stub OK)
-- [ ] AuditEvent for auth + admin mutations
-- [ ] Cross-role deny tests (≥1 test per role pair critical path)
-- [ ] Security headers / CORS locked to known origins
+- [x] OTP request/verify with rate limits
+- [x] Access + refresh rotation
+- [x] Session revoke
+- [x] Role guard on all `/v1` mutating routes
+- [x] AdminScope tables + seed
+- [x] Provision admin API (invite email stub OK)
+- [x] AuditEvent for auth + admin mutations
+- [x] Cross-role deny tests (≥1 test per role pair critical path)
+- [x] Security headers / CORS locked to known origins
 
 ## Exit / QA checklist
 
-- [ ] All six roles can log in (test users)
-- [ ] State user cannot read other-state fixtures
-- [ ] Local user cannot access Super policy routes
-- [ ] Unauthenticated requests get 401
-- [ ] FR-1 partial (OTP) satisfied
+- [x] All six roles can log in (test users)
+- [x] State user cannot read other-state fixtures
+- [x] Local user cannot access Super policy routes
+- [x] Unauthenticated requests get 401
+- [x] FR-1 partial (OTP) satisfied
 
 ---
 
@@ -285,25 +285,25 @@ clox/
 
 ## Implementation checklist
 
-- [ ] Signed URL upload pipeline
-- [ ] Document metadata + content hash (mime/size validation)
-- [ ] **No** easyAML/Trulioo integration
-- [ ] **No** malware scan integration
-- [ ] Optional ABR ABN lookup (assist Ops only)
-- [ ] Sender state machine persisted (pending → Ops decision)
-- [ ] Carrier state machine persisted (pending → Ops decision)
-- [ ] Expiry watchdog job
-- [ ] Compliance review queue API (scoped) + Approve / Request info / Reject
-- [ ] Audit on every Ops decision
-- [ ] G0-3: Phase 1 default = **manual queue** for carriers (no paid-vendor auto path)
+- [x] Signed URL upload pipeline
+- [x] Document metadata + content hash (mime/size validation)
+- [x] **No** easyAML/Trulioo integration
+- [x] **No** malware scan integration
+- [x] Optional ABR ABN lookup (assist Ops only)
+- [x] Sender state machine persisted (pending → Ops decision)
+- [x] Carrier state machine persisted (pending → Ops decision)
+- [x] Expiry watchdog job
+- [x] Compliance review queue API (scoped) + Approve / Request info / Reject
+- [x] Audit on every Ops decision
+- [x] G0-3: Phase 1 default = **manual queue** for carriers (no paid-vendor auto path)
 
 ## Exit / QA checklist
 
-- [ ] Carrier cannot reach bid-eligible without mandatory docs **and Ops approve**
-- [ ] Sender cannot reach active without Ops verification (+ payment in M3)
-- [ ] Expired RWC suspends vehicle / company per policy
-- [ ] Ops can list pending cases filtered by VIC-only scope
-- [ ] FR-1 compliance gate (carrier) ready for M4
+- [x] Carrier cannot reach bid-eligible without mandatory docs **and Ops approve**
+- [x] Sender cannot reach active without Ops verification (+ payment in M3)
+- [x] Expired RWC suspends vehicle / company per policy
+- [x] Ops can list pending cases filtered by VIC-only scope
+- [x] FR-1 compliance gate (carrier) ready for M4
 
 ---
 
@@ -963,3 +963,6 @@ Territory dashboard · growth pipeline · carrier support (view/escalate) · fir
 | 1.2 | 2026-09-15 | Receiver: mandatory email on job; email notifications; driver-device POD |
 | 1.3 | 2026-09-15 | **Gate 0 fully locked** — ADR G0; VIC; Flutter; Vite app; Stripe SCT; GST; vehicle floor |
 | 1.4 | 2026-09-15 | M0: local Docker only; thin CI; manual stage (no full auto-CD required) |
+| 1.5 | 2026-09-16 | M0 implementation started: PostGIS Compose, ERD v0, module skeletons, stage playbook |
+| 1.6 | 2026-09-16 | M1: 6-role OTP auth, sessions, RBAC/scope, ops admin provision |
+| 1.7 | 2026-09-16 | M2: documents upload, compliance cases, ABR assist, expiry watchdog |

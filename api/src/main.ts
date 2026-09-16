@@ -42,16 +42,28 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle('CLOX Pre-Launch API')
+        .setTitle('CLOX API')
         .setDescription(
-          'Phase 0 API: public leads (registry / EOI / investor), Super Admin OTP auth, and admin review.',
+          'Phase 1 modular monolith: pre-launch leads + Phase 1 bounded contexts (identity, jobs, trips, payments, …).',
         )
-        .setVersion('0.1.0')
+        .setVersion('0.2.0')
         .addBearerAuth()
         .addTag('health')
         .addTag('leads')
         .addTag('auth')
         .addTag('admin')
+        .addTag('identity')
+        .addTag('compliance')
+        .addTag('documents')
+        .addTag('jobs')
+        .addTag('matching')
+        .addTag('trips')
+        .addTag('payments')
+        .addTag('settlements')
+        .addTag('geolocation')
+        .addTag('notifications')
+        .addTag('ops')
+        .addTag('audit')
         .build(),
     );
     SwaggerModule.setup('docs', app, document, {

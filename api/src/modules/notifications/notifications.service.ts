@@ -71,7 +71,7 @@ export class NotificationsService {
   }
 
   async sendOtpEmail(params: { to: string; code: string; ttlMinutes: number }) {
-    const subject = 'CLOX Super Admin login code';
+    const subject = 'CLOX login code';
     const text = `Your CLOX login code is ${params.code}. It expires in ${params.ttlMinutes} minutes.`;
     const html = `<p>Your CLOX login code is <strong>${params.code}</strong>.</p><p>It expires in ${params.ttlMinutes} minutes.</p>`;
     return this.sendMail({ to: params.to, subject, text, html });

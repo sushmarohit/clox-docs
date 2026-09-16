@@ -4,13 +4,13 @@ import type { HomeSectionProps } from '@/components/home/types';
 
 export function HomeCohort({ copy, locale }: HomeSectionProps) {
   return (
-    <section id="cohort" className="scroll-mt-28 px-5 py-28 sm:px-8">
-      <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-20 rounded-3xl bg-white p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] lg:flex-row lg:p-16">
+    <section id="cohort" className="scroll-mt-28 px-5 py-12 sm:px-8 sm:py-28">
+      <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-10 rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-8 lg:flex-row lg:gap-20 lg:p-16">
         <div className="flex-1">
           <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-clox-orange">
             {copy.cohortEyebrow}
           </p>
-          <h2 className="mb-6 text-[2.2rem] font-extrabold uppercase text-clox-navy sm:text-[2.8rem]">
+          <h2 className="mb-4 text-[1.65rem] font-extrabold uppercase leading-tight text-clox-navy sm:mb-6 sm:text-[2.8rem]">
             {copy.cohortTitle}
           </h2>
           <h3 className="mb-4 text-xl font-bold text-clox-navy">{copy.benefitsTitle}</h3>

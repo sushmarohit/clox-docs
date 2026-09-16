@@ -2,13 +2,15 @@ import type { HomeCopy } from '@/components/home/copy';
 
 export function HomeJourney({ copy }: { copy: HomeCopy }) {
   return (
-    <section id="process" className="scroll-mt-28 px-5 py-28 sm:px-8">
+    <section id="process" className="scroll-mt-28 px-5 py-14 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-[1200px]">
-        <h2 className="mb-3 text-center text-[2.2rem] font-extrabold uppercase text-clox-navy sm:text-[2.8rem]">
+        <h2 className="mb-2 text-center text-[1.65rem] font-extrabold uppercase leading-tight text-clox-navy sm:mb-3 sm:text-[2.8rem]">
           {copy.journeyTitle}
         </h2>
-        <p className="mb-16 text-center text-[1.2rem] text-slate-500">{copy.journeySub}</p>
-        <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
+        <p className="mb-8 text-center text-base text-slate-500 sm:mb-16 sm:text-[1.2rem]">
+          {copy.journeySub}
+        </p>
+        <div className="grid gap-6 sm:grid-cols-2 sm:gap-8 xl:grid-cols-4">
           {copy.steps.map(([title, sub, body], index) => (
             <article
               key={title}

@@ -30,9 +30,37 @@ export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus];
 
 export const AdminRole = {
   SUPER_ADMIN: 'SUPER_ADMIN',
+  STATE_MASTER: 'STATE_MASTER',
+  LOCAL_BDE: 'LOCAL_BDE',
 } as const;
 
 export type AdminRole = (typeof AdminRole)[keyof typeof AdminRole];
+
+export const PlatformRole = {
+  SENDER: 'SENDER',
+  TRANSPORT_COMPANY: 'TRANSPORT_COMPANY',
+  DRIVER: 'DRIVER',
+} as const;
+
+export type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
+
+/** All six Phase 1 login roles. */
+export const AppRole = {
+  ...AdminRole,
+  ...PlatformRole,
+} as const;
+
+export type AppRole = (typeof AppRole)[keyof typeof AppRole];
+
+export const ADMIN_ROLES: AdminRole[] = [
+  AdminRole.SUPER_ADMIN,
+  AdminRole.STATE_MASTER,
+  AdminRole.LOCAL_BDE,
+];
+
+export function isAdminRole(role: string): role is AdminRole {
+  return (ADMIN_ROLES as string[]).includes(role);
+}
 
 export const Locale = {
   en: 'en',
@@ -51,6 +79,22 @@ export const AuditAction = {
   AUTH_OTP_VERIFIED: 'auth.otp_verified',
   AUTH_OTP_FAILED: 'auth.otp_failed',
   AUTH_TOKEN_REFRESHED: 'auth.token_refreshed',
+  AUTH_LOGOUT: 'auth.logout',
+  AUTH_SESSION_REVOKED: 'auth.session_revoked',
+  AUTH_STEP_UP_REQUESTED: 'auth.step_up_requested',
+  AUTH_STEP_UP_VERIFIED: 'auth.step_up_verified',
+  ADMIN_PROVISIONED: 'admin.provisioned',
+  ADMIN_SCOPE_CHANGED: 'admin.scope_changed',
+  DOC_UPLOAD_INTENT: 'document.upload_intent',
+  DOC_UPLOADED: 'document.uploaded',
+  DOC_CONFIRMED: 'document.confirmed',
+  COMPLIANCE_SUBMITTED: 'compliance.submitted',
+  COMPLIANCE_APPROVED: 'compliance.approved',
+  COMPLIANCE_REJECTED: 'compliance.rejected',
+  COMPLIANCE_INFO_REQUESTED: 'compliance.info_requested',
+  COMPLIANCE_ESCALATED: 'compliance.escalated',
+  COMPLIANCE_DOC_EXPIRED: 'compliance.doc_expired',
+  COMPANY_SUSPENDED: 'company.suspended',
 } as const;
 
 export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction];
@@ -220,28 +264,74 @@ export const createLeadResponseSchema = z.object({
 export type CreateLeadResponse = z.infer<typeof createLeadResponseSchema>;
 
 export const otpRequestSchema = z.object({
-  email: emailField,
+  email: emailField.optional(),
+  phone: z
+    .string()
+    .trim()
+    .min(8)
+    .max(32)
+    .optional(),
+  deviceLabel: z.string().trim().max(120).optional(),
+}).refine((value) => Boolean(value.email || value.phone), {
+  message: 'email or phone is required',
 });
 
 export type OtpRequestInput = z.infer<typeof otpRequestSchema>;
 
 export const otpVerifySchema = z.object({
-  email: emailField,
+  email: emailField.optional(),
+  phone: z.string().trim().min(8).max(32).optional(),
   code: z.string().trim().regex(/^\d{4,8}$/),
+  deviceLabel: z.string().trim().max(120).optional(),
+}).refine((value) => Boolean(value.email || value.phone), {
+  message: 'email or phone is required',
 });
 
 export type OtpVerifyInput = z.infer<typeof otpVerifySchema>;
+
+const principalScopeSchema = z.object({
+  scopeType: z.enum(['STATE', 'LOCAL']),
+  regionCode: z.string().nullable(),
+  territoryCode: z.string().nullable(),
+});
+
+export const authPrincipalSchema = z.object({
+  kind: z.enum(['admin', 'user']),
+  id: z.string().uuid(),
+  email: z.string().email(),
+  name: z.string().nullable(),
+  role: z.enum([
+    AppRole.SUPER_ADMIN,
+    AppRole.STATE_MASTER,
+    AppRole.LOCAL_BDE,
+    AppRole.SENDER,
+    AppRole.TRANSPORT_COMPANY,
+    AppRole.DRIVER,
+  ]),
+  scopes: z.array(principalScopeSchema).optional(),
+});
+
+export type AuthPrincipalDto = z.infer<typeof authPrincipalSchema>;
 
 export const authTokensSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
   expiresIn: z.string(),
-  admin: z.object({
-    id: z.string().uuid(),
-    email: z.string().email(),
-    name: z.string().nullable(),
-    role: z.literal(AdminRole.SUPER_ADMIN),
-  }),
+  sessionId: z.string().uuid(),
+  principal: authPrincipalSchema,
+  /** Phase 0 admin UI compat — present when kind=admin */
+  admin: z
+    .object({
+      id: z.string().uuid(),
+      email: z.string().email(),
+      name: z.string().nullable(),
+      role: z.enum([
+        AdminRole.SUPER_ADMIN,
+        AdminRole.STATE_MASTER,
+        AdminRole.LOCAL_BDE,
+      ]),
+    })
+    .optional(),
 });
 
 export type AuthTokens = z.infer<typeof authTokensSchema>;
@@ -251,6 +341,46 @@ export const refreshTokenSchema = z.object({
 });
 
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
+
+export const logoutSchema = z.object({
+  refreshToken: z.string().min(20).optional(),
+  allDevices: z.boolean().optional().default(false),
+});
+
+export type LogoutInput = z.infer<typeof logoutSchema>;
+
+export const provisionAdminSchema = z.object({
+  email: emailField,
+  name: z.string().trim().min(1).max(120).optional(),
+  role: z.enum([AdminRole.STATE_MASTER, AdminRole.LOCAL_BDE]),
+  regionCode: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^[A-Z]{2,3}$/),
+  territoryCode: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .max(32)
+    .optional(),
+}).superRefine((value, ctx) => {
+  if (value.role === AdminRole.LOCAL_BDE && !value.territoryCode) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['territoryCode'],
+      message: 'territoryCode is required for LOCAL_BDE',
+    });
+  }
+});
+
+export type ProvisionAdminInput = z.infer<typeof provisionAdminSchema>;
+
+export const stepUpVerifySchema = z.object({
+  code: z.string().trim().regex(/^\d{4,8}$/),
+});
+
+export type StepUpVerifyInput = z.infer<typeof stepUpVerifySchema>;
 
 export const adminLeadListQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
@@ -310,3 +440,90 @@ export const adminLeadExportQuerySchema = z.object({
 });
 
 export type AdminLeadExportQuery = z.infer<typeof adminLeadExportQuerySchema>;
+
+export const ComplianceDocType = {
+  ABN_EXTRACT: 'ABN_EXTRACT',
+  GOVERNMENT_ID: 'GOVERNMENT_ID',
+  SELFIE: 'SELFIE',
+  DRIVER_LICENCE: 'DRIVER_LICENCE',
+  VEHICLE_REGO: 'VEHICLE_REGO',
+  RWC: 'RWC',
+  PUBLIC_LIABILITY: 'PUBLIC_LIABILITY',
+  CARGO_INSURANCE: 'CARGO_INSURANCE',
+  INSURANCE: 'INSURANCE',
+  NHVR: 'NHVR',
+  OTHER: 'OTHER',
+} as const;
+
+export type ComplianceDocType = (typeof ComplianceDocType)[keyof typeof ComplianceDocType];
+
+export const createUploadIntentSchema = z.object({
+  companyId: z.string().uuid(),
+  docType: z.enum([
+    ComplianceDocType.ABN_EXTRACT,
+    ComplianceDocType.GOVERNMENT_ID,
+    ComplianceDocType.SELFIE,
+    ComplianceDocType.DRIVER_LICENCE,
+    ComplianceDocType.VEHICLE_REGO,
+    ComplianceDocType.RWC,
+    ComplianceDocType.PUBLIC_LIABILITY,
+    ComplianceDocType.CARGO_INSURANCE,
+    ComplianceDocType.INSURANCE,
+    ComplianceDocType.NHVR,
+    ComplianceDocType.OTHER,
+  ]),
+  vehicleId: z.string().uuid().optional(),
+  driverId: z.string().uuid().optional(),
+  originalFilename: z.string().trim().min(1).max(255),
+  mimeType: z.enum(['application/pdf', 'image/jpeg', 'image/png', 'image/webp']),
+  sizeBytes: z.number().int().positive().max(10 * 1024 * 1024),
+  expiresAt: z.string().datetime().optional(),
+});
+
+export type CreateUploadIntentInput = z.infer<typeof createUploadIntentSchema>;
+
+export const confirmDocumentSchema = z.object({
+  contentHash: z
+    .string()
+    .trim()
+    .regex(/^[a-f0-9]{64}$/i, 'contentHash must be sha256 hex'),
+});
+
+export type ConfirmDocumentInput = z.infer<typeof confirmDocumentSchema>;
+
+export const submitComplianceSchema = z.object({
+  companyId: z.string().uuid(),
+  caseType: z.enum(['SENDER_KYB', 'SENDER_KYC', 'CARRIER_KYB']),
+  documentIds: z.array(z.string().uuid()).min(1).max(50),
+});
+
+export type SubmitComplianceInput = z.infer<typeof submitComplianceSchema>;
+
+export const complianceCaseListQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(20),
+  status: z
+    .enum(['OPEN', 'INFO_REQUESTED', 'ESCALATED', 'APPROVED', 'REJECTED', 'CLOSED'])
+    .optional(),
+  caseType: z.enum(['SENDER_KYB', 'SENDER_KYC', 'CARRIER_KYB']).optional(),
+  regionCode: z.string().trim().toUpperCase().max(3).optional(),
+});
+
+export type ComplianceCaseListQuery = z.infer<typeof complianceCaseListQuerySchema>;
+
+export const complianceDecisionSchema = z.object({
+  note: z.string().trim().max(2000).optional(),
+});
+
+export type ComplianceDecisionInput = z.infer<typeof complianceDecisionSchema>;
+
+export const abrLookupQuerySchema = z.object({
+  abn: z
+    .string()
+    .trim()
+    .transform((value) => value.replace(/\s/g, ''))
+    .refine((value) => /^\d{11}$/.test(value), 'ABN must be 11 digits'),
+});
+
+export type AbrLookupQuery = z.infer<typeof abrLookupQuerySchema>;
+

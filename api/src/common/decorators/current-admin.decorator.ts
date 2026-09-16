@@ -1,9 +1,12 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import type { AuthenticatedAdmin } from '../guards/jwt-auth.guard';
+import type { AuthenticatedPrincipal } from '../guards/jwt-auth.guard';
 
-export const CurrentAdmin = createParamDecorator(
-  (_data: unknown, ctx: ExecutionContext): AuthenticatedAdmin => {
-    const request = ctx.switchToHttp().getRequest<{ user: AuthenticatedAdmin }>();
+export const CurrentPrincipal = createParamDecorator(
+  (_data: unknown, ctx: ExecutionContext): AuthenticatedPrincipal => {
+    const request = ctx.switchToHttp().getRequest<{ user: AuthenticatedPrincipal }>();
     return request.user;
   },
 );
+
+/** @deprecated Use CurrentPrincipal */
+export const CurrentAdmin = CurrentPrincipal;

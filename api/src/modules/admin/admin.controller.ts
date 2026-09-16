@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
+  AdminRole,
   adminAuditQuerySchema,
   adminLeadExportQuerySchema,
   adminLeadListQuerySchema,
@@ -24,14 +25,17 @@ import {
   type UpdateLeadInput,
 } from '../../shared/types';
 import { CurrentAdmin } from '../../common/decorators/current-admin.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtAuthGuard, type AuthenticatedAdmin } from '../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { AdminService } from './admin.service';
 
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(AdminRole.SUPER_ADMIN)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 

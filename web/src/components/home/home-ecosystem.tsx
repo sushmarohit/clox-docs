@@ -23,15 +23,15 @@ export function HomeEcosystem({ copy, locale }: HomeSectionProps) {
   ];
 
   return (
-    <section id="ecosystem" className="scroll-mt-28 bg-clox-surface px-5 py-2 sm:px-8">
+    <section id="ecosystem" className="scroll-mt-28 bg-clox-surface px-5 py-12 sm:px-8 sm:py-20">
       <div className="mx-auto max-w-[1200px]">
-        <p className="mb-3 text-center text-sm font-bold uppercase tracking-[0.2em] text-clox-orange">
+        <p className="mb-2 text-center text-sm font-bold uppercase tracking-[0.2em] text-clox-orange sm:mb-3">
           {copy.ecosystemEyebrow}
         </p>
-        <h2 className="mb-16 text-center text-[2.2rem] font-extrabold uppercase text-clox-navy sm:text-[2.8rem]">
+        <h2 className="mb-8 text-center text-[1.65rem] font-extrabold uppercase leading-tight text-clox-navy sm:mb-16 sm:text-[2.8rem]">
           {copy.ecosystemTitle}
         </h2>
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
           {cards.map((card) => (
             <article
               key={card.title}
@@ -41,10 +41,10 @@ export function HomeEcosystem({ copy, locale }: HomeSectionProps) {
                 <img src={card.image} alt={card.label} className="h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-clox-navy to-transparent opacity-90" />
                 <div className="absolute inset-x-0 bottom-0 p-8 text-white">
-                  <p className="text-sm font-bold uppercase tracking-wide text-clox-orange">
+                  <span className="inline-block rounded-full border border-clox-orange/60 bg-clox-navy/75 px-4 py-1.5 text-sm font-bold uppercase tracking-wide text-clox-orange shadow-lg backdrop-blur-sm">
                     {card.label}
-                  </p>
-                  <h3 className="mt-2 text-3xl font-extrabold">{card.title}</h3>
+                  </span>
+                  <h3 className="mt-3 text-3xl font-extrabold">{card.title}</h3>
                   <p className="mt-2 font-semibold text-slate-200">{card.sub}</p>
                 </div>
               </div>
