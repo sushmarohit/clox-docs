@@ -31,7 +31,7 @@ export function HomeComparison({ copy }: { copy: HomeCopy }) {
       </article>
 
       <div className="absolute left-1/2 top-1/2 z-20 flex h-[90px] w-[90px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-clox-navy bg-clox-orange text-3xl font-black italic shadow-[0_10px_40px_rgba(0,0,0,0.5)] max-lg:relative max-lg:left-auto max-lg:top-auto max-lg:mx-auto max-lg:my-[-40px] max-lg:translate-x-0 max-lg:translate-y-0">
-        Vs
+        {copy.comparisonVs}
       </div>
 
       <article className="relative flex min-w-full flex-1 flex-col justify-center px-6 py-20 sm:min-w-[50%] sm:px-12 sm:py-32">

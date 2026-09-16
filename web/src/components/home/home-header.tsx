@@ -12,7 +12,7 @@ export function HomeHeader({ copy, locale }: HomeSectionProps) {
     <header className="fixed inset-x-0 top-0 z-[1000] border-b border-slate-200/80 bg-white/95 shadow-[0_4px_24px_rgba(10,31,60,0.08)] backdrop-blur-[12px]">
       <div className="bg-clox-navy px-4 py-2.5 sm:px-6">
         <p className="mx-auto max-w-[1100px] text-center text-[0.7rem] font-semibold leading-relaxed tracking-wide text-white sm:text-[0.8rem]">
-          <span className="text-clox-orange">Coming Soon</span>
+          <span className="text-clox-orange">{copy.announceSoon}</span>
           <span className="mx-2 text-white/40" aria-hidden>
             ·
           </span>

@@ -9,6 +9,7 @@ export const homeCopyEn = {
     ['Ecosystem', '#ecosystem'],
     ['FAQ', '#faq'],
   ],
+  announceSoon: 'Coming Soon',
   announceBar:
     'Launching first on key Australian freight corridors, then expanding. Register early for priority access.',
   tagline: 'Australia’s Digital Full-Load Freight Marketplace',
@@ -48,6 +49,7 @@ export const homeCopyEn = {
     'CLOX is building a clearer digital full-load logistics experience. By modernizing Australian freight through an automated marketplace, the platform bridges the gap between shippers looking for competitive pricing and carriers looking to optimize asset utilization. Our technology is designed to reduce traditional frictional costs, returning control, speed, and visibility to the businesses that drive our economy.',
   discover: 'Discover the Ecosystem',
   legacyTitle: 'Legacy Middleware',
+  comparisonVs: 'Vs',
   legacySub: 'Slow. Manual. Error-Prone.',
   legacy: [
     'Manual Data Entry',
