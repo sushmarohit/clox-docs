@@ -15,7 +15,8 @@ clox/
 
 **Phase 1 plan:** [docs/PHASE-1-IMPLEMENTATION-PLAN.md](docs/PHASE-1-IMPLEMENTATION-PLAN.md)  
 **Gate 0 ADR:** [docs/adr/G0-gate-0-phase1-decisions.md](docs/adr/G0-gate-0-phase1-decisions.md)  
-**Module boundaries:** [docs/architecture/module-boundaries.md](docs/architecture/module-boundaries.md)
+**Module boundaries:** [docs/architecture/module-boundaries.md](docs/architecture/module-boundaries.md)  
+**Milestone browser demo (M1/M2):** [docs/operations/milestone-verification-ui.md](docs/operations/milestone-verification-ui.md)
 
 ## Setup
 

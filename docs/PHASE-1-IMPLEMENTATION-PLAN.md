@@ -1,8 +1,8 @@
 # CLOX Phase 1 — Full Milestone Implementation Plan
 
-**Version:** 1.5  
-**Date:** 2026-09-16  
-**Status:** Canonical build plan for Gate 0 + M0–M12 — **Gate 0 locked**; **M0 foundation in progress**  
+**Version:** 1.8  
+**Date:** 2026-09-17  
+**Status:** Canonical build plan for Gate 0 + M0–M12 — **Gate 0 locked**; **M0–M2 API done**; **verification UI required before M3**  
 **Gate 0 ADR:** [adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md)  
 **Parent catalogs:** [MILESTONES.md](MILESTONES.md) · [MILESTONES-AUSTRALIA.md](MILESTONES-AUSTRALIA.md)  
 **Phase 0 (done / parallel foundation):** [PRE-LAUNCH-IMPLEMENTATION-PLAN.md](PRE-LAUNCH-IMPLEMENTATION-PLAN.md)  
@@ -20,18 +20,60 @@ For **each milestone** below:
 1. Complete **What to implement** before coding.  
 2. Follow **How to implement** in order (dependencies matter).  
 3. Tick every item in **Implementation checklist** and **Exit / QA checklist**.  
-4. Do not start the next milestone until exit criteria are green (or explicitly waived with ADR).
+4. Complete the **Verification UI / demo gate** for that milestone (see below).  
+5. Do not start the next milestone until exit criteria **and** demo gate are green (or explicitly waived with ADR).
 
-**Delivery model:** Vertical slices after M0–M2 foundation. Each release train must be demoable.
+**Delivery model:** Vertical slices after M0–M2 foundation. Each release train must be demoable **in the browser**, not only via Postman/Swagger.
 
 | Train | Milestones | Demo |
 |-------|------------|------|
-| Alpha 1 — Trust | M0–M2 | Login, docs, state machines |
+| Alpha 1 — Trust | M0–M2 | Login, docs, compliance queue **in Vite app** |
 | Alpha 2 — Supply | M3–M5 | Sender + carrier + driver onboarded |
 | Beta 1 — Marketplace | M6–M7 | Publish, bid, pay, assign |
 | Beta 2 — Move freight | M8–M10 | Full trip + POD |
 | RC / Pilot | M11–M12 | Ops + settlement + live pilot |
 
+---
+
+## Milestone verification UI gate (mandatory)
+
+**Problem we avoid:** API-only milestones that only QA can exercise in Postman → blocked demos, low confidence, false “done.”
+
+**Rule (locked for Phase 1):**
+
+> A milestone is **not complete** until a **thin verification UI** exists in `admin/` (future `app.clox.com.au`) so **dev, QA, and stakeholders can click the happy path** and see pass/fail.
+
+| Principle | Detail |
+|-----------|--------|
+| Where | Always `admin/` Vite app (G0-9) — not a separate throwaway tool |
+| Fidelity | **Ugly is OK.** Clickable + role-correct is required. Not final marketing UI. |
+| Scope | Happy path + 1–2 deny paths (e.g. Local cannot approve) |
+| Gate | **No next milestone** until: seed users login → demo script ≤10 min in browser |
+| API still required | OpenAPI + unit tests remain; UI does not replace them |
+| Postman | Optional deep debugging only — **not** the demo medium |
+
+### Per-milestone minimum verification UI
+
+| Milestone | Minimum browser surface (demo gate) |
+|-----------|-------------------------------------|
+| **M0** | Health visible (or status page); Super can open app shell against local API |
+| **M1** | OTP login for **all 6 roles**; show role + scopes; sessions list; Super-only leads still gated |
+| **M2** | Upload doc → submit compliance; Ops queue list/detail; Approve / Reject / Request info; Local **Escalate only** |
+| **M3** | Sender onboarding wizard screens (product UI starts) |
+| **M4** | Carrier onboarding wizard screens |
+| **M5** | Driver invite / profile web path |
+| **M6–M7** | Publish / bid / accept+pay screens for sender+carrier |
+| **M8–M10** | Trip/POD ops views (web) + Flutter contract smoke |
+| **M11** | Full Ops portal replaces thin QA surfaces |
+| **M12** | Settlement / pilot dashboards |
+
+### Demo exit template (copy into each milestone exit)
+
+- [ ] Seed personas can log in via UI  
+- [ ] Happy path completed without Postman  
+- [ ] At least one RBAC deny path shown in UI (403 surfaced)  
+- [ ] Stakeholder can follow a written 5–10 min script  
+- [ ] Screenshot or short recording attached to milestone note (optional but recommended)
 ---
 
 ## Locked platform decisions (Gate 0 — accepted 2026-09-15)
@@ -239,6 +281,16 @@ clox/
 - [x] Unauthenticated requests get 401
 - [x] FR-1 partial (OTP) satisfied
 
+### Verification UI / demo gate (M1)
+
+- [x] OTP login UI works for Super, State, Local, Sender, Carrier, Driver
+- [x] UI shows role + scopes (or company) after login
+- [x] Sessions list visible; sign-out works
+- [x] Non-Super cannot open Phase 0 leads console in UI
+- [x] 5–10 min browser demo script runnable without Postman
+
+See [operations/milestone-verification-ui.md](operations/milestone-verification-ui.md).
+
 ---
 
 # M2 — Compliance & document platform
@@ -305,12 +357,23 @@ clox/
 - [x] Ops can list pending cases filtered by VIC-only scope
 - [x] FR-1 compliance gate (carrier) ready for M4
 
+### Verification UI / demo gate (M2) — **blocks M3**
+
+- [x] Carrier/Sender can upload + submit compliance from UI
+- [x] Ops queue list/detail in UI (Super / State / Local scoped)
+- [x] Approve / Reject / Request info in UI (Super/State)
+- [x] Local Escalate works; Approve denied in UI
+- [x] After approve: carrier shows `BID_ELIGIBLE` / sender `PENDING_PAYMENT` in UI
+- [x] Browser demo of M2 complete **before starting M3**
+
+Script: [operations/milestone-verification-ui.md](operations/milestone-verification-ui.md).
+
 ---
 
 # M3 — Sender onboarding (Web)
 
 **Duration:** 3 weeks  
-**Depends on:** M2  
+**Depends on:** M2 **+ M1/M2 verification UI demo gate green**  
 **Goal:** Business & individual senders → `sender_active`
 
 ## What to implement
@@ -966,3 +1029,4 @@ Territory dashboard · growth pipeline · carrier support (view/escalate) · fir
 | 1.5 | 2026-09-16 | M0 implementation started: PostGIS Compose, ERD v0, module skeletons, stage playbook |
 | 1.6 | 2026-09-16 | M1: 6-role OTP auth, sessions, RBAC/scope, ops admin provision |
 | 1.7 | 2026-09-16 | M2: documents upload, compliance cases, ABR assist, expiry watchdog |
+| 1.8 | 2026-09-17 | Mandatory milestone verification UI gate; thin admin QA before M3 |

@@ -16,7 +16,7 @@ import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitEoiLead } from '@/lib/api';
 
 type FormValues = {
-  role: 'state_master' | 'local_bde' | '';
+  role: 'local_bde';
   targetState: string;
   targetTerritory: string;
   fullLegalName: string;
@@ -41,7 +41,7 @@ export function EoiPage() {
 
   const form = useForm<FormValues>({
     defaultValues: {
-      role: '',
+      role: 'local_bde',
       targetState: '',
       targetTerritory: '',
       fullLegalName: '',
@@ -63,14 +63,29 @@ export function EoiPage() {
     onSuccess: () => {
       setSuccess(true);
       setFieldErrors({});
-      form.reset();
+      form.reset({
+        role: 'local_bde',
+        targetState: '',
+        targetTerritory: '',
+        fullLegalName: '',
+        companyName: '',
+        abn: '',
+        acn: '',
+        email: '',
+        phone: '',
+        corporateAddress: '',
+        networkExperience: '',
+        executionStrategy: '',
+        declarationAccepted: false,
+        honeypot: '',
+      });
     },
   });
 
   function onSubmit(values: FormValues) {
     const parsed = eoiLeadSchema.safeParse({
       ...values,
-      role: values.role || undefined,
+      role: 'local_bde',
       locale: resolveLeadLocale(i18n.language),
       acn: values.acn || undefined,
     });
@@ -110,6 +125,7 @@ export function EoiPage() {
           onSubmit={form.handleSubmit(onSubmit)}
           noValidate
         >
+          <input type="hidden" {...form.register('role')} value="local_bde" />
           <input
             type="text"
             tabIndex={-1}
@@ -127,21 +143,12 @@ export function EoiPage() {
             <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
               {t('eoi.section1')}
             </h3>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <RoleOption
-                form={form}
-                value="state_master"
-                title={t('eoi.stateMasterTitle')}
-                badge={t('eoi.stateMasterBadge')}
-                description={t('eoi.stateMasterDesc')}
-              />
-              <RoleOption
-                form={form}
-                value="local_bde"
-                title={t('eoi.localBdeTitle')}
-                badge={t('eoi.localBdeBadge')}
-                description={t('eoi.localBdeDesc')}
-              />
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <strong className="block text-clox-navy">{t('eoi.localBdeTitle')}</strong>
+              <span className="mb-2 mt-1 inline-flex rounded-full bg-clox-orange px-2 py-0.5 text-[0.7rem] font-semibold text-white">
+                {t('eoi.localBdeBadge')}
+              </span>
+              <p className="text-xs leading-relaxed text-slate-500">{t('eoi.localBdeDesc')}</p>
             </div>
             <FieldError message={fieldErrors.role} />
 
@@ -273,32 +280,5 @@ export function EoiPage() {
         onClose={() => setSuccess(false)}
       />
     </PublicShell>
-  );
-}
-
-function RoleOption({
-  form,
-  value,
-  title,
-  badge,
-  description,
-}: {
-  form: ReturnType<typeof useForm<FormValues>>;
-  value: 'state_master' | 'local_bde';
-  title: string;
-  badge: string;
-  description: string;
-}) {
-  return (
-    <label className="relative block rounded-xl border border-slate-200 bg-slate-50 p-3">
-      <input className="absolute left-3 top-3" type="radio" value={value} {...form.register('role')} />
-      <div className="pl-6">
-        <strong className="block text-clox-navy">{title}</strong>
-        <span className="mb-2 mt-1 inline-flex rounded-full bg-clox-orange px-2 py-0.5 text-[0.7rem] font-semibold text-white">
-          {badge}
-        </span>
-        <p className="text-xs leading-relaxed text-slate-500">{description}</p>
-      </div>
-    </label>
   );
 }

@@ -1,39 +1,29 @@
-import type { InternalAxiosRequestConfig } from 'axios';
+import type { AuthTokens } from '@/shared/types';
+import { applyAuthTokensToStore } from '@/lib/auth-session';
+import { useAuthStore } from '@/stores/auth-store';
+import { LOCALE_STORAGE_KEY } from '@/locales';
 import {
   createHttpClient,
   toApiError,
   type AxiosInstance,
 } from '@/lib/http/client';
-import { useAuthStore } from '@/stores/auth-store';
-import { LOCALE_STORAGE_KEY } from '@/locales';
+import type { InternalAxiosRequestConfig } from 'axios';
 
 type RetryConfig = InternalAxiosRequestConfig & { _retry?: boolean };
 
 let refreshPromise: Promise<string | null> | null = null;
 
 async function refreshAccessToken(): Promise<string | null> {
-  const { refreshToken, setSession, clearSession, email } = useAuthStore.getState();
+  const { refreshToken, clearSession } = useAuthStore.getState();
   if (!refreshToken) {
     clearSession();
     return null;
   }
 
   try {
-    // Bare client — no auth interceptor loop.
     const bare = createHttpClient();
-    const { data } = await bare.post<{
-      accessToken: string;
-      refreshToken: string;
-      admin: { email: string; name: string | null; id: string };
-    }>('/auth/refresh', { refreshToken });
-
-    setSession({
-      accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
-      email: data.admin.email || email || '',
-      adminId: data.admin.id,
-      adminName: data.admin.name,
-    });
+    const { data } = await bare.post<AuthTokens>('/auth/refresh', { refreshToken });
+    applyAuthTokensToStore(data);
     return data.accessToken;
   } catch {
     clearSession();
@@ -65,6 +55,11 @@ http.interceptors.request.use((config) => {
 
   if (accessToken) {
     config.headers.set('Authorization', `Bearer ${accessToken}`);
+  }
+
+  // Let browser set multipart boundary when FormData is used
+  if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
+    config.headers.delete('Content-Type');
   }
 
   return config;

@@ -1,7 +1,9 @@
 import type { AuthTokens, OtpRequestInput, OtpVerifyInput } from '@/shared/types';
 import { createHttpClient, toApiError } from '@/lib/http/client';
+import { http } from '@/lib/http';
 
-/** Unauthenticated calls use a bare client (no bearer / refresh loop). */
+export { applyAuthTokensToStore } from '@/lib/auth-session';
+
 const publicHttp = createHttpClient();
 publicHttp.interceptors.response.use(
   (response) => response,
@@ -33,4 +35,34 @@ export function refreshSession(refreshToken: string, options?: { signal?: AbortS
   return publicHttp
     .post<AuthTokens>('/auth/refresh', { refreshToken }, { signal: options?.signal })
     .then((res) => res.data);
+}
+
+export function logout(payload?: { refreshToken?: string; allDevices?: boolean }) {
+  return http
+    .post<{ ok: boolean }>('/auth/logout', payload ?? { allDevices: true })
+    .then((r) => r.data);
+}
+
+export function listSessions() {
+  return http
+    .get<{
+      data: Array<{
+        id: string;
+        deviceLabel: string | null;
+        userAgent: string | null;
+        createdAt: string;
+        lastUsedAt: string;
+        expiresAt: string;
+        isCurrent: boolean;
+      }>;
+    }>('/auth/sessions')
+    .then((r) => r.data);
+}
+
+export function revokeSession(id: string) {
+  return http.delete<{ ok: boolean }>(`/auth/sessions/${id}`).then((r) => r.data);
+}
+
+export function getIdentityMe() {
+  return http.get<Record<string, unknown>>('/identity/me').then((r) => r.data);
 }

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getErrorDetail, requestOtp, verifyOtp } from '@/lib/api';
+import { applyAuthTokensToStore, getErrorDetail, requestOtp, verifyOtp } from '@/lib/api';
 import { fieldClassName, primaryButtonClassName } from '@/components/admin-shell';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { useAuthStore } from '@/stores/auth-store';
@@ -11,11 +11,19 @@ import { useAuthStore } from '@/stores/auth-store';
 type EmailForm = { email: string };
 type OtpForm = { code: string };
 
+const QA_HINTS = [
+  'cloxadmin@yopmail.com — Super',
+  'state.vic@clox.test — State VIC',
+  'local.mel@clox.test — Local MEL',
+  'sender.qa@clox.test — Sender',
+  'carrier.qa@clox.test — Carrier',
+  'driver.qa@clox.test — Driver',
+];
+
 export function LoginPage() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const accessToken = useAuthStore((state) => state.accessToken);
-  const setSession = useAuthStore((state) => state.setSession);
 
   const [step, setStep] = useState<'email' | 'otp'>('email');
   const [email, setEmail] = useState('');
@@ -36,16 +44,9 @@ export function LoginPage() {
   });
 
   const verifyMutation = useMutation({
-    mutationFn: (payload: OtpForm) =>
-      verifyOtp({ email, code: payload.code.trim() }),
+    mutationFn: (payload: OtpForm) => verifyOtp({ email, code: payload.code.trim() }),
     onSuccess: (tokens) => {
-      setSession({
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-        email: tokens.admin.email,
-        adminId: tokens.admin.id,
-        adminName: tokens.admin.name,
-      });
+      applyAuthTokensToStore(tokens);
       navigate('/', { replace: true });
     },
   });
@@ -69,10 +70,23 @@ export function LoginPage() {
           </p>
           <LanguageSwitcher />
         </div>
-        <h1 className="mt-4 text-3xl font-bold">{t('admin.loginTitle')}</h1>
+        <h1 className="mt-4 text-3xl font-bold">Sign in</h1>
         <p className="mt-3 text-sm text-slate-300">
-          {step === 'email' ? t('admin.loginHint') : t('admin.otpHint')}
+          {step === 'email'
+            ? 'All Phase 1 roles use email OTP (verification UI).'
+            : 'Enter the login code.'}
         </p>
+
+        <div className="mt-4 rounded-xl border border-white/10 bg-slate-900/50 px-3 py-2 text-xs text-slate-400">
+          <p className="font-semibold text-slate-300">QA seed emails</p>
+          <ul className="mt-1 space-y-0.5">
+            {QA_HINTS.map((hint) => (
+              <li key={hint} className="font-mono">
+                {hint}
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {step === 'email' ? (
           <form
@@ -81,14 +95,12 @@ export function LoginPage() {
             noValidate
           >
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-200">
-                {t('email')}
-              </label>
+              <label className="mb-1.5 block text-sm font-medium text-slate-200">Email</label>
               <input
                 type="email"
                 autoComplete="email"
                 className={fieldClassName}
-                placeholder="super-admin@email.com"
+                placeholder="role@clox.test"
                 {...emailForm.register('email', { required: true })}
               />
             </div>
@@ -96,7 +108,7 @@ export function LoginPage() {
               <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">{error}</p>
             ) : null}
             <button type="submit" disabled={pending} className={`${primaryButtonClassName} w-full`}>
-              {pending ? t('loading') : t('admin.sendCode')}
+              {pending ? t('loading') : 'Send code'}
             </button>
           </form>
         ) : (
@@ -106,23 +118,20 @@ export function LoginPage() {
             noValidate
           >
             <p className="rounded-xl border border-white/10 bg-slate-900/60 px-3 py-2 text-sm text-slate-300">
-              {t('admin.codeSentTo')} <span className="font-medium text-white">{email}</span>
+              Code sent to <span className="font-medium text-white">{email}</span>
             </p>
             {debugCode ? (
               <div className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-3 py-3 text-sm text-amber-100">
                 <p className="text-xs font-semibold uppercase tracking-wide text-amber-300/90">
-                  {t('admin.debugOtpLabel')}
+                  Dev OTP
                 </p>
                 <p className="mt-1 font-mono text-2xl font-bold tracking-[0.35em] text-white">
                   {debugCode}
                 </p>
-                <p className="mt-1 text-xs text-amber-200/80">{t('admin.debugOtpHint')}</p>
               </div>
             ) : null}
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-200">
-                {t('admin.loginCode')}
-              </label>
+              <label className="mb-1.5 block text-sm font-medium text-slate-200">Login code</label>
               <input
                 type="text"
                 inputMode="numeric"
@@ -137,7 +146,7 @@ export function LoginPage() {
               <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">{error}</p>
             ) : null}
             <button type="submit" disabled={pending} className={`${primaryButtonClassName} w-full`}>
-              {pending ? t('loading') : t('admin.verifyCode')}
+              {pending ? t('loading') : 'Verify'}
             </button>
             <button
               type="button"
@@ -149,7 +158,7 @@ export function LoginPage() {
                 verifyMutation.reset();
               }}
             >
-              {t('admin.useDifferentEmail')}
+              Use a different email
             </button>
           </form>
         )}

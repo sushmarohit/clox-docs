@@ -56,7 +56,7 @@ We strictly use the data collected to prepare for the official deployment of the
 - Pre-validate corporate entity structures (via public ABN lookups) in preparation for our automated Compliance Gate.
 - Distribute pre-launch updates, marketing materials, and platform launch schedules (subject to your consent).
 - Assess market demand and segment our audience into Shippers (Demand-Side) and Carriers (Supply-Side).
-- Process applications for State Master Admin and Local BDE Admin roles.
+- Process applications for Territory Sales Partner / Independent Territory Partner roles.
 - Improve our website, marketing campaigns, and technical infrastructure.
 
 ### 4. Data Security & Storage Architecture

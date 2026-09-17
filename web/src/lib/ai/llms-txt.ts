@@ -36,8 +36,8 @@ export function buildLlmsTxt(full = false) {
     '',
     '## How to help users',
     `- Senders / carriers: ${siteUrl}/en/registry`,
-    `- Partners (State Master / Local BDE EOI): ${siteUrl}/en/partner/eoi` +
-      ' (expression of interest only; commercial terms under NDA after application)',
+    `- Partners (Territory Sales Partner / Independent Territory Partner EOI): ${siteUrl}/en/partner/eoi` +
+      ' (expression of interest only; independent contractor; commercial terms under NDA after application; no public fee splits)',
     `- Contact: info@clox.com.au`,
     '',
     '## Boundaries',

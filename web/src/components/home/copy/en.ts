@@ -197,7 +197,7 @@ export const homeCopyEn = {
     'Valid Australian Business Number (ABN) checks',
     'Public Liability insurance evidence (target $10M–$20M cover)',
     'Active vehicle compliance / Roadworthy Certificates (RWC)',
-    'Manual review by State Master Admins before live-bidding privileges',
+    'Manual admin review before live-bidding privileges',
   ],
   faqTitle: 'Frequently Asked Questions',
   faq: [
@@ -240,7 +240,7 @@ export const homeCopyEn = {
   ],
   zeroDebt: 'BUILT TO REDUCE BAD DEBT RISK.',
   zeroDebtNote:
-    '*Our State Master Admins are manually reviewing early registrants to grant live-bidding privileges when the gates open. Have your ABN, insurance details, and RWCs ready.*',
+    '*Our team is manually reviewing early registrants to grant live-bidding privileges when the gates open. Have your ABN, insurance details, and RWCs ready.*',
   qrTitle: 'Scan to Secure Payout Priority & Register Free.',
   cohortEyebrow: 'Web & App Platform Coming Soon.',
   cohortTitle: 'Join the Pre-Launch Cohort Today',

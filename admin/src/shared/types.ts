@@ -36,6 +36,31 @@ export const AdminRole = {
 
 export type AdminRole = (typeof AdminRole)[keyof typeof AdminRole];
 
+export const PlatformRole = {
+  SENDER: 'SENDER',
+  TRANSPORT_COMPANY: 'TRANSPORT_COMPANY',
+  DRIVER: 'DRIVER',
+} as const;
+
+export type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
+
+export const AppRole = {
+  ...AdminRole,
+  ...PlatformRole,
+} as const;
+
+export type AppRole = (typeof AppRole)[keyof typeof AppRole];
+
+export const ADMIN_ROLES: AdminRole[] = [
+  AdminRole.SUPER_ADMIN,
+  AdminRole.STATE_MASTER,
+  AdminRole.LOCAL_BDE,
+];
+
+export function isAdminRole(role: string): role is AdminRole {
+  return (ADMIN_ROLES as string[]).includes(role);
+}
+
 export const Locale = {
   en: 'en',
   hi: 'hi',
@@ -238,12 +263,44 @@ export const authTokensSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
   expiresIn: z.string(),
-  admin: z.object({
-    id: z.string().uuid(),
-    email: z.string().email(),
-    name: z.string().nullable(),
-    role: z.literal(AdminRole.SUPER_ADMIN),
-  }),
+  sessionId: z.string().uuid().optional(),
+  principal: z
+    .object({
+      kind: z.enum(['admin', 'user']),
+      id: z.string().uuid(),
+      email: z.string().email(),
+      name: z.string().nullable(),
+      role: z.enum([
+        AppRole.SUPER_ADMIN,
+        AppRole.STATE_MASTER,
+        AppRole.LOCAL_BDE,
+        AppRole.SENDER,
+        AppRole.TRANSPORT_COMPANY,
+        AppRole.DRIVER,
+      ]),
+      scopes: z
+        .array(
+          z.object({
+            scopeType: z.enum(['STATE', 'LOCAL']),
+            regionCode: z.string().nullable(),
+            territoryCode: z.string().nullable(),
+          }),
+        )
+        .optional(),
+    })
+    .optional(),
+  admin: z
+    .object({
+      id: z.string().uuid(),
+      email: z.string().email(),
+      name: z.string().nullable(),
+      role: z.enum([
+        AdminRole.SUPER_ADMIN,
+        AdminRole.STATE_MASTER,
+        AdminRole.LOCAL_BDE,
+      ]),
+    })
+    .optional(),
 });
 
 export type AuthTokens = z.infer<typeof authTokensSchema>;

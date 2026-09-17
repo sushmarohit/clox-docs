@@ -147,7 +147,7 @@ export const registryLeadSchema = z.discriminatedUnion('userType', [
 export type RegistryLeadInput = z.infer<typeof registryLeadSchema>;
 
 export const eoiLeadSchema = z.object({
-  role: z.enum(['state_master', 'local_bde']),
+  role: z.literal('local_bde'),
   targetState: z.string().trim().min(2).max(80),
   targetTerritory: z.string().trim().min(2).max(120),
   fullLegalName: z.string().trim().min(2).max(120),
