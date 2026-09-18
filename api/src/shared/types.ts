@@ -95,6 +95,11 @@ export const AuditAction = {
   COMPLIANCE_ESCALATED: 'compliance.escalated',
   COMPLIANCE_DOC_EXPIRED: 'compliance.doc_expired',
   COMPANY_SUSPENDED: 'company.suspended',
+  SENDER_REGISTERED: 'sender.registered',
+  SENDER_PROFILE_UPDATED: 'sender.profile_updated',
+  SENDER_PAYMENT_SETUP: 'sender.payment_setup',
+  SENDER_PAYMENT_READY: 'sender.payment_ready',
+  SENDER_ACTIVATED: 'sender.activated',
 } as const;
 
 export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction];
@@ -526,4 +531,59 @@ export const abrLookupQuerySchema = z.object({
 });
 
 export type AbrLookupQuery = z.infer<typeof abrLookupQuerySchema>;
+
+export const senderRegisterSchema = z.object({
+  email: emailField,
+  name: z.string().trim().min(2).max(120),
+  phone: z.string().trim().min(8).max(32).optional(),
+  acceptedTerms: acceptedTrue,
+});
+
+export type SenderRegisterInput = z.infer<typeof senderRegisterSchema>;
+
+export const senderProfileSchema = z
+  .object({
+    accountType: z.enum(['BUSINESS', 'INDIVIDUAL']),
+    legalName: z.string().trim().min(2).max(200),
+    tradingName: z.string().trim().max(200).optional(),
+    abn: z
+      .string()
+      .trim()
+      .transform((v) => v.replace(/\s/g, ''))
+      .refine((v) => v === '' || /^\d{11}$/.test(v), 'ABN must be 11 digits')
+      .optional(),
+    acn: z.string().trim().max(20).optional(),
+    phone: z.string().trim().min(8).max(32).optional(),
+    homeRegionCode: z.string().trim().toUpperCase().regex(/^[A-Z]{2,3}$/).default('VIC'),
+    invoiceLegalName: z.string().trim().min(2).max(200),
+    invoiceAddressLine1: z.string().trim().min(3).max(200),
+    invoiceSuburb: z.string().trim().min(2).max(100),
+    invoiceState: z.string().trim().toUpperCase().regex(/^[A-Z]{2,3}$/),
+    invoicePostcode: z.string().trim().regex(/^\d{4}$/),
+    gstRegistered: z.boolean().default(false),
+  })
+  .superRefine((value, ctx) => {
+    if (value.accountType === 'BUSINESS' && (!value.abn || value.abn.length === 0)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['abn'],
+        message: 'ABN is required for business senders',
+      });
+    }
+  });
+
+export type SenderProfileInput = z.infer<typeof senderProfileSchema>;
+
+export const senderSubmitVerificationSchema = z.object({
+  documentIds: z.array(z.string().uuid()).min(1).max(20),
+});
+
+export type SenderSubmitVerificationInput = z.infer<typeof senderSubmitVerificationSchema>;
+
+export const senderPaymentConfirmSchema = z.object({
+  /** Real Stripe PaymentMethod id, or omit in mock mode */
+  paymentMethodId: z.string().trim().min(3).max(200).optional(),
+});
+
+export type SenderPaymentConfirmInput = z.infer<typeof senderPaymentConfirmSchema>;
 

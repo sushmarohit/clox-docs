@@ -1,15 +1,16 @@
 # CLOX Phase 1 — Full Milestone Implementation Plan
 
-**Version:** 1.8  
+**Status:** Canonical build plan for Gate 0 + M0–M12 — **Gate 0 locked**; **M0–M3 done** (M3 sender onboarding + mock Stripe); next **M4**  
+**Version:** 1.9  
 **Date:** 2026-09-17  
-**Status:** Canonical build plan for Gate 0 + M0–M12 — **Gate 0 locked**; **M0–M2 API done**; **verification UI required before M3**  
 **Gate 0 ADR:** [adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md)  
 **Parent catalogs:** [MILESTONES.md](MILESTONES.md) · [MILESTONES-AUSTRALIA.md](MILESTONES-AUSTRALIA.md)  
 **Phase 0 (done / parallel foundation):** [PRE-LAUNCH-IMPLEMENTATION-PLAN.md](PRE-LAUNCH-IMPLEMENTATION-PLAN.md)  
 **Backend architecture:** [architecture/backend-architecture.md](architecture/backend-architecture.md) (modular monolith → microservices-ready)  
 **Engineering rules:** [engineering/production-development-rules.md](engineering/production-development-rules.md) · `.cursor/rules/`  
 **Payments:** [payments/stripe-payment-specification.md](payments/stripe-payment-specification.md)  
-**Architecture:** [system-design.md](system-design.md) · [security.md](security.md)
+**Architecture:** [system-design.md](system-design.md) · [security.md](security.md)  
+**Edge cases (M0–M3 implemented):** [operations/m0-m3-edge-cases.md](operations/m0-m3-edge-cases.md) · [operations/m0-m3-test-map.md](operations/m0-m3-test-map.md) · [operations/milestone-verification-ui.md](operations/milestone-verification-ui.md)
 
 ---
 
@@ -401,21 +402,28 @@ Welcome → OTP → account type → **upload ID / business docs** → invoice p
 
 ## Implementation checklist
 
-- [ ] SND-ONB flows wired end-to-end
-- [ ] Business ABN + docs upload path
-- [ ] Individual ID upload path
-- [ ] Invoice + GST fields
-- [ ] Ops approve required before payment/active
-- [ ] Stripe Customer + default PM
-- [ ] Reject / request-info UX
-- [ ] Go/no-go table ([useronboarding](useronboarding.md) §1) — KYB/KYC = Ops verified
+- [x] SND-ONB flows wired end-to-end
+- [x] Business ABN + docs upload path
+- [x] Individual ID upload path
+- [x] Invoice + GST fields
+- [x] Ops approve required before payment/active
+- [x] Stripe Customer + default PM
+- [x] Reject / request-info UX
+- [x] Go/no-go table ([useronboarding](useronboarding.md) §1) — KYB/KYC = Ops verified
 
 ## Exit / QA checklist
 
-- [ ] New sender reaches `sender_active` only after Ops + payment
-- [ ] Booking flag true only when go/no-go passes
-- [ ] Unapproved sender cannot create jobs
-- [ ] No card PAN in DB/logs
+- [x] New sender reaches `sender_active` only after Ops + payment
+- [x] Booking flag true only when go/no-go passes
+- [x] Unapproved sender cannot create jobs
+- [x] No card PAN in DB/logs
+
+### Verification UI / demo gate (M3)
+
+- [x] Register → OTP → wizard (account/invoice/docs) in admin Vite
+- [x] Ops approve → payment mock SetupIntent → ACTIVE
+- [x] Seed sender shows complete / canBook; new register demos full path
+- [x] Job create stub returns `SENDER_NOT_BOOKING_READY` when not eligible
 
 ---
 
@@ -961,7 +969,7 @@ Territory dashboard · growth pipeline · carrier support (view/escalate) · fir
 | Role | Flows | Milestone | Done |
 |------|-------|-----------|:----:|
 | Shared auth/notif/profile | SHR-* | M1, M12 | [ ] |
-| Sender web onboarding | SND-ONB | M3 | [ ] |
+| Sender web onboarding | SND-ONB | M3 | [x] |
 | Sender job + proposals | SND-JOB, SND-PRP | M6, M7 | [ ] |
 | Sender mobile | SND-MOB, SND-SRG | M8, M9 | [ ] |
 | Transport Co. onboarding | TCO-ONB | M4 | [ ] |
@@ -1030,3 +1038,4 @@ Territory dashboard · growth pipeline · carrier support (view/escalate) · fir
 | 1.6 | 2026-09-16 | M1: 6-role OTP auth, sessions, RBAC/scope, ops admin provision |
 | 1.7 | 2026-09-16 | M2: documents upload, compliance cases, ABR assist, expiry watchdog |
 | 1.8 | 2026-09-17 | Mandatory milestone verification UI gate; thin admin QA before M3 |
+| 1.9 | 2026-09-17 | M3: sender register/wizard, mock Stripe, booking gate, admin UI |

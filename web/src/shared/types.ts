@@ -60,7 +60,10 @@ const localeField = z.enum(['en', 'hi', 'pa']).default('en');
 const abnField = z
   .string()
   .trim()
-  .regex(/^\d{2}\s?\d{3}\s?\d{3}\s?\d{3}$|^\d{9,11}$/, 'Enter a valid Australian ABN (11 digits)');
+  .regex(
+    /^(?:\d{2}\s?\d{3}\s?\d{3}\s?\d{3}|\d{11})$/,
+    'Enter a valid Australian ABN (11 digits, e.g. 48 626 269 387)',
+  );
 const emailField = z
   .string()
   .trim()

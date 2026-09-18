@@ -26,7 +26,7 @@ describe('ComplianceService gates', () => {
 
     const local: AuthenticatedPrincipal = {
       id: 'local-1',
-      email: 'local.mel@clox.test',
+      email: 'local.mel@yopmail.com',
       role: AppRole.LOCAL_BDE,
       kind: 'admin',
       regionCodes: ['VIC'],

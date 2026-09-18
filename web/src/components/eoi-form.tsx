@@ -14,6 +14,7 @@ import {
 } from '@/components/public-shell';
 import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitEoiLead } from '@/lib/api';
+import { focusFirstFormError } from '@/lib/form-errors';
 
 type FormValues = {
   role: 'local_bde';
@@ -97,6 +98,20 @@ export function EoiPage() {
         if (!errors[key]) errors[key] = issue.message;
       }
       setFieldErrors(errors);
+      focusFirstFormError(errors, [
+        'role',
+        'targetState',
+        'targetTerritory',
+        'fullLegalName',
+        'companyName',
+        'abn',
+        'email',
+        'phone',
+        'corporateAddress',
+        'networkExperience',
+        'executionStrategy',
+        'declarationAccepted',
+      ]);
       return;
     }
 
@@ -248,7 +263,7 @@ export function EoiPage() {
             <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
               {t('eoi.section5')}
             </h3>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3" data-error-field="declarationAccepted">
               <label className="flex items-start gap-2 text-xs leading-relaxed text-slate-600">
                 <input type="checkbox" {...form.register('declarationAccepted')} />
                 <span>{t('eoi.declaration')}</span>

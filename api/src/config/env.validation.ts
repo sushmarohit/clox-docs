@@ -32,7 +32,7 @@ export const envSchema = z.object({
   ENABLE_OPENAPI: booleanFromString.default(false),
   /** TEMP testing: include OTP in API response and show on admin login. Turn off for real use. */
   EXPOSE_OTP_IN_RESPONSE: booleanFromString.default(true),
-  SEED_SUPER_ADMIN_EMAIL: z.string().email().default('abc@example.com'),
+  SEED_SUPER_ADMIN_EMAIL: z.string().email().default('cloxadmin@yopmail.com'),
   SEED_SUPER_ADMIN_NAME: z.string().default('CLOX Super Admin'),
   THROTTLE_TTL_MS: z.coerce.number().int().positive().default(60_000),
   THROTTLE_LIMIT: z.coerce.number().int().positive().default(10),
@@ -42,6 +42,11 @@ export const envSchema = z.object({
   ABR_GUID: z.string().optional(),
   /** Expiry watchdog interval ms (default 1h). Set 0 to disable. */
   COMPLIANCE_WATCHDOG_MS: z.coerce.number().int().nonnegative().default(3_600_000),
+  /** Stripe secret — optional in local; when missing, payment uses mock mode. */
+  STRIPE_SECRET_KEY: z.string().optional(),
+  /** Force mock Stripe even if key present (local QA). */
+  STRIPE_MOCK: booleanFromString.default(false),
+  STRIPE_PUBLISHABLE_KEY: z.string().optional(),
 });
 
 export type AppEnv = z.infer<typeof envSchema>;

@@ -25,6 +25,11 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
       <NavLink to="/" end className={navItemClass} onClick={onNavigate}>
         Home
       </NavLink>
+      {role === AppRole.SENDER ? (
+        <NavLink to="/sender/onboarding" className={navItemClass} onClick={onNavigate}>
+          Sender onboarding
+        </NavLink>
+      ) : null}
       {isSuper ? (
         <>
           <NavLink to="/leads" className={navItemClass} onClick={onNavigate}>

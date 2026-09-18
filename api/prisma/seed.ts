@@ -5,6 +5,7 @@ import {
   CompanyStatus,
   CompanyType,
   PlatformRole,
+  SenderAccountType,
   UserStatus,
 } from '@prisma/client';
 
@@ -50,7 +51,7 @@ async function seedRegions() {
 }
 
 async function seedSuperAdmin() {
-  const email = (process.env.SEED_SUPER_ADMIN_EMAIL ?? 'abc@example.com').toLowerCase();
+  const email = (process.env.SEED_SUPER_ADMIN_EMAIL ?? 'cloxadmin@yopmail.com').toLowerCase();
   const name = process.env.SEED_SUPER_ADMIN_NAME ?? 'CLOX Super Admin';
 
   const admin = await prisma.adminUser.upsert({
@@ -78,10 +79,10 @@ async function seedScopedAdmins(vicRegionId: string) {
   });
 
   const stateEmail = (
-    process.env.SEED_STATE_MASTER_EMAIL ?? 'state.vic@clox.test'
+    process.env.SEED_STATE_MASTER_EMAIL ?? 'state.vic@yopmail.com'
   ).toLowerCase();
   const localEmail = (
-    process.env.SEED_LOCAL_BDE_EMAIL ?? 'local.mel@clox.test'
+    process.env.SEED_LOCAL_BDE_EMAIL ?? 'local.mel@yopmail.com'
   ).toLowerCase();
 
   const state = await prisma.adminUser.upsert({
@@ -138,6 +139,17 @@ async function seedMarketplaceUsers(vicRegionId: string) {
       legalName: 'QA Sender Pty Ltd',
       status: CompanyStatus.ACTIVE,
       homeRegionId: vicRegionId,
+      senderAccountType: SenderAccountType.BUSINESS,
+      abn: '51824753556',
+      invoiceLegalName: 'QA Sender Pty Ltd',
+      invoiceAddressLine1: '1 Collins St',
+      invoiceSuburb: 'Melbourne',
+      invoiceState: 'VIC',
+      invoicePostcode: '3000',
+      gstRegistered: true,
+      paymentReady: true,
+      stripeCustomerId: 'cus_mock_seed_sender',
+      stripeDefaultPaymentMethodId: 'pm_mock_seed',
     },
     create: {
       id: '00000000-0000-4000-8000-000000000001',
@@ -146,6 +158,16 @@ async function seedMarketplaceUsers(vicRegionId: string) {
       legalName: 'QA Sender Pty Ltd',
       abn: '51824753556',
       homeRegionId: vicRegionId,
+      senderAccountType: SenderAccountType.BUSINESS,
+      invoiceLegalName: 'QA Sender Pty Ltd',
+      invoiceAddressLine1: '1 Collins St',
+      invoiceSuburb: 'Melbourne',
+      invoiceState: 'VIC',
+      invoicePostcode: '3000',
+      gstRegistered: true,
+      paymentReady: true,
+      stripeCustomerId: 'cus_mock_seed_sender',
+      stripeDefaultPaymentMethodId: 'pm_mock_seed',
     },
   });
 
@@ -168,21 +190,21 @@ async function seedMarketplaceUsers(vicRegionId: string) {
 
   const users = [
     {
-      email: (process.env.SEED_SENDER_EMAIL ?? 'sender.qa@clox.test').toLowerCase(),
+      email: (process.env.SEED_SENDER_EMAIL ?? 'sender.qa@yopmail.com').toLowerCase(),
       role: PlatformRole.SENDER,
       name: 'QA Sender',
       companyId: senderCompany.id,
       phone: '+61400000001',
     },
     {
-      email: (process.env.SEED_CARRIER_EMAIL ?? 'carrier.qa@clox.test').toLowerCase(),
+      email: (process.env.SEED_CARRIER_EMAIL ?? 'carrier.qa@yopmail.com').toLowerCase(),
       role: PlatformRole.TRANSPORT_COMPANY,
       name: 'QA Carrier Admin',
       companyId: carrierCompany.id,
       phone: '+61400000002',
     },
     {
-      email: (process.env.SEED_DRIVER_EMAIL ?? 'driver.qa@clox.test').toLowerCase(),
+      email: (process.env.SEED_DRIVER_EMAIL ?? 'driver.qa@yopmail.com').toLowerCase(),
       role: PlatformRole.DRIVER,
       name: 'QA Driver',
       companyId: carrierCompany.id,

@@ -64,6 +64,7 @@ async function bootstrap() {
         .addTag('notifications')
         .addTag('ops')
         .addTag('audit')
+        .addTag('sender')
         .build(),
     );
     SwaggerModule.setup('docs', app, document, {

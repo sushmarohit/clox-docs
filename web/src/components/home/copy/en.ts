@@ -105,6 +105,7 @@ export const homeCopyEn = {
     ],
   ],
   matchingTitle: 'The Right Vehicle for the Job',
+  matchingEyebrow: 'Vehicle & load matching',
   matchingBody:
     'CLOX is designed to match shipment dimensions and payload to suitable transport options — so senders declare the load, the platform recommends a minimum vehicle class, and carriers propose a compliant vehicle and driver.',
   matchingSteps: [
@@ -123,6 +124,13 @@ export const homeCopyEn = {
   ],
   matchingNote:
     'Vehicle and load matching opens with live marketplace operations — register now for early access.',
+  matchingClassesTitle: 'Full-load vehicle classes (indicative)',
+  matchingClasses: [
+    ['Medium Rigid (3–8T)', 'Regional distribution and warehouse lanes'],
+    ['Heavy Rigid / Tray', 'Bulk, steel, and site-access freight'],
+    ['Semi-trailer', 'Interstate full-load linehaul'],
+    ['B-Double', 'High-capacity corridor freight'],
+  ],
   journeyTitle: 'The Digital Shipping Journey',
   journeySub: 'The Simple Four-Step Process',
   steps: [

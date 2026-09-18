@@ -279,6 +279,11 @@ model User {
   @@index([phone])
 }
 
+enum SenderAccountType {
+  BUSINESS
+  INDIVIDUAL
+}
+
 model Company {
   id                    String        @id @default(uuid())
   type                  CompanyType
@@ -291,7 +296,17 @@ model Company {
   phone                 String?
   homeRegionId          String?
   homeRegion            Region?       @relation("CompanyHomeRegion", fields: [homeRegionId], references: [id], onDelete: SetNull)
+  /// Sender onboarding (M3)
+  senderAccountType     SenderAccountType?
+  invoiceLegalName      String?
+  invoiceAddressLine1   String?
+  invoiceSuburb         String?
+  invoiceState          String?
+  invoicePostcode       String?
+  gstRegistered         Boolean       @default(false)
+  paymentReady          Boolean       @default(false)
   stripeCustomerId      String?
+  stripeDefaultPaymentMethodId String?
   stripeConnectAccountId String?
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt

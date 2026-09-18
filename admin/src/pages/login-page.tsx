@@ -1,11 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { applyAuthTokensToStore, getErrorDetail, requestOtp, verifyOtp } from '@/lib/api';
 import { fieldClassName, primaryButtonClassName } from '@/components/admin-shell';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import { AppRole } from '@/shared/types';
 import { useAuthStore } from '@/stores/auth-store';
 
 type EmailForm = { email: string };
@@ -13,23 +14,29 @@ type OtpForm = { code: string };
 
 const QA_HINTS = [
   'cloxadmin@yopmail.com — Super',
-  'state.vic@clox.test — State VIC',
-  'local.mel@clox.test — Local MEL',
-  'sender.qa@clox.test — Sender',
-  'carrier.qa@clox.test — Carrier',
-  'driver.qa@clox.test — Driver',
+  'state.vic@yopmail.com — State VIC',
+  'local.mel@yopmail.com — Local MEL',
+  'sender.qa@yopmail.com — Sender',
+  'carrier.qa@yopmail.com — Carrier',
+  'driver.qa@yopmail.com — Driver',
 ];
 
 export function LoginPage() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
+  const location = useLocation();
+  const prefillEmail =
+    typeof (location.state as { email?: string } | null)?.email === 'string'
+      ? (location.state as { email: string }).email
+      : '';
   const accessToken = useAuthStore((state) => state.accessToken);
+  const role = useAuthStore((state) => state.role);
 
   const [step, setStep] = useState<'email' | 'otp'>('email');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(prefillEmail);
   const [debugCode, setDebugCode] = useState<string | null>(null);
 
-  const emailForm = useForm<EmailForm>({ defaultValues: { email: '' } });
+  const emailForm = useForm<EmailForm>({ defaultValues: { email: prefillEmail } });
   const otpForm = useForm<OtpForm>({ defaultValues: { code: '' } });
 
   const requestMutation = useMutation({
@@ -47,12 +54,15 @@ export function LoginPage() {
     mutationFn: (payload: OtpForm) => verifyOtp({ email, code: payload.code.trim() }),
     onSuccess: (tokens) => {
       applyAuthTokensToStore(tokens);
-      navigate('/', { replace: true });
+      const role = tokens.principal?.role ?? tokens.admin?.role;
+      navigate(role === 'SENDER' ? '/sender/onboarding' : '/', { replace: true });
     },
   });
 
   if (accessToken) {
-    return <Navigate to="/" replace />;
+    return (
+      <Navigate to={role === AppRole.SENDER ? '/sender/onboarding' : '/'} replace />
+    );
   }
 
   const pending = requestMutation.isPending || verifyMutation.isPending;
@@ -100,7 +110,7 @@ export function LoginPage() {
                 type="email"
                 autoComplete="email"
                 className={fieldClassName}
-                placeholder="role@clox.test"
+                placeholder="name@yopmail.com"
                 {...emailForm.register('email', { required: true })}
               />
             </div>
@@ -162,6 +172,13 @@ export function LoginPage() {
             </button>
           </form>
         )}
+
+        <p className="mt-6 text-center text-sm text-slate-400">
+          New sender?{' '}
+          <Link to="/register/sender" className="text-clox-orange hover:underline">
+            Register
+          </Link>
+        </p>
       </div>
     </main>
   );

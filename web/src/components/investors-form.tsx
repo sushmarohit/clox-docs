@@ -19,6 +19,7 @@ import {
 } from '@/components/public-shell';
 import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitInvestorLead } from '@/lib/api';
+import { focusFirstFormError } from '@/lib/form-errors';
 
 type Classification = (typeof investorClassificationSchema.options)[number];
 type CapitalBand = (typeof capitalAllocationSchema.options)[number];
@@ -151,6 +152,21 @@ export function InvestorsPage() {
         if (!errors[key]) errors[key] = issue.message;
       }
       setFieldErrors(errors);
+      focusFirstFormError(errors, [
+        'fullNameOrEntity',
+        'contactPersonName',
+        'email',
+        'phone',
+        'abn',
+        'acn',
+        'residence',
+        'investorClassifications',
+        'capitalAllocation',
+        'ecosystemFocus',
+        'strategicNotes',
+        'declarationAccepted',
+        'authorizedName',
+      ]);
       return;
     }
 
@@ -240,7 +256,7 @@ export function InvestorsPage() {
               {t('investors.section2')}
             </h3>
             <p className="mb-2 text-xs text-slate-500">{t('selectAllThatApply')}</p>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-3" data-error-field="investorClassifications">
               {classifications.map((item) => (
                 <label
                   key={item.value}
@@ -325,7 +341,7 @@ export function InvestorsPage() {
             <h3 className="mb-3 border-b border-slate-200 pb-2 text-sm font-bold text-clox-navy">
               {t('investors.section5')}
             </h3>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3" data-error-field="declarationAccepted">
               <label className="flex items-start gap-2 text-xs leading-relaxed text-slate-600">
                 <input type="checkbox" {...form.register('declarationAccepted')} />
                 <span>{t('investors.declaration')}</span>

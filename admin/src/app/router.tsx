@@ -11,6 +11,8 @@ import { LoginPage } from '@/pages/login-page';
 import { ComplianceCasePage, ComplianceQueuePage } from '@/pages/compliance-pages';
 import { QaUploadPage } from '@/pages/qa-upload-page';
 import { AccountPage } from '@/pages/account-page';
+import { SenderRegisterPage } from '@/pages/sender-register-page';
+import { SenderOnboardingPage } from '@/pages/sender-onboarding-page';
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -58,6 +60,7 @@ export function AppRouter() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register/sender" element={<SenderRegisterPage />} />
       <Route element={<ProtectedShell />}>
         <Route path="/" element={<HomePage />} />
         <Route
@@ -100,6 +103,7 @@ export function AppRouter() {
             </OpsOnly>
           }
         />
+        <Route path="/sender/onboarding" element={<SenderOnboardingPage />} />
         <Route path="/qa/upload" element={<QaUploadPage />} />
         <Route path="/account" element={<AccountPage />} />
       </Route>

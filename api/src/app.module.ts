@@ -19,6 +19,7 @@ import { MatchingModule } from './modules/matching/matching.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { OpsModule } from './modules/ops/ops.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { SenderModule } from './modules/sender/sender.module';
 import { SettlementsModule } from './modules/settlements/settlements.module';
 import { TripsModule } from './modules/trips/trips.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -53,6 +54,7 @@ import { PrismaModule } from './prisma/prisma.module';
     AuthModule,
     AdminModule,
     IdentityModule,
+    SenderModule,
     ComplianceModule,
     DocumentsModule,
     JobsModule,

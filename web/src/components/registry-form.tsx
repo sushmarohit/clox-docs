@@ -14,6 +14,7 @@ import {
   inputClassName,
 } from '@/components/public-shell';
 import { SuccessModal } from '@/components/success-modal';
+import { focusFirstFormError } from '@/lib/form-errors';
 import { getErrorDetail, submitRegistryLead } from '@/lib/api';
 import { useRegistryWizardStore } from '@/stores/registry-wizard-store';
 
@@ -90,7 +91,7 @@ function mapZodErrors(issues: { path: PropertyKey[]; message: string }[]): Field
 }
 
 function focusFirstError(errors: FieldErrors) {
-  const order: (keyof FieldErrors)[] = [
+  focusFirstFormError(errors, [
     'userType',
     'companyLegalName',
     'fleetEntityName',
@@ -106,12 +107,7 @@ function focusFirstError(errors: FieldErrors) {
     'phone',
     'infraAcknowledged',
     'termsAccepted',
-  ];
-  const first = order.find((key) => errors[key]);
-  if (!first) return;
-  const el = document.querySelector<HTMLElement>(`[name="${first}"], [data-error-field="${first}"]`);
-  el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  if (el instanceof HTMLElement && 'focus' in el) el.focus();
+  ]);
 }
 
 export function RegistryPage() {
@@ -277,7 +273,7 @@ export function RegistryPage() {
           />
 
           {step === 1 ? (
-            <div>
+              <div data-error-field="userType">
               <h2 className="text-lg font-bold text-clox-navy">{t('registry.joinTitle')}</h2>
               <p className="mb-3 text-sm text-slate-500">{t('registry.joinPrompt')}</p>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -295,7 +291,7 @@ export function RegistryPage() {
                 />
               </div>
               <FieldError message={fieldErrors.userType} />
-            </div>
+              </div>
           ) : null}
 
           {step === 2 && userType ? (
@@ -348,7 +344,7 @@ export function RegistryPage() {
               <h2 className="mb-4 text-center text-lg font-bold text-clox-navy">
                 {t('registry.verifyTitle')}
               </h2>
-              <div className="mb-4 grid gap-3 sm:grid-cols-3">
+              <div className="mb-4 grid gap-3 sm:grid-cols-3" data-error-field="infraAcknowledged">
                 {INFRA.map((option) => {
                   const selected = values.infraAcknowledged.includes(option.value);
                   return (
@@ -514,7 +510,10 @@ function SenderFields({
         <FieldError message={errors.shippingOrigin} />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
+      <div
+        className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4"
+        data-error-field="operationalModels"
+      >
         <FieldLabel required>{t('registry.operationalModel')}</FieldLabel>
         <div className="mt-1 grid gap-1 sm:grid-cols-2">
           {OPS.map((option) => (
@@ -609,7 +608,10 @@ function CarrierFields({
         <FieldError message={errors.depotState} />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
+      <div
+        className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4"
+        data-error-field="fleetComposition"
+      >
         <FieldLabel required>{t('registry.fleetComposition')}</FieldLabel>
         <div className="mt-1 grid gap-1 sm:grid-cols-2">
           {FLEET.map((option) => (
@@ -652,7 +654,10 @@ function CarrierFields({
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
+      <div
+        className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4"
+        data-error-field="complianceAuthorized"
+      >
         <FieldLabel required>{t('registry.complianceAuth')}</FieldLabel>
         <label className="flex items-start gap-2 text-xs text-slate-600 sm:text-sm">
           <input type="checkbox" {...form.register('complianceAuthorized')} />

@@ -52,7 +52,7 @@ npm run dev:web
 npm run dev:admin
 ```
 
-Seed Super Admin email: `abc@example.com` (override via `SEED_SUPER_ADMIN_EMAIL`).  
+Seed Super Admin email: `cloxadmin@yopmail.com` (override via `SEED_SUPER_ADMIN_EMAIL`). QA personas use `@yopmail.com` — check inbox at https://yopmail.com.  
 Seed also enables **VIC** region (pilot) + Melbourne Metro territory.
 
 ### Useful URLs

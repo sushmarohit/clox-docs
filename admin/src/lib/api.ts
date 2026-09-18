@@ -33,3 +33,13 @@ export {
   type ComplianceCaseListItem,
   type ComplianceCaseDetail,
 } from '@/lib/api/compliance';
+export {
+  registerSender,
+  getSenderOnboarding,
+  updateSenderProfile,
+  submitSenderVerification,
+  setupSenderPayment,
+  confirmSenderPayment,
+  getBookingEligibility,
+  type SenderOnboarding,
+} from '@/lib/api/sender';

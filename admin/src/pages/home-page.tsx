@@ -74,6 +74,15 @@ function RoleHomePage() {
             </p>
           </Link>
         ) : null}
+        {role === AppRole.SENDER ? (
+          <Link
+            to="/sender/onboarding"
+            className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
+          >
+            <p className="text-lg font-semibold">Sender onboarding</p>
+            <p className="mt-1 text-sm text-slate-400">M3 wizard → Ops → payment → active</p>
+          </Link>
+        ) : null}
         <Link
           to="/account"
           className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
