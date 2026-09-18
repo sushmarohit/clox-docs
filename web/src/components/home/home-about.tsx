@@ -37,7 +37,7 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
             className="absolute left-0 top-0 z-[2] aspect-[7/5] w-[70%] max-h-[350px] rounded-2xl border-8 border-white object-cover shadow-clox-card animate-about-float motion-reduce:animate-none"
           />
           <img
-            src="/landing/1380.jpg"
+            src="/landing/2151919254.jpg"
             alt="Freight transport"
             className="absolute bottom-0 right-0 z-[1] aspect-[3/2.5] w-[60%] max-h-[300px] rounded-2xl border-8 border-white object-cover shadow-clox-card animate-about-float-delayed motion-reduce:animate-none"
           />
