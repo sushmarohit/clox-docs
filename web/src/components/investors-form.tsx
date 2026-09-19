@@ -17,6 +17,12 @@ import {
   PublicShell,
   inputClassName,
 } from '@/components/public-shell';
+import {
+  ChoiceCard,
+  ChoiceCheckbox,
+  ChoiceOption,
+  ChoiceRadio,
+} from '@/components/form-controls';
 import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitInvestorLead } from '@/lib/api';
 import { focusFirstFormError } from '@/lib/form-errors';
@@ -258,25 +264,18 @@ export function InvestorsPage() {
             <p className="mb-2 text-xs text-slate-500">{t('selectAllThatApply')}</p>
             <div className="grid gap-3 sm:grid-cols-3" data-error-field="investorClassifications">
               {classifications.map((item) => (
-                <label
-                  key={item.value}
-                  className="block rounded-xl border border-slate-200 bg-slate-50 p-3 sm:p-4"
-                >
-                  <div className="flex items-start gap-2">
-                    <input
-                      type="checkbox"
-                      className="mt-1"
-                      checked={selectedClassifications.includes(item.value)}
-                      onChange={() => toggleClassification(item.value)}
-                    />
-                    <div>
-                      <strong className="block text-clox-navy">{t(item.titleKey)}</strong>
-                      <p className="mt-1 text-xs leading-relaxed text-slate-500">
-                        {t(item.descKey)}
-                      </p>
-                    </div>
+                <ChoiceCard key={item.value}>
+                  <ChoiceCheckbox
+                    checked={selectedClassifications.includes(item.value)}
+                    onChange={() => toggleClassification(item.value)}
+                  />
+                  <div className="min-w-0">
+                    <strong className="block text-clox-navy">{t(item.titleKey)}</strong>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                      {t(item.descKey)}
+                    </p>
                   </div>
-                </label>
+                </ChoiceCard>
               ))}
             </div>
             <FieldError message={fieldErrors.investorClassifications} />
@@ -291,17 +290,13 @@ export function InvestorsPage() {
                 <FieldLabel required>{t('investors.capitalAllocation')}</FieldLabel>
                 <div className="flex flex-col gap-2">
                   {capitalBands.map((band) => (
-                    <label
-                      key={band.value}
-                      className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700"
-                    >
-                      <input
-                        type="radio"
+                    <ChoiceOption key={band.value}>
+                      <ChoiceRadio
                         value={band.value}
                         {...form.register('capitalAllocation')}
                       />
-                      {t(band.labelKey)}
-                    </label>
+                      <span>{t(band.labelKey)}</span>
+                    </ChoiceOption>
                   ))}
                 </div>
                 <FieldError message={fieldErrors.capitalAllocation} />
@@ -310,13 +305,13 @@ export function InvestorsPage() {
                 <FieldLabel required>{t('investors.ecosystemFocus')}</FieldLabel>
                 <div className="flex flex-col gap-2">
                   {focusAreas.map((area) => (
-                    <label
-                      key={area.value}
-                      className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700"
-                    >
-                      <input type="radio" value={area.value} {...form.register('ecosystemFocus')} />
-                      {t(area.labelKey)}
-                    </label>
+                    <ChoiceOption key={area.value}>
+                      <ChoiceRadio
+                        value={area.value}
+                        {...form.register('ecosystemFocus')}
+                      />
+                      <span>{t(area.labelKey)}</span>
+                    </ChoiceOption>
                   ))}
                 </div>
                 <FieldError message={fieldErrors.ecosystemFocus} />
@@ -342,8 +337,8 @@ export function InvestorsPage() {
               {t('investors.section5')}
             </h3>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3" data-error-field="declarationAccepted">
-              <label className="flex items-start gap-2 text-xs leading-relaxed text-slate-600">
-                <input type="checkbox" {...form.register('declarationAccepted')} />
+              <label className="flex cursor-pointer items-start gap-3 text-xs leading-relaxed text-slate-600">
+                <ChoiceCheckbox {...form.register('declarationAccepted')} />
                 <span>{t('investors.declaration')}</span>
               </label>
               <FieldError message={fieldErrors.declarationAccepted} />

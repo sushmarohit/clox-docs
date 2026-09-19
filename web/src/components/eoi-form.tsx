@@ -12,6 +12,7 @@ import {
   PublicShell,
   inputClassName,
 } from '@/components/public-shell';
+import { ChoiceCheckbox } from '@/components/form-controls';
 import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitEoiLead } from '@/lib/api';
 import { focusFirstFormError } from '@/lib/form-errors';
@@ -264,8 +265,8 @@ export function EoiPage() {
               {t('eoi.section5')}
             </h3>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3" data-error-field="declarationAccepted">
-              <label className="flex items-start gap-2 text-xs leading-relaxed text-slate-600">
-                <input type="checkbox" {...form.register('declarationAccepted')} />
+              <label className="flex cursor-pointer items-start gap-3 text-xs leading-relaxed text-slate-600">
+                <ChoiceCheckbox {...form.register('declarationAccepted')} />
                 <span>{t('eoi.declaration')}</span>
               </label>
               <FieldError message={fieldErrors.declarationAccepted} />

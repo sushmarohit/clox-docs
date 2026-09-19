@@ -13,6 +13,7 @@ import {
   StepIndicator,
   inputClassName,
 } from '@/components/public-shell';
+import { ChoiceCheckbox, ChoiceRadio, ChoiceRow } from '@/components/form-controls';
 import { SuccessModal } from '@/components/success-modal';
 import { focusFirstFormError } from '@/lib/form-errors';
 import { getErrorDetail, submitRegistryLead } from '@/lib/api';
@@ -383,8 +384,8 @@ export function RegistryPage() {
                 className="mb-4 rounded-xl border border-slate-200 bg-slate-50 p-3"
                 data-error-field="termsAccepted"
               >
-                <label className="flex items-start gap-2 text-xs leading-relaxed text-slate-600">
-                  <input type="checkbox" {...form.register('termsAccepted')} />
+                <label className="flex cursor-pointer items-start gap-3 text-xs leading-relaxed text-slate-600">
+                  <ChoiceCheckbox {...form.register('termsAccepted')} />
                   <span>
                     {t('registry.termsAcceptPrefix')}{' '}
                     <a
@@ -515,11 +516,10 @@ function SenderFields({
         data-error-field="operationalModels"
       >
         <FieldLabel required>{t('registry.operationalModel')}</FieldLabel>
-        <div className="mt-1 grid gap-1 sm:grid-cols-2">
+        <div className="mt-1 grid gap-2 sm:grid-cols-2">
           {OPS.map((option) => (
-            <label key={option.value} className="flex items-start gap-2 text-sm text-slate-600">
-              <input
-                type="checkbox"
+            <ChoiceRow key={option.value}>
+              <ChoiceCheckbox
                 checked={values.operationalModels.includes(option.value)}
                 onChange={(event) => {
                   const next = event.target.checked
@@ -529,7 +529,7 @@ function SenderFields({
                 }}
               />
               <span>{t(option.labelKey)}</span>
-            </label>
+            </ChoiceRow>
           ))}
         </div>
         <FieldError message={errors.operationalModels} />
@@ -537,12 +537,12 @@ function SenderFields({
 
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
         <FieldLabel required>{t('registry.biddingStructure')}</FieldLabel>
-        <div className="mt-1 grid gap-1 sm:grid-cols-2">
+        <div className="mt-1 grid gap-2 sm:grid-cols-2">
           {BIDDING.map((option) => (
-            <label key={option.value} className="flex items-start gap-2 text-sm text-slate-600">
-              <input type="radio" value={option.value} {...form.register('biddingType')} />
+            <ChoiceRow key={option.value}>
+              <ChoiceRadio value={option.value} {...form.register('biddingType')} />
               <span>{t(option.labelKey)}</span>
-            </label>
+            </ChoiceRow>
           ))}
         </div>
         <FieldError message={errors.biddingType} />
@@ -613,11 +613,10 @@ function CarrierFields({
         data-error-field="fleetComposition"
       >
         <FieldLabel required>{t('registry.fleetComposition')}</FieldLabel>
-        <div className="mt-1 grid gap-1 sm:grid-cols-2">
+        <div className="mt-1 grid gap-2 sm:grid-cols-2">
           {FLEET.map((option) => (
-            <label key={option.value} className="flex items-start gap-2 text-sm text-slate-600">
-              <input
-                type="checkbox"
+            <ChoiceRow key={option.value}>
+              <ChoiceCheckbox
                 checked={values.fleetComposition.includes(option.value)}
                 onChange={(event) => {
                   const next = event.target.checked
@@ -627,7 +626,7 @@ function CarrierFields({
                 }}
               />
               <span>{t(option.labelKey)}</span>
-            </label>
+            </ChoiceRow>
           ))}
         </div>
         <FieldError message={errors.fleetComposition} />
@@ -635,11 +634,10 @@ function CarrierFields({
 
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
         <FieldLabel>{t('registry.capabilities')}</FieldLabel>
-        <div className="mt-1 grid gap-1 sm:grid-cols-2">
+        <div className="mt-1 grid gap-2 sm:grid-cols-2">
           {CAPABILITY.map((option) => (
-            <label key={option.value} className="flex items-start gap-2 text-sm text-slate-600">
-              <input
-                type="checkbox"
+            <ChoiceRow key={option.value}>
+              <ChoiceCheckbox
                 checked={values.capabilities.includes(option.value)}
                 onChange={(event) => {
                   const next = event.target.checked
@@ -649,7 +647,7 @@ function CarrierFields({
                 }}
               />
               <span>{t(option.labelKey)}</span>
-            </label>
+            </ChoiceRow>
           ))}
         </div>
       </div>
@@ -659,10 +657,10 @@ function CarrierFields({
         data-error-field="complianceAuthorized"
       >
         <FieldLabel required>{t('registry.complianceAuth')}</FieldLabel>
-        <label className="flex items-start gap-2 text-xs text-slate-600 sm:text-sm">
-          <input type="checkbox" {...form.register('complianceAuthorized')} />
+        <ChoiceRow className="text-xs sm:text-sm">
+          <ChoiceCheckbox {...form.register('complianceAuthorized')} />
           <span>{t('registry.complianceAuthBody')}</span>
-        </label>
+        </ChoiceRow>
         <FieldError message={errors.complianceAuthorized} />
       </div>
     </div>
