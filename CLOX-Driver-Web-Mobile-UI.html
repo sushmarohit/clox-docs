@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLOX — Driver Web + Mobile UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1A2F4C; --navy-ink:#10192B; --navy-soft:#233F63;
+    --orange:#F26E22; --orange-deep:#C6551A; --orange-tint:#FDE7DA;
+    --steel:#3D5875; --steel-tint:#E7EDF4;
+    --bg:#F3F5F9; --surface:#FFFFFF; --surface-alt:#EEF1F6;
+    --border:#DCE2EC; --border-soft:#E9ECF3;
+    --text:#17233B; --text-mute:#5B6B84; --text-faint:#93A0B4;
+    --green:#1D7A4C; --green-bg:#E3F4EA; --green-bd:#BEE3CC;
+    --amber:#9C6A0A; --amber-bg:#FCF0D8; --amber-bd:#F0D397;
+    --red:#B93A2B; --red-bg:#FBE8E5; --red-bd:#F0C4BC;
+    --violet:#6547A8; --violet-bg:#EFE9F9; --violet-bd:#D6C7F0;
+    --radius-sm:6px; --radius-md:10px; --radius-lg:16px;
+    --shadow-1:0 1px 2px rgba(16,25,43,0.06), 0 1px 1px rgba(16,25,43,0.04);
+    --shadow-2:0 8px 24px rgba(16,25,43,0.10), 0 2px 6px rgba(16,25,43,0.06);
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'IBM Plex Sans', -apple-system, sans-serif;
+    --font-mono:'IBM Plex Mono', ui-monospace, monospace;
+    /* Driver mobile — high-contrast cab UI (glare/outdoor legibility) */
+    --cab-bg:#0E1826; --cab-surface:#182740; --cab-surface-2:#1F3252;
+    --cab-border:#2C4066; --cab-text:#F4F7FC; --cab-text-mute:#93A5C4;
+    --cab-green:#3ED689; --cab-amber:#FFC24B; --cab-red:#FF5D52;
+  }
+  *{margin:0; padding:0; box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{ font-family:var(--font-body); color:var(--text); background:var(--bg); -webkit-font-smoothing:antialiased; }
+  ::selection{ background: var(--orange-tint); color:var(--navy-ink); }
+
+  .kit-cover{ background: linear-gradient(160deg, var(--navy) 0%, #142338 62%, #0F1B2C 100%); color:#fff; padding:72px 8vw 56px; position:relative; overflow:hidden; }
+  .kit-cover::after{ content:""; position:absolute; right:-120px; top:-160px; width:520px; height:520px; border-radius:50%; border:1px dashed rgba(242,110,34,0.35); pointer-events:none; }
+  .kit-cover::before{ content:""; position:absolute; right:-40px; top:-40px; width:340px; height:340px; border-radius:50%; border:1px dashed rgba(242,110,34,0.22); pointer-events:none; }
+  .kit-eyebrow{ font-family:var(--font-mono); font-size:12.5px; letter-spacing:2.5px; color:var(--orange); text-transform:uppercase; display:flex; align-items:center; gap:10px; margin-bottom:22px; }
+  .kit-eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--orange); display:inline-block;}
+  .kit-title{ font-family:var(--font-display); font-weight:700; font-size:clamp(32px,4.2vw,52px); line-height:1.05; letter-spacing:-0.5px; max-width:820px; }
+  .kit-title em{ font-style:normal; color:var(--orange); }
+  .kit-sub{ margin-top:18px; font-size:16.5px; color:#C7D2E3; max-width:640px; line-height:1.6; }
+  .kit-meta-row{ display:flex; gap:36px; margin-top:44px; flex-wrap:wrap; }
+  .kit-meta-row .m{ font-family:var(--font-mono); font-size:12.5px; color:#8FA0BC; }
+  .kit-meta-row .m b{ display:block; font-family:var(--font-body); font-weight:600; font-size:19px; color:#fff; margin-top:4px; }
+  .kit-toc{ background:var(--surface); border-bottom:1px solid var(--border); padding:28px 8vw 30px; position:sticky; top:0; z-index:50; box-shadow:var(--shadow-1); }
+  .kit-toc-label{ font-family:var(--font-mono); font-size:11px; letter-spacing:2px; color:var(--text-faint); text-transform:uppercase; margin-bottom:12px;}
+  .kit-toc-grid{ display:flex; flex-wrap:wrap; gap:8px; }
+  .kit-toc-grid a{ font-family:var(--font-mono); font-size:12.5px; color:var(--navy); text-decoration:none; background:var(--surface-alt); border:1px solid var(--border); padding:6px 11px; border-radius:20px; transition:all .15s ease; white-space:nowrap; }
+  .kit-toc-grid a:hover{ background:var(--orange); border-color:var(--orange); color:#fff; }
+  .kit-toc-grid a.mob{ background:var(--cab-bg); color:var(--cab-amber); border-color:var(--cab-bg); }
+
+  .section-divider{ padding:46px 8vw 10px; }
+  .section-divider h2{ font-family:var(--font-display); font-size:15px; letter-spacing:1px; text-transform:uppercase; color:var(--text-faint); display:flex; align-items:center; gap:14px; }
+  .section-divider h2::after{ content:""; flex:1; height:1px; background:var(--border); }
+
+  .screen-wrap{ padding:56px 8vw 8px; border-bottom:1px solid var(--border-soft); scroll-margin-top:96px; }
+  .screen-wrap:nth-of-type(even){ background:#F8F9FC; }
+  .screen-wrap.dark{ background:#0B131E; }
+  .screen-tag{ display:flex; align-items:baseline; gap:14px; margin-bottom:8px; flex-wrap:wrap; }
+  .screen-id{ font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:#fff; background:var(--navy); padding:4px 10px; border-radius:4px; letter-spacing:0.5px; }
+  .screen-id.mob{ background:var(--cab-red); }
+  .screen-name{ font-family:var(--font-display); font-weight:600; font-size:23px; color:var(--navy-ink); }
+  .screen-wrap.dark .screen-name{ color:#fff; }
+  .screen-purpose{ color:var(--text-mute); font-size:14.5px; margin:6px 0 26px; max-width:760px; line-height:1.55; }
+  .screen-wrap.dark .screen-purpose{ color:#8FA0BC; }
+  .screen-flags{ display:flex; gap:8px; margin-left:auto; flex-wrap:wrap; }
+  .flag{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:0.6px; padding:3px 8px; border-radius:4px; text-transform:uppercase; }
+  .flag.gated{ background:var(--red-bg); color:var(--red); border:1px solid var(--red-bd); }
+  .flag.web{ background:var(--steel-tint); color:var(--steel); border:1px solid #C9D6E4; }
+  .flag.mobile{ background:#20304C; color:var(--cab-amber); border:1px solid #2C4066; }
+
+  .device{ background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-2); border:1px solid var(--border); overflow:hidden; margin-bottom:56px; }
+  .device-bar{ height:38px; background:#E7EAF0; display:flex; align-items:center; padding:0 14px; gap:8px; border-bottom:1px solid var(--border); }
+  .device-bar .dot{ width:10px; height:10px; border-radius:50%; }
+  .device-bar .r{background:#F0524A;} .device-bar .y{background:#F2B41D;} .device-bar .g{background:#25B551;}
+  .device-bar .url{ margin-left:14px; font-family:var(--font-mono); font-size:11px; color:#78829A; background:#fff; border-radius:5px; padding:4px 12px; flex:1; max-width:340px; }
+
+  .auth-shell{ background:var(--bg); min-height:600px; display:flex; flex-direction:column; }
+  .auth-top{ height:58px; background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 24px; gap:10px; }
+  .auth-top .mark{ width:26px; height:26px; border-radius:7px; background:var(--orange); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; color:#fff; font-size:13px; }
+  .auth-top .word{ font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--navy-ink); }
+  .auth-top .sep{ color:var(--text-faint); }
+  .auth-top .stage{ font-family:var(--font-mono); font-size:12px; color:var(--text-mute); }
+  .auth-body{ flex:1; display:flex; justify-content:center; padding:40px 20px 60px; }
+  .auth-card{ width:480px; max-width:100%; }
+  .auth-card h2{ font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--navy-ink); margin-bottom:6px; }
+  .auth-card .lede{ font-size:13.5px; color:var(--text-mute); margin-bottom:26px; line-height:1.55; }
+
+  .field{ margin-bottom:16px; } .field label{ display:block; font-size:12.5px; font-weight:600; color:var(--navy-ink); margin-bottom:6px; }
+  .field .hint{ font-size:11.5px; color:var(--text-faint); margin-top:5px; } .field .req{ color:var(--red); }
+  .input, select.input, textarea.input{ width:100%; border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:13.5px; font-family:var(--font-body); color:var(--text); background:#fff; }
+  .input::placeholder{ color:var(--text-faint); }
+  .input-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .upload-slot{ border:1.5px dashed var(--border); border-radius:10px; padding:20px; text-align:center; color:var(--text-mute); font-size:12.5px; }
+  .check-row{ display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border-soft); }
+  .check-row input{ margin-top:3px; }
+  .check-row .t{ font-size:13px; color:var(--text); line-height:1.5; }
+
+  .btn{ font-family:var(--font-body); font-size:13.5px; font-weight:600; padding:9px 16px; border-radius:8px; border:1px solid transparent; cursor:default; display:inline-flex; align-items:center; gap:7px; transition:filter .12s ease; white-space:nowrap; }
+  .btn-primary{ background:var(--orange); color:#fff; }
+  .btn-secondary{ background:#fff; color:var(--navy); border-color:var(--border); }
+  .btn-ghost{ background:transparent; color:var(--text-mute); }
+  .btn-block{ width:100%; justify-content:center; }
+  .btn[disabled], .btn.is-disabled{ background:var(--surface-alt); color:var(--text-faint); border-color:var(--border); cursor:not-allowed; }
+  .btn-sm{ padding:6px 12px; font-size:12.5px; }
+  .stepper{ display:flex; align-items:center; gap:6px; margin-bottom:26px; flex-wrap:wrap; }
+  .step-dot{ display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:11px; color:var(--text-faint); }
+  .step-dot .n{ width:22px; height:22px; border-radius:50%; background:var(--surface-alt); display:flex; align-items:center; justify-content:center; border:1px solid var(--border); }
+  .step-dot.done .n{ background:var(--green); color:#fff; border-color:var(--green); }
+  .step-dot.active .n{ background:var(--orange); color:#fff; border-color:var(--orange); }
+  .step-dot.active{ color:var(--navy-ink); font-weight:600; }
+  .step-line{ width:22px; height:1.5px; background:var(--border); }
+  .pill{ font-family:var(--font-mono); font-size:11px; font-weight:500; padding:3px 9px; border-radius:20px; display:inline-flex; align-items:center; gap:5px; }
+  .pill::before{ content:""; width:6px; height:6px; border-radius:50%; }
+  .pill-green{ background:var(--green-bg); color:var(--green); border:1px solid var(--green-bd); } .pill-green::before{ background:var(--green); }
+  .pill-amber{ background:var(--amber-bg); color:var(--amber); border:1px solid var(--amber-bd); } .pill-amber::before{ background:var(--amber); }
+  .pill-red{ background:var(--red-bg); color:var(--red); border:1px solid var(--red-bd); } .pill-red::before{ background:var(--red); }
+  .notice{ display:flex; gap:12px; padding:13px 15px; border-radius:10px; font-size:13px; line-height:1.5; }
+  .notice-info{ background:var(--steel-tint); border:1px solid #C9D6E4; color:var(--steel); }
+  .notice-warn{ background:var(--amber-bg); border:1px solid var(--amber-bd); color:#7A550A; }
+  .divider{ height:1px; background:var(--border-soft); margin:20px 0; }
+
+  /* ===== Phone frame (cab UI) ===== */
+  .phone-wrap{ display:flex; justify-content:center; padding:14px 0 50px; }
+  .phone{ width:360px; height:740px; background:var(--cab-bg); border-radius:38px; border:8px solid #05070B; box-shadow:var(--shadow-2); overflow:hidden; position:relative; display:flex; flex-direction:column; color:var(--cab-text); }
+  .phone-status{ height:30px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; font-family:var(--font-mono); font-size:11px; color:var(--cab-text-mute); flex-shrink:0; }
+  .phone-header{ padding:6px 18px 14px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .phone-header .back{ width:30px; height:30px; border-radius:9px; background:var(--cab-surface); display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .phone-header .ttl{ font-family:var(--font-display); font-weight:600; font-size:16px; }
+  .phone-header .sub{ font-family:var(--font-mono); font-size:10.5px; color:var(--cab-text-mute); margin-top:1px; }
+  .phone-body{ flex:1; overflow-y:auto; padding:4px 18px 16px; }
+  .phone-cta{ padding:14px 18px 10px; flex-shrink:0; }
+  .phone-tabbar{ height:66px; background:var(--cab-surface); border-top:1px solid var(--cab-border); display:flex; flex-shrink:0; }
+  .phone-tabbar .t{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-family:var(--font-mono); font-size:9.5px; color:var(--cab-text-mute); }
+  .phone-tabbar .t.active{ color:var(--orange); }
+  .phone-tabbar .t .ic{ font-size:16px; }
+
+  .job-card-cab{ background:var(--cab-surface); border:1px solid var(--cab-border); border-radius:14px; padding:16px; margin-bottom:12px; }
+  .job-card-cab .route{ font-family:var(--font-display); font-weight:600; font-size:15px; }
+  .job-card-cab .meta{ font-family:var(--font-mono); font-size:11px; color:var(--cab-text-mute); margin-top:4px; }
+  .cab-btn{ display:block; width:100%; text-align:center; padding:15px; border-radius:12px; font-family:var(--font-body); font-weight:700; font-size:14.5px; }
+  .cab-btn.primary{ background:var(--orange); color:#fff; }
+  .cab-btn.locked{ background:#26314A; color:#5C6C8A; }
+  .cab-btn.danger{ background:transparent; border:1.5px solid var(--cab-red); color:var(--cab-red); }
+  .cab-btn.ghost{ background:var(--cab-surface); border:1px solid var(--cab-border); color:var(--cab-text); }
+  .gate-row{ display:flex; align-items:center; gap:12px; background:var(--cab-surface); border:1px solid var(--cab-border); border-radius:12px; padding:13px 15px; margin-bottom:10px; }
+  .gate-row .gi{ width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .gate-row .gi.pass{ background:rgba(62,214,137,0.15); color:var(--cab-green); }
+  .gate-row .gi.pend{ background:rgba(255,194,75,0.15); color:var(--cab-amber); }
+  .gate-row .gi.fail{ background:rgba(255,93,82,0.15); color:var(--cab-red); }
+  .gate-row .gt{ flex:1; font-size:13.5px; font-weight:600; }
+  .gate-row .gs{ font-family:var(--font-mono); font-size:10.5px; color:var(--cab-text-mute); }
+  .cab-checklist-item{ display:flex; gap:11px; align-items:flex-start; padding:11px 0; border-bottom:1px solid var(--cab-border); }
+  .cab-checklist-item .box{ width:20px; height:20px; border-radius:6px; border:1.5px solid var(--cab-border); flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; font-size:12px; }
+  .cab-checklist-item .box.on{ background:var(--cab-green); border-color:var(--cab-green); color:#0E1826; }
+  .cab-checklist-item .lbl{ font-size:13px; }
+  .cab-chip{ font-family:var(--font-mono); font-size:10px; padding:3px 9px; border-radius:20px; display:inline-block; }
+  .cab-chip.green{ background:rgba(62,214,137,0.15); color:var(--cab-green); }
+  .cab-chip.amber{ background:rgba(255,194,75,0.15); color:var(--cab-amber); }
+  .cab-chip.red{ background:rgba(255,93,82,0.15); color:var(--cab-red); }
+  .cab-input{ width:100%; background:var(--cab-surface-2); border:1px solid var(--cab-border); border-radius:10px; padding:12px 13px; color:var(--cab-text); font-family:var(--font-mono); font-size:14px; }
+  .cab-status-strip{ display:flex; gap:6px; margin-bottom:14px; }
+  .cab-status-strip .s{ flex:1; text-align:center; font-family:var(--font-mono); font-size:10px; padding:7px 4px; border-radius:8px; background:var(--cab-surface); border:1px solid var(--cab-border); color:var(--cab-text-mute); }
+  .cab-status-strip .s.active{ background:var(--orange); color:#fff; border-color:var(--orange); }
+  .cab-status-strip .s.done{ color:var(--cab-green); }
+  .signpad{ background:var(--cab-surface-2); border:1.5px dashed var(--cab-border); border-radius:12px; height:120px; display:flex; align-items:center; justify-content:center; color:var(--cab-text-mute); font-size:12px; margin-bottom:14px; }
+  .photo-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+  .photo-slot{ aspect-ratio:1; border-radius:10px; background:var(--cab-surface-2); border:1.5px dashed var(--cab-border); display:flex; align-items:center; justify-content:center; color:var(--cab-text-mute); font-size:18px; }
+  .side-card-title-cab{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--cab-text-mute); margin:14px 0 8px; }
+
+  .footer-note{ padding:40px 8vw 90px; color:var(--text-faint); font-size:12px; font-family:var(--font-mono); line-height:1.7; }
+</style>
+</head>
+<body>
+<section class="kit-cover">
+  <div class="kit-eyebrow"><span class="dot"></span> CLOX FREIGHT PLATFORM &nbsp;/&nbsp; UI SPECIFICATION</div>
+  <h1 class="kit-title">Driver <em>web + mobile</em> — the gates that stand between a job and a moving truck.</h1>
+  <p class="kit-sub">Web is a thin invite-and-profile shell. Mobile is the real product: pre-trip safety and mass gates, geofenced arrival, POD capture, breakdown reporting — designed for a cab, not a desk, with high-contrast dark chrome for outdoor glare and gloved thumbs.</p>
+  <div class="kit-meta-row">
+    <div class="m">SURFACES<b>Driver Web · Driver Mobile</b></div>
+    <div class="m">SCREENS<b>19</b></div>
+    <div class="m">CORE MECHANIC<b>Gated state machine</b></div>
+    <div class="m">RESTRICTIONS<b>No job create · bid · pay · Ops</b></div>
+  </div>
+</section>
+
+<nav class="kit-toc">
+  <div class="kit-toc-label">Jump to screen</div>
+  <div class="kit-toc-grid">
+    <a href="#web-01">WEB-01 Invite landing</a>
+    <a href="#web-02">WEB-02 OTP + password</a>
+    <a href="#web-03">WEB-03 Licence profile</a>
+    <a href="#web-04">WEB-04 Safety &amp; policy</a>
+    <a href="#web-05">WEB-05 Ready / app install</a>
+    <a href="#mob-01" class="mob">MOB-01 Today</a>
+    <a href="#mob-02" class="mob">MOB-02 Trip overview</a>
+    <a href="#mob-03" class="mob">MOB-03 Safety Gate A</a>
+    <a href="#mob-04" class="mob">MOB-04 Arrival</a>
+    <a href="#mob-05" class="mob">MOB-05 Mass Gate B</a>
+    <a href="#mob-06" class="mob">MOB-06 Ready / Start</a>
+    <a href="#mob-07" class="mob">MOB-07 In transit</a>
+    <a href="#mob-08" class="mob">MOB-08 At dropoff</a>
+    <a href="#mob-09" class="mob">MOB-09 POD capture</a>
+    <a href="#mob-10" class="mob">MOB-10 Report breakdown</a>
+    <a href="#mob-11" class="mob">MOB-11 Taking break</a>
+    <a href="#mob-12" class="mob">MOB-12 Trip history</a>
+    <a href="#mob-13" class="mob">MOB-13 Account</a>
+    <a href="#mob-14" class="mob">MOB-14 Odometer (hourly)</a>
+  </div>
+</nav>
+
+<div class="section-divider"><h2>Driver Web — invite &amp; profile</h2></div>
+<!-- ================= WEB-01 ================= -->
+<div class="screen-wrap" id="web-01">
+  <div class="screen-tag"><span class="screen-id">DRV-WEB-01</span><span class="screen-name">Invite landing</span><div class="screen-flags"><span class="flag web">WEB</span></div></div>
+  <p class="screen-purpose">Drivers never self-register — they land here from the SMS/email a carrier admin sent (TCO-DRV-02). The carrier and role are pre-filled so there's no ambiguity about who's inviting them.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">app.clox.com.au/driver/invite/8f2a1c</div></div>
+    <div class="auth-shell">
+      <div class="auth-top"><div class="mark">C</div><div class="word">CLOX</div><span class="sep">/</span><span class="stage">Driver invite</span></div>
+      <div class="auth-body">
+        <div class="auth-card" style="text-align:center;">
+          <div style="width:52px; height:52px; border-radius:14px; background:var(--steel-tint); display:flex; align-items:center; justify-content:center; font-size:22px; margin:0 auto 18px;">🚚</div>
+          <h2 style="text-align:center;">Interstate Freight Solutions invited you</h2>
+          <p class="lede" style="text-align:center;">You've been added as a driver. Accept the invite to set up your CLOX profile — it takes about 5 minutes.</p>
+          <button class="btn btn-primary btn-block">Accept invite</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WEB-02 ================= -->
+<div class="screen-wrap" id="web-02">
+  <div class="screen-tag"><span class="screen-id">DRV-WEB-02</span><span class="screen-name">OTP + password</span><div class="screen-flags"><span class="flag web">WEB</span></div></div>
+  <p class="screen-purpose">Mobile OTP confirms it's really the invited person, then a password is set once — this becomes the credential used to sign into the mobile app for trip execution.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">app.clox.com.au/driver/invite/8f2a1c/verify</div></div>
+    <div class="auth-shell">
+      <div class="auth-top"><div class="mark">C</div><div class="word">CLOX</div><span class="sep">/</span><span class="stage">Driver setup · Step 1 of 4</span></div>
+      <div class="auth-body">
+        <div class="auth-card">
+          <div class="stepper">
+            <div class="step-dot active"><span class="n">1</span>Verify</div><div class="step-line"></div>
+            <div class="step-dot"><span class="n">2</span>Licence</div><div class="step-line"></div>
+            <div class="step-dot"><span class="n">3</span>Safety</div><div class="step-line"></div>
+            <div class="step-dot"><span class="n">4</span>Ready</div>
+          </div>
+          <h2>Verify your number</h2>
+          <p class="lede">Code sent to +61 4XX XXX 331.</p>
+          <div style="display:flex; gap:8px; margin-bottom:18px;">
+            <input class="input" style="text-align:center; font-family:var(--font-mono); font-size:18px;" value="2">
+            <input class="input" style="text-align:center; font-family:var(--font-mono); font-size:18px;" value="6">
+            <input class="input" style="text-align:center; font-family:var(--font-mono); font-size:18px;">
+            <input class="input" style="text-align:center; font-family:var(--font-mono); font-size:18px;">
+            <input class="input" style="text-align:center; font-family:var(--font-mono); font-size:18px;">
+            <input class="input" style="text-align:center; font-family:var(--font-mono); font-size:18px;">
+          </div>
+          <div class="field"><label>Create a password<span class="req">*</span></label><input class="input" type="password" placeholder="Min. 8 characters"></div>
+          <button class="btn btn-primary btn-block">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WEB-03 ================= -->
+<div class="screen-wrap" id="web-03">
+  <div class="screen-tag"><span class="screen-id">DRV-WEB-03</span><span class="screen-name">Licence profile</span><div class="screen-flags"><span class="flag web">WEB</span></div></div>
+  <p class="screen-purpose">Licence data is entered by the driver themselves, not the carrier admin — keeps sensitive personal/medical-adjacent data owned by the person it belongs to, and is what unlocks trip-eligible status.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">app.clox.com.au/driver/onboarding/licence</div></div>
+    <div class="auth-shell">
+      <div class="auth-top"><div class="mark">C</div><div class="word">CLOX</div><span class="sep">/</span><span class="stage">Driver setup · Step 2 of 4</span></div>
+      <div class="auth-body">
+        <div class="auth-card">
+          <div class="stepper">
+            <div class="step-dot done"><span class="n">✓</span></div><div class="step-line"></div>
+            <div class="step-dot active"><span class="n">2</span>Licence</div><div class="step-line"></div>
+            <div class="step-dot"><span class="n">3</span></div><div class="step-line"></div>
+            <div class="step-dot"><span class="n">4</span></div>
+          </div>
+          <h2>Your licence details</h2>
+          <p class="lede">Required before you can be assigned to any job.</p>
+          <div class="input-row">
+            <div class="field"><label>Licence class<span class="req">*</span></label><select class="input"><option>HR — Heavy Rigid</option><option>HC — Heavy Combination</option><option>MR — Medium Rigid</option></select></div>
+            <div class="field"><label>Licence number<span class="req">*</span></label><input class="input" placeholder="e.g. 04829913"></div>
+          </div>
+          <div class="field"><label>Expiry date<span class="req">*</span></label><input class="input" placeholder="DD/MM/YYYY"></div>
+          <div class="field"><label>Photo of licence — front &amp; back<span class="req">*</span></label><div class="upload-slot">📎 Drag file here or <b style="color:var(--orange);">browse</b></div></div>
+          <div style="display:flex; gap:10px;"><button class="btn btn-secondary" style="flex:1;">Back</button><button class="btn btn-primary" style="flex:2;">Continue</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WEB-04 ================= -->
+<div class="screen-wrap" id="web-04">
+  <div class="screen-tag"><span class="screen-id">DRV-WEB-04</span><span class="screen-name">Safety &amp; policy acknowledgements</span><div class="screen-flags"><span class="flag web">WEB</span></div></div>
+  <p class="screen-purpose">One-time acknowledgement of NHVR fatigue rules and company policy — read here at setup so the pre-trip gates on mobile (MOB-03) can stay a fast checklist, not a wall of legal text under time pressure.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">app.clox.com.au/driver/onboarding/policy</div></div>
+    <div class="auth-shell">
+      <div class="auth-top"><div class="mark">C</div><div class="word">CLOX</div><span class="sep">/</span><span class="stage">Driver setup · Step 3 of 4</span></div>
+      <div class="auth-body">
+        <div class="auth-card">
+          <div class="stepper">
+            <div class="step-dot done"><span class="n">✓</span></div><div class="step-line"></div>
+            <div class="step-dot done"><span class="n">✓</span></div><div class="step-line"></div>
+            <div class="step-dot active"><span class="n">3</span>Safety</div><div class="step-line"></div>
+            <div class="step-dot"><span class="n">4</span></div>
+          </div>
+          <h2>Safety &amp; policy</h2>
+          <p class="lede">Please read and acknowledge before your first trip.</p>
+          <div class="check-row"><input type="checkbox" checked><div class="t">I understand NHVR fatigue management rules apply to every trip I accept.</div></div>
+          <div class="check-row"><input type="checkbox" checked><div class="t">I will complete the pre-trip safety and mass checklist before starting any trip.</div></div>
+          <div class="check-row"><input type="checkbox"><div class="t">I have read and agree to Interstate Freight Solutions' driver code of conduct.</div></div>
+          <button class="btn btn-primary btn-block" style="margin-top:20px;">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WEB-05 ================= -->
+<div class="screen-wrap" id="web-05">
+  <div class="screen-tag"><span class="screen-id">DRV-WEB-05</span><span class="screen-name">Ready / app install</span><div class="screen-flags"><span class="flag web">WEB</span></div></div>
+  <p class="screen-purpose">Web's job is done here — everything from this point (every trip, every gate, every POD) happens on the mobile app, so the handoff is explicit rather than leaving the driver in a dead-end web account.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">app.clox.com.au/driver/onboarding/ready</div></div>
+    <div class="auth-shell">
+      <div class="auth-top"><div class="mark">C</div><div class="word">CLOX</div><span class="sep">/</span><span class="stage">You're set up</span></div>
+      <div class="auth-body">
+        <div class="auth-card" style="text-align:center;">
+          <div style="font-size:38px; margin-bottom:14px;">✅</div>
+          <h2 style="text-align:center;">Profile complete, David</h2>
+          <p class="lede" style="text-align:center;">Your documents are being verified by Interstate Freight Solutions. Download the CLOX Driver app to see your assigned trips — that's where the rest of your work happens.</p>
+          <div style="display:flex; gap:10px; justify-content:center;">
+            <div class="btn btn-secondary" style="background:#000; color:#fff;">📱 App Store</div>
+            <div class="btn btn-secondary" style="background:#000; color:#fff;">▶ Google Play</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"><h2>Driver Mobile — trip execution</h2></div>
+<!-- ================= MOB-01 ================= -->
+<div class="screen-wrap dark" id="mob-01">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-01</span><span class="screen-name">Today</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Home tab shows only today's assigned trips in execution order — no marketplace, no bidding, nothing outside what this driver is scoped to do, per the permission matrix.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div><div class="ttl">Today</div><div class="sub">Wed 12 Aug · Sam Okafor</div></div></div>
+      <div class="phone-body">
+        <div class="job-card-cab" style="border-color:var(--orange);">
+          <span class="cab-chip amber">NEXT UP</span>
+          <div class="route" style="margin-top:8px;">Melbourne → Bendigo</div>
+          <div class="meta">#JB-10471 · Pickup 10:00 · 1AB 2CD</div>
+        </div>
+        <div class="job-card-cab">
+          <span class="cab-chip green">SCHEDULED</span>
+          <div class="route" style="margin-top:8px;">Dandenong → Ballarat</div>
+          <div class="meta">#JB-10468 · Pickup 16:00 · 3EF 4GH</div>
+        </div>
+        <div class="side-card-title-cab">Completed today</div>
+        <div class="job-card-cab" style="opacity:0.6;">
+          <span class="cab-chip green">DELIVERED</span>
+          <div class="route" style="margin-top:8px;">Laverton → Geelong</div>
+          <div class="meta">#JB-10455 · POD confirmed 08:14</div>
+        </div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn primary">Open next trip</div></div>
+      <div class="phone-tabbar">
+        <div class="t active"><span class="ic">📋</span>Today</div>
+        <div class="t"><span class="ic">🕐</span>History</div>
+        <div class="t"><span class="ic">👤</span>Account</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-02 ================= -->
+<div class="screen-wrap dark" id="mob-02">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-02</span><span class="screen-name">Trip overview</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Shows the full gate sequence up front — Safety, Arrival, Mass, Start — so the driver knows exactly what's required before they can move, instead of discovering gates one at a time.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div class="back">←</div><div><div class="ttl">#JB-10471</div><div class="sub">Melbourne → Bendigo</div></div></div>
+      <div class="phone-body">
+        <div class="job-card-cab">
+          <div class="meta">PICKUP</div>
+          <div class="route" style="font-size:14px; margin-top:4px;">Laverton Distribution Centre, VIC</div>
+          <div class="divider" style="background:var(--cab-border); margin:12px 0;"></div>
+          <div class="meta">DELIVERY</div>
+          <div class="route" style="font-size:14px; margin-top:4px;">Bendigo Warehouse, VIC</div>
+        </div>
+        <div class="side-card-title-cab">Before you start</div>
+        <div class="gate-row"><div class="gi pend">1</div><div class="gt">Safety check</div><span class="cab-chip amber">Pending</span></div>
+        <div class="gate-row"><div class="gi pend">2</div><div class="gt">Arrival at pickup</div><span class="cab-chip amber">Pending</span></div>
+        <div class="gate-row"><div class="gi pend">3</div><div class="gt">Mass check</div><span class="cab-chip amber">Pending</span></div>
+        <div class="gate-row"><div class="gi pend">4</div><div class="gt">Start trip</div><span class="cab-chip amber">Locked</span></div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn primary">Begin safety check</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-03 ================= -->
+<div class="screen-wrap dark" id="mob-03">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-03</span><span class="screen-name">Safety check — Gate A</span><div class="screen-flags"><span class="flag gated">GATED</span><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">NHVR-aligned checklist grouped into scannable categories rather than one long list. Failing any item marked critical locks the trip outright — this is a hard gate, not a soft warning.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div class="back">←</div><div><div class="ttl">Safety check</div><div class="sub">Gate A of 4</div></div></div>
+      <div class="phone-body">
+        <div class="side-card-title-cab">Vehicle</div>
+        <div class="cab-checklist-item"><div class="box on">✓</div><div class="lbl">Tyres &amp; lights OK</div></div>
+        <div class="cab-checklist-item"><div class="box on">✓</div><div class="lbl">Brakes &amp; fluids checked</div></div>
+        <div class="cab-checklist-item"><div class="box on">✓</div><div class="lbl">Load restraints secure</div></div>
+        <div class="cab-checklist-item"><div class="box"></div><div class="lbl">Cabin &amp; coupling inspected</div></div>
+        <div class="side-card-title-cab">You</div>
+        <div class="cab-checklist-item"><div class="box on">✓</div><div class="lbl">Fit for duty — rested, no fatigue</div></div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn locked">Complete all items to continue</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-03 fail ================= -->
+<div class="screen-wrap dark" id="mob-03-fail">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-03</span><span class="screen-name">Safety check — critical fail</span><div class="screen-flags"><span class="flag gated">GATED</span><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">A critical fail locks the trip entirely and routes straight to the carrier — no ambiguity about whether the driver can proceed anyway, since a failed safety item is a hard stop by design.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div class="back">←</div><div><div class="ttl">Safety check</div><div class="sub">Gate A of 4</div></div></div>
+      <div class="phone-body" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding-top:40px;">
+        <div style="width:64px; height:64px; border-radius:50%; background:rgba(255,93,82,0.15); display:flex; align-items:center; justify-content:center; font-size:28px; color:var(--cab-red); margin-bottom:18px;">⛔</div>
+        <div style="font-family:var(--font-display); font-weight:600; font-size:17px; margin-bottom:8px;">Trip locked — critical fail</div>
+        <div style="font-size:13px; color:var(--cab-text-mute); line-height:1.6; max-width:260px;">You reported a brake issue. This trip is locked until Interstate Freight Solutions confirms the vehicle is roadworthy.</div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn danger">Notify carrier</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-04 ================= -->
+<div class="screen-wrap dark" id="mob-04">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-04</span><span class="screen-name">Arrival</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">GPS geofence auto-detects arrival and starts the wait timer, which feeds sender-facing wait-charge surcharges (REQ-013) — a manual confirm exists as fallback for poor GPS reception, not as the default path.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div class="back">←</div><div><div class="ttl">At pickup</div><div class="sub">Laverton Distribution Centre</div></div></div>
+      <div class="phone-body">
+        <div class="job-card-cab" style="text-align:center;">
+          <span class="cab-chip green">📍 GEOFENCE DETECTED</span>
+          <div style="font-family:var(--font-mono); font-size:28px; margin:14px 0 4px;">00:04:12</div>
+          <div class="meta">Wait time running</div>
+        </div>
+        <div class="notice-warn" style="background:rgba(255,194,75,0.1); border:1px solid var(--cab-border); border-radius:10px; padding:12px 14px; font-size:12.5px; color:var(--cab-amber); margin-top:14px;">Wait beyond 30 min may trigger a sender wait-time surcharge.</div>
+      </div>
+      <div class="phone-cta">
+        <div class="cab-btn primary">Confirm arrival &amp; continue</div>
+        <div style="text-align:center; margin-top:10px; font-family:var(--font-mono); font-size:11px; color:var(--cab-text-mute);">GPS not detecting? Confirm manually</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ================= MOB-05 ================= -->
+<div class="screen-wrap dark" id="mob-05">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-05</span><span class="screen-name">Mass check — Gate B</span><div class="screen-flags"><span class="flag gated">GATED</span><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Declared-vs-actual mass comparison. An overage doesn't lock the trip outright — it blocks Start and routes to a discrepancy surcharge path (REQ-014), which the driver sees plainly here rather than being left to guess why Start is disabled.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div class="back">←</div><div><div class="ttl">Mass check</div><div class="sub">Gate B of 4</div></div></div>
+      <div class="phone-body">
+        <div class="field"><label style="color:var(--cab-text);">Declared mass (kg)</label><input class="cab-input" value="1,840" disabled></div>
+        <div class="field"><label style="color:var(--cab-text);">Actual mass (kg)<span class="req">*</span></label><input class="cab-input" value="2,120"></div>
+        <div class="notice" style="background:rgba(255,93,82,0.1); border:1px solid var(--cab-red); border-radius:10px; padding:12px 14px; font-size:12.5px; color:var(--cab-red); margin-bottom:14px;">⚠ Actual exceeds declared by 280kg. Start will be blocked — a discrepancy surcharge will apply to this job.</div>
+        <div class="cab-checklist-item"><div class="box on">✓</div><div class="lbl" style="color:var(--cab-text);">Load restraints confirmed OK</div></div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn locked">Submit — Start will be blocked</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-06 ================= -->
+<div class="screen-wrap dark" id="mob-06">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-06</span><span class="screen-name">Ready / Start trip</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Final gate summary before the trip actually starts server-side — all three gates (Safety, Mass, Payment) must show pass, and the server re-validates on tap rather than trusting client state alone.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div class="back">←</div><div><div class="ttl">Ready to start</div><div class="sub">#JB-10471</div></div></div>
+      <div class="phone-body">
+        <div class="gate-row"><div class="gi pass">✓</div><div class="gt">Safety check</div><span class="cab-chip green">Passed</span></div>
+        <div class="gate-row"><div class="gi pass">✓</div><div class="gt">Arrival confirmed</div><span class="cab-chip green">Passed</span></div>
+        <div class="gate-row"><div class="gi pass">✓</div><div class="gt">Mass check</div><span class="cab-chip green">Passed</span></div>
+        <div class="gate-row"><div class="gi pass">✓</div><div class="gt">Sender payment</div><span class="cab-chip green">Confirmed</span></div>
+        <div class="side-card-title-cab">Job value</div>
+        <div class="job-card-cab"><div class="route">$620</div><div class="meta">Net to you after platform fee: $558</div></div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn primary">START TRIP</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-07 ================= -->
+<div class="screen-wrap dark" id="mob-07">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-07</span><span class="screen-name">In transit</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Minimal live screen — status chips and two secondary actions (break, breakdown) are always one tap away, but the primary surface stays calm since this is the state the driver spends the most time in.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div><div class="ttl">In transit</div><div class="sub">#JB-10471 · Melbourne → Bendigo</div></div></div>
+      <div class="phone-body">
+        <div class="cab-status-strip">
+          <div class="s done">Loading</div><div class="s active">Transit</div><div class="s">Drop</div><div class="s">POD</div>
+        </div>
+        <div class="job-card-cab" style="text-align:center;">
+          <div class="meta">ETA</div>
+          <div style="font-family:var(--font-mono); font-size:26px; margin:6px 0;">14:30</div>
+          <div class="meta">38 km remaining</div>
+        </div>
+        <div class="side-card-title-cab">Actions</div>
+        <div class="cab-btn ghost" style="margin-bottom:10px;">☕ Taking a break</div>
+        <div class="cab-btn ghost" style="color:var(--cab-red); border-color:var(--cab-red);">⚠ Report breakdown</div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn primary">Arrived at drop-off</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-08 ================= -->
+<div class="screen-wrap dark" id="mob-08">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-08</span><span class="screen-name">At dropoff</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Mirrors the pickup geofence pattern (MOB-04) for consistency — same mental model, different destination, so the driver isn't relearning a new interaction at the end of the trip.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div><div class="ttl">At drop-off</div><div class="sub">Bendigo Warehouse</div></div></div>
+      <div class="phone-body">
+        <div class="cab-status-strip"><div class="s done">Loading</div><div class="s done">Transit</div><div class="s active">Drop</div><div class="s">POD</div></div>
+        <div class="job-card-cab" style="text-align:center;"><span class="cab-chip green">📍 GEOFENCE DETECTED</span><div style="font-size:13px; color:var(--cab-text-mute); margin-top:10px;">You've arrived. Unload, then capture proof of delivery.</div></div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn primary">Unloaded — start POD</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-09 ================= -->
+<div class="screen-wrap dark" id="mob-09">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-09</span><span class="screen-name">POD capture</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Signature-on-glass, mandatory photos, and a server-stamped timestamp (REQ-016) — this record is what triggers settlement accrual, so every field here is deliberately non-optional.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div class="back">←</div><div><div class="ttl">Proof of delivery</div><div class="sub">#JB-10471</div></div></div>
+      <div class="phone-body">
+        <div class="field"><label style="color:var(--cab-text);">Receiver name<span class="req">*</span></label><input class="cab-input" placeholder="Full name"></div>
+        <div class="side-card-title-cab">Signature</div>
+        <div class="signpad">Sign here</div>
+        <div class="side-card-title-cab">Photos — min. 2 required</div>
+        <div class="photo-grid"><div class="photo-slot">📷</div><div class="photo-slot">📷</div><div class="photo-slot">＋</div></div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn primary">Submit POD</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-09 success ================= -->
+<div class="screen-wrap dark" id="mob-09-success">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-09</span><span class="screen-name">POD confirmed</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Confirms the reference ID that ties this delivery to settlement accrual, and states plainly when the payout clock starts — the driver's version of the same T+7 promise shown on the carrier's wallet.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"></div>
+      <div class="phone-body" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding-top:50px;">
+        <div style="width:64px; height:64px; border-radius:50%; background:rgba(62,214,137,0.15); display:flex; align-items:center; justify-content:center; font-size:28px; color:var(--cab-green); margin-bottom:18px;">✓</div>
+        <div style="font-family:var(--font-display); font-weight:600; font-size:18px; margin-bottom:8px;">Trip complete</div>
+        <div class="mono" style="color:var(--cab-text-mute); font-size:12px; margin-bottom:16px;">REF CLX-POD-10471-0912</div>
+        <div style="font-size:13px; color:var(--cab-text-mute); line-height:1.6; max-width:260px;">Settlement of $558 starts accruing now and pays out T+7 from today.</div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn primary">Back to Today</div></div>
+    </div>
+  </div>
+</div>
+<!-- ================= MOB-10 ================= -->
+<div class="screen-wrap dark" id="mob-10">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-10</span><span class="screen-name">Report breakdown</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">GPS location attaches automatically so the driver isn't typing an address under stress. Photo requirement is flagged as an open question in the source spec — shown here as optional with a visible clarification chip rather than silently deciding either way.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div class="back">←</div><div><div class="ttl">Report breakdown</div><div class="sub">#JB-10471</div></div></div>
+      <div class="phone-body">
+        <div class="field"><label style="color:var(--cab-text);">Type<span class="req">*</span></label>
+          <select class="cab-input"><option>Mechanical failure</option><option>Tyre / puncture</option><option>Accident</option><option>Other</option></select>
+        </div>
+        <div class="job-card-cab" style="margin-top:6px;"><span class="cab-chip green">📍 GPS location attached</span><div class="meta" style="margin-top:6px;">Calder Freeway, 12km N of Bendigo</div></div>
+        <div class="field" style="margin-top:14px;"><label style="color:var(--cab-text);">Notes</label><textarea class="cab-input" rows="3" placeholder="What happened?"></textarea></div>
+        <div class="side-card-title-cab">Photos <span class="cab-chip amber" style="margin-left:6px;">Optional — needs clarification</span></div>
+        <div class="photo-grid"><div class="photo-slot">📷</div><div class="photo-slot">＋</div><div class="photo-slot">＋</div></div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn danger">Submit — notify carrier</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-11 ================= -->
+<div class="screen-wrap dark" id="mob-11">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-11</span><span class="screen-name">Taking break</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Fatigue-compliance break mode — pauses the trip clock visibly so a rest stop is never mistaken for unexplained downtime by dispatch or the sender tracking the job.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"></div>
+      <div class="phone-body" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding-top:50px;">
+        <div style="width:64px; height:64px; border-radius:50%; background:rgba(255,194,75,0.15); display:flex; align-items:center; justify-content:center; font-size:26px; color:var(--cab-amber); margin-bottom:18px;">☕</div>
+        <div style="font-family:var(--font-display); font-weight:600; font-size:18px; margin-bottom:8px;">On break</div>
+        <div style="font-family:var(--font-mono); font-size:28px; margin-bottom:8px;">00:14:02</div>
+        <div style="font-size:13px; color:var(--cab-text-mute);">Trip status paused. Dispatch and sender can see you're on a fatigue break.</div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn primary">Resume trip</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-12 ================= -->
+<div class="screen-wrap dark" id="mob-12">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-12</span><span class="screen-name">Trip history</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Personal record of completed trips — useful for a driver's own pay reconciliation even though the actual settlement is owned by the carrier's wallet, not the driver's.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div><div class="ttl">Trip history</div></div></div>
+      <div class="phone-body">
+        <div class="job-card-cab"><span class="cab-chip green">DELIVERED</span><div class="route" style="margin-top:8px;">Laverton → Geelong</div><div class="meta">Yesterday · #JB-10455 · POD 08:14</div></div>
+        <div class="job-card-cab"><span class="cab-chip green">DELIVERED</span><div class="route" style="margin-top:8px;">Sunshine → Werribee</div><div class="meta">Mon 10 Aug · #JB-10402</div></div>
+        <div class="job-card-cab"><span class="cab-chip red">BREAKDOWN</span><div class="route" style="margin-top:8px;">Melbourne → Ballarat</div><div class="meta">Fri 7 Aug · #JB-10388 · Repaired &amp; completed</div></div>
+      </div>
+      <div class="phone-tabbar">
+        <div class="t"><span class="ic">📋</span>Today</div>
+        <div class="t active"><span class="ic">🕐</span>History</div>
+        <div class="t"><span class="ic">👤</span>Account</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-13 ================= -->
+<div class="screen-wrap dark" id="mob-13">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-13</span><span class="screen-name">Account</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Profile-only management, consistent with the permission matrix (Fleet: "profile only" for Driver) — no fleet or job controls live here, just what belongs to the individual.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div><div class="ttl">Account</div></div></div>
+      <div class="phone-body">
+        <div class="job-card-cab" style="display:flex; align-items:center; gap:12px;">
+          <div style="width:44px; height:44px; border-radius:50%; background:var(--orange); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:600;">SO</div>
+          <div><div class="route" style="font-size:15px;">Sam Okafor</div><div class="meta">Interstate Freight Solutions</div></div>
+        </div>
+        <div class="side-card-title-cab">Licence</div>
+        <div class="gate-row"><div class="gi pass">✓</div><div class="gt">HR — expires 04/2027</div><span class="cab-chip green">Verified</span></div>
+        <div class="side-card-title-cab">Settings</div>
+        <div class="cab-checklist-item"><div class="lbl">Notifications</div></div>
+        <div class="cab-checklist-item"><div class="lbl">Language</div></div>
+        <div class="cab-checklist-item"><div class="lbl">Help &amp; support</div></div>
+        <div class="cab-checklist-item"><div class="lbl" style="color:var(--cab-red);">Log out</div></div>
+      </div>
+      <div class="phone-tabbar">
+        <div class="t"><span class="ic">📋</span>Today</div>
+        <div class="t"><span class="ic">🕐</span>History</div>
+        <div class="t active"><span class="ic">👤</span>Account</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MOB-14 ================= -->
+<div class="screen-wrap dark" id="mob-14">
+  <div class="screen-tag"><span class="screen-id mob">DRV-MOB-14</span><span class="screen-name">Odometer (hourly jobs)</span><div class="screen-flags"><span class="flag mobile">MOBILE</span></div></div>
+  <p class="screen-purpose">Only appears for hourly-rate jobs — manual odometer entry at start and completion, cross-checked against GPS distance. A gap over 10% auto-flags Super Admin (REQ-019), shown here so the driver understands the number is being checked, not just filed.</p>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>●●● 5G 🔋</span></div>
+      <div class="phone-header"><div class="back">←</div><div><div class="ttl">Odometer reading</div><div class="sub">Shift start · #JB-10490 (hourly)</div></div></div>
+      <div class="phone-body">
+        <div class="field"><label style="color:var(--cab-text);">Odometer (km)<span class="req">*</span></label><input class="cab-input" placeholder="e.g. 184,220"></div>
+        <div class="side-card-title-cab">Photo of dash</div>
+        <div class="photo-grid" style="grid-template-columns:1fr;"><div class="photo-slot" style="aspect-ratio:16/9;">📷 Capture odometer</div></div>
+        <div class="notice-warn" style="background:rgba(255,194,75,0.1); border:1px solid var(--cab-border); border-radius:10px; padding:12px 14px; font-size:12px; color:var(--cab-amber); margin-top:14px;">This reading is cross-checked against GPS. A gap over 10% is automatically flagged for review — enter it accurately.</div>
+      </div>
+      <div class="phone-cta"><div class="cab-btn primary">Confirm &amp; start shift</div></div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer-note">
+  CLOX · Driver web + mobile UI specification build v1.0<br>
+  Generated against UI-UX-MASTER-SPECIFICATION.md · trip state-machine gates (WF-DRV-002/003) enforced visually at every step · one true gap (MOB-10 photo requirement) flagged inline rather than silently resolved.
+</footer>
+
+</body>
+</html>

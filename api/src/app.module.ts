@@ -20,6 +20,8 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { OpsModule } from './modules/ops/ops.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { SenderModule } from './modules/sender/sender.module';
+import { CarrierModule } from './modules/carrier/carrier.module';
+import { DriverModule } from './modules/driver/driver.module';
 import { SettlementsModule } from './modules/settlements/settlements.module';
 import { TripsModule } from './modules/trips/trips.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -55,6 +57,8 @@ import { PrismaModule } from './prisma/prisma.module';
     AdminModule,
     IdentityModule,
     SenderModule,
+    CarrierModule,
+    DriverModule,
     ComplianceModule,
     DocumentsModule,
     JobsModule,

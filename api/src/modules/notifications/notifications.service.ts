@@ -117,4 +117,31 @@ export class NotificationsService {
 
     return this.sendMail({ to: params.email, cc, subject, text, html });
   }
+
+  async sendDriverInviteEmail(params: {
+    to: string;
+    driverName: string;
+    companyName: string;
+    inviteUrl: string;
+    expiresHours: number;
+  }) {
+    const subject = `CLOX driver invite — ${params.companyName}`;
+    const text = [
+      `Hi ${params.driverName},`,
+      '',
+      `${params.companyName} invited you to join CLOX as a driver.`,
+      `Accept invite: ${params.inviteUrl}`,
+      `This link expires in ${params.expiresHours} hours.`,
+      '',
+      'After accepting, sign in with a one-time code (OTP) emailed to you.',
+    ].join('\n');
+    const html = [
+      `<p>Hi ${params.driverName},</p>`,
+      `<p><strong>${params.companyName}</strong> invited you to join CLOX as a driver.</p>`,
+      `<p><a href="${params.inviteUrl}">Accept invite</a></p>`,
+      `<p>This link expires in ${params.expiresHours} hours.</p>`,
+      `<p>After accepting, sign in with a one-time code (OTP) emailed to you.</p>`,
+    ].join('');
+    return this.sendMail({ to: params.to, subject, text, html });
+  }
 }

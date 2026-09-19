@@ -55,13 +55,29 @@ export function LoginPage() {
     onSuccess: (tokens) => {
       applyAuthTokensToStore(tokens);
       const role = tokens.principal?.role ?? tokens.admin?.role;
-      navigate(role === 'SENDER' ? '/sender/onboarding' : '/', { replace: true });
+      navigate(
+        role === 'SENDER'
+          ? '/sender/onboarding'
+          : role === 'TRANSPORT_COMPANY'
+            ? '/carrier/onboarding'
+            : '/',
+        { replace: true },
+      );
     },
   });
 
   if (accessToken) {
     return (
-      <Navigate to={role === AppRole.SENDER ? '/sender/onboarding' : '/'} replace />
+      <Navigate
+        to={
+          role === AppRole.SENDER
+            ? '/sender/onboarding'
+            : role === AppRole.TRANSPORT_COMPANY
+              ? '/carrier/onboarding'
+              : '/'
+        }
+        replace
+      />
     );
   }
 
@@ -176,6 +192,11 @@ export function LoginPage() {
         <p className="mt-6 text-center text-sm text-slate-400">
           New sender?{' '}
           <Link to="/register/sender" className="text-clox-orange hover:underline">
+            Register
+          </Link>
+          {' · '}
+          New carrier?{' '}
+          <Link to="/register/carrier" className="text-clox-orange hover:underline">
             Register
           </Link>
         </p>

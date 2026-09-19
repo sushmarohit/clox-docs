@@ -1,8 +1,8 @@
 # CLOX Phase 1 — Full Milestone Implementation Plan
 
-**Status:** Canonical build plan for Gate 0 + M0–M12 — **Gate 0 locked**; **M0–M3 done** (M3 sender onboarding + mock Stripe); next **M4**  
-**Version:** 1.9  
-**Date:** 2026-09-17  
+**Status:** Canonical build plan for Gate 0 + M0–M12 — **Gate 0 locked**; **M0–M5 done** (M5 driver invite onboarding); next **M6**  
+**Version:** 1.11  
+**Date:** 2026-09-18  
 **Gate 0 ADR:** [adr/G0-gate-0-phase1-decisions.md](adr/G0-gate-0-phase1-decisions.md)  
 **Parent catalogs:** [MILESTONES.md](MILESTONES.md) · [MILESTONES-AUSTRALIA.md](MILESTONES-AUSTRALIA.md)  
 **Phase 0 (done / parallel foundation):** [PRE-LAUNCH-IMPLEMENTATION-PLAN.md](PRE-LAUNCH-IMPLEMENTATION-PLAN.md)  
@@ -458,22 +458,29 @@ Register → legal entity → compliance docs upload → **Stripe Connect** → 
 
 ## Implementation checklist
 
-- [ ] 8-step wizard UI
-- [ ] PL + cargo + RWC (+ permits) uploads — Ops reviews manually
-- [ ] Optional ABR ABN assist (not auto-approve)
-- [ ] Stripe Connect onboarding complete → `payouts_enabled`
-- [ ] Vehicle + driver minimum
-- [ ] Capabilities (DG, reefer, etc.) + service regions
-- [ ] Ops/State manual approve path (default Phase 1)
-- [ ] Suspension on insurance/RWC expiry
-- [ ] Net payout display rules stub (70% — enforced M6/M7)
+- [x] 8-step wizard UI
+- [x] PL + cargo + RWC (+ permits) uploads — Ops reviews manually
+- [x] Optional ABR ABN assist (not auto-approve)
+- [x] Stripe Connect onboarding complete → `payouts_enabled`
+- [x] Vehicle + driver minimum
+- [x] Capabilities (DG, reefer, etc.) + service regions
+- [x] Ops/State manual approve path (default Phase 1)
+- [x] Suspension on insurance/RWC expiry
+- [x] Net payout display rules stub (70% — enforced M6/M7)
 
 ## Exit / QA checklist
 
-- [ ] E2E: register → docs → Connect → fleet → **Ops approve** → bid-eligible
-- [ ] Non-eligible carrier gets 403 on bid
-- [ ] Connect account fails block eligibility
-- [ ] FR-1 carrier gate satisfied
+- [x] E2E: register → docs → Connect → fleet → **Ops approve** → bid-eligible
+- [x] Non-eligible carrier gets 403 on bid
+- [x] Connect account fails block eligibility
+- [x] FR-1 carrier gate satisfied
+
+### Verification UI / demo gate (M4)
+
+- [x] Carrier register + wizard in admin Vite
+- [x] Mock Stripe Connect setup/confirm
+- [x] Vehicle + driver invite minimum
+- [x] Ops approve → BID_ELIGIBLE; bid stub `CARRIER_NOT_BID_ELIGIBLE` when not ready
 
 ---
 
@@ -504,18 +511,24 @@ Invite → OTP → password → licence + NHVR acknowledgement → active
 
 ## Implementation checklist
 
-- [ ] Invite create + resend
-- [ ] Token expiry + single use
-- [ ] Licence fields + document photo optional
-- [ ] NHVR / safety policy acknowledgement copy
-- [ ] Company linkage enforced
-- [ ] Suspend on licence expiry job
+- [x] Invite create + resend
+- [x] Token expiry + single use
+- [x] Licence fields + document photo optional
+- [x] NHVR / safety policy acknowledgement copy
+- [x] Company linkage enforced
+- [x] Suspend on licence expiry job
 
 ## Exit / QA checklist
 
-- [ ] Driver assignable when licence matches vehicle rules
-- [ ] Orphan driver (no company) cannot be assigned
-- [ ] Mobile auth works (placeholder home until M8)
+- [x] Driver assignable when licence matches vehicle rules
+- [x] Orphan driver (no company) cannot be assigned
+- [x] Mobile auth works (placeholder home until M8)
+
+### Verification UI / demo gate (M5)
+
+- [x] Public `/driver/invite/:token` accept → OTP login
+- [x] Driver onboarding: licence + NHVR → ACTIVE
+- [x] Carrier invite shows URL / resend; seed `driver.qa` canBeAssigned
 
 ---
 
@@ -972,9 +985,9 @@ Territory dashboard · growth pipeline · carrier support (view/escalate) · fir
 | Sender web onboarding | SND-ONB | M3 | [x] |
 | Sender job + proposals | SND-JOB, SND-PRP | M6, M7 | [ ] |
 | Sender mobile | SND-MOB, SND-SRG | M8, M9 | [ ] |
-| Transport Co. onboarding | TCO-ONB | M4 | [ ] |
+| Transport Co. onboarding | TCO-ONB | M4 | [x] |
 | Transport Co. market/assign | TCO-MKT, TCO-BID, TCO-ASN | M6, M7, M9 | [ ] |
-| Driver web | DRV-WEB | M5 | [ ] |
+| Driver web | DRV-WEB | M5 | [x] |
 | Driver mobile | DRV-MOB | M8–M10 | [ ] |
 | Super Admin | OPS-SUP | M11 | [ ] |
 | State Master | OPS-STA | M11 | [ ] |
@@ -1039,3 +1052,5 @@ Territory dashboard · growth pipeline · carrier support (view/escalate) · fir
 | 1.7 | 2026-09-16 | M2: documents upload, compliance cases, ABR assist, expiry watchdog |
 | 1.8 | 2026-09-17 | Mandatory milestone verification UI gate; thin admin QA before M3 |
 | 1.9 | 2026-09-17 | M3: sender register/wizard, mock Stripe, booking gate, admin UI |
+| 1.10 | 2026-09-18 | M4: carrier wizard, Connect mock, fleet/drivers, bid gate |
+| 1.11 | 2026-09-18 | M5: driver invite token, licence+NHVR, assignability gate |

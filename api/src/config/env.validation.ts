@@ -14,6 +14,10 @@ export const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   API_PREFIX: z.string().default('v1'),
   CORS_ORIGINS: z.string().default('http://localhost:5173,http://localhost:5174'),
+  /** Admin/verification UI base URL for driver invite links. */
+  ADMIN_APP_URL: z.string().url().default('http://localhost:5174'),
+  /** Driver invite token TTL hours. */
+  DRIVER_INVITE_TTL_HOURS: z.coerce.number().int().positive().default(168),
   DATABASE_URL: z.string().min(1),
   JWT_ACCESS_SECRET: z.string().min(32),
   JWT_REFRESH_SECRET: z.string().min(32),

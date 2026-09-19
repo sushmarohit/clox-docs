@@ -30,6 +30,16 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           Sender onboarding
         </NavLink>
       ) : null}
+      {role === AppRole.TRANSPORT_COMPANY ? (
+        <NavLink to="/carrier/onboarding" className={navItemClass} onClick={onNavigate}>
+          Carrier onboarding
+        </NavLink>
+      ) : null}
+      {role === AppRole.DRIVER ? (
+        <NavLink to="/driver/onboarding" className={navItemClass} onClick={onNavigate}>
+          Driver onboarding
+        </NavLink>
+      ) : null}
       {isSuper ? (
         <>
           <NavLink to="/leads" className={navItemClass} onClick={onNavigate}>

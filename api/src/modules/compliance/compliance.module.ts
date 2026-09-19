@@ -8,9 +8,10 @@ import { AbrService } from './abr.service';
 import { ComplianceController } from './compliance.controller';
 import { ComplianceService } from './compliance.service';
 import { ExpiryWatchdogService } from './expiry-watchdog.service';
+import { DriverModule } from '../driver/driver.module';
 
 @Module({
-  imports: [JwtModule.register({}), AuditModule],
+  imports: [JwtModule.register({}), AuditModule, DriverModule],
   controllers: [ComplianceController],
   providers: [
     ComplianceService,

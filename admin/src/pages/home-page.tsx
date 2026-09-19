@@ -83,6 +83,24 @@ function RoleHomePage() {
             <p className="mt-1 text-sm text-slate-400">M3 wizard → Ops → payment → active</p>
           </Link>
         ) : null}
+        {role === AppRole.TRANSPORT_COMPANY ? (
+          <Link
+            to="/carrier/onboarding"
+            className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
+          >
+            <p className="text-lg font-semibold">Carrier onboarding</p>
+            <p className="mt-1 text-sm text-slate-400">M4 wizard → Connect → fleet → Ops → bid-eligible</p>
+          </Link>
+        ) : null}
+        {role === AppRole.DRIVER ? (
+          <Link
+            to="/driver/onboarding"
+            className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
+          >
+            <p className="text-lg font-semibold">Driver onboarding</p>
+            <p className="mt-1 text-sm text-slate-400">M5 invite → OTP → licence + NHVR → active</p>
+          </Link>
+        ) : null}
         <Link
           to="/account"
           className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"

@@ -100,6 +100,19 @@ export const AuditAction = {
   SENDER_PAYMENT_SETUP: 'sender.payment_setup',
   SENDER_PAYMENT_READY: 'sender.payment_ready',
   SENDER_ACTIVATED: 'sender.activated',
+  CARRIER_REGISTERED: 'carrier.registered',
+  CARRIER_PROFILE_UPDATED: 'carrier.profile_updated',
+  CARRIER_CONNECT_SETUP: 'carrier.connect_setup',
+  CARRIER_CONNECT_READY: 'carrier.connect_ready',
+  CARRIER_VEHICLE_ADDED: 'carrier.vehicle_added',
+  CARRIER_DRIVER_INVITED: 'carrier.driver_invited',
+  CARRIER_DRIVER_INVITE_RESENT: 'carrier.driver_invite_resent',
+  CARRIER_CAPABILITIES_UPDATED: 'carrier.capabilities_updated',
+  CARRIER_ACTIVATED: 'carrier.activated',
+  DRIVER_INVITE_ACCEPTED: 'driver.invite_accepted',
+  DRIVER_PROFILE_SUBMITTED: 'driver.profile_submitted',
+  DRIVER_ACTIVATED: 'driver.activated',
+  DRIVER_SUSPENDED: 'driver.suspended',
 } as const;
 
 export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction];
@@ -586,4 +599,100 @@ export const senderPaymentConfirmSchema = z.object({
 });
 
 export type SenderPaymentConfirmInput = z.infer<typeof senderPaymentConfirmSchema>;
+
+export const carrierRegisterSchema = z.object({
+  email: emailField,
+  name: z.string().trim().min(2).max(120),
+  phone: z.string().trim().min(8).max(32).optional(),
+  acceptedTerms: acceptedTrue,
+});
+
+export type CarrierRegisterInput = z.infer<typeof carrierRegisterSchema>;
+
+export const carrierProfileSchema = z.object({
+  legalName: z.string().trim().min(2).max(200),
+  tradingName: z.string().trim().max(200).optional(),
+  abn: z
+    .string()
+    .trim()
+    .transform((v) => v.replace(/\s/g, ''))
+    .refine((v) => /^\d{11}$/.test(v), 'ABN must be 11 digits'),
+  acn: z.string().trim().max(20).optional(),
+  phone: z.string().trim().min(8).max(32).optional(),
+  homeRegionCode: z.string().trim().toUpperCase().regex(/^[A-Z]{2,3}$/).default('VIC'),
+});
+
+export type CarrierProfileInput = z.infer<typeof carrierProfileSchema>;
+
+export const carrierSubmitVerificationSchema = z.object({
+  documentIds: z.array(z.string().uuid()).min(1).max(20),
+});
+
+export type CarrierSubmitVerificationInput = z.infer<typeof carrierSubmitVerificationSchema>;
+
+export const carrierVehicleSchema = z.object({
+  label: z.string().trim().min(1).max(120),
+  registration: z.string().trim().min(2).max(20),
+  vehicleClass: z.string().trim().min(2).max(40),
+  tareKg: z.number().int().positive().max(100_000).optional(),
+  gvmKg: z.number().int().positive().max(200_000).optional(),
+  gcmKg: z.number().int().positive().max(300_000).optional(),
+});
+
+export type CarrierVehicleInput = z.infer<typeof carrierVehicleSchema>;
+
+export const carrierDriverInviteSchema = z.object({
+  email: emailField,
+  name: z.string().trim().min(2).max(120),
+  phone: z.string().trim().min(8).max(32).optional(),
+  licenceNo: z.string().trim().min(3).max(40).optional(),
+});
+
+export type CarrierDriverInviteInput = z.infer<typeof carrierDriverInviteSchema>;
+
+export const carrierCapabilitiesSchema = z.object({
+  capabilities: z
+    .array(z.enum(['DG', 'REEFER', 'TAIL_LIFT', 'CURTAINSIDER', 'FLATBED', 'OTHER']))
+    .default([]),
+  serviceRegionCodes: z
+    .array(z.string().trim().toUpperCase().regex(/^[A-Z]{2,3}$/))
+    .min(1)
+    .max(8),
+});
+
+export type CarrierCapabilitiesInput = z.infer<typeof carrierCapabilitiesSchema>;
+
+export const carrierBidStubSchema = z.object({
+  jobId: z.string().uuid().optional(),
+  amountAud: z.number().positive().max(1_000_000).optional(),
+});
+
+export type CarrierBidStubInput = z.infer<typeof carrierBidStubSchema>;
+
+export const carrierDriverResendSchema = z.object({
+  driverId: z.string().uuid(),
+});
+
+export type CarrierDriverResendInput = z.infer<typeof carrierDriverResendSchema>;
+
+export const driverAcceptInviteSchema = z.object({
+  token: z.string().trim().min(16).max(128),
+});
+
+export type DriverAcceptInviteInput = z.infer<typeof driverAcceptInviteSchema>;
+
+export const driverProfileSchema = z.object({
+  licenceNo: z.string().trim().min(3).max(40),
+  licenceClass: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^(C|LR|MR|HR|HC|MC)$/, 'Invalid licence class'),
+  licenceExpiry: z.string().datetime({ offset: true }).or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/)),
+  nhvrAcknowledged: z.literal(true),
+  /** Optional DRIVER_LICENCE document id after upload */
+  licenceDocumentId: z.string().uuid().optional(),
+});
+
+export type DriverProfileInput = z.infer<typeof driverProfileSchema>;
 

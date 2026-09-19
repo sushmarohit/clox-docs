@@ -212,9 +212,9 @@ Duration bands are **indicative** for a small cross-functional squad (2–3 back
 
 **Exit criteria**
 
-- [ ] E2E: register carrier → upload docs → Connect → fleet → `approved_bid_eligible`
-- [ ] Non-compliant carrier receives 403 on bid APIs
-- [ ] FR-1 carrier compliance gate satisfied
+- [x] E2E: register carrier → upload docs → Connect → fleet → `approved_bid_eligible`
+- [x] Non-compliant carrier receives 403 on bid APIs
+- [x] FR-1 carrier compliance gate satisfied
 
 **Maps to:** FR-1 (carrier), FR-4 prerequisite
 
@@ -233,8 +233,8 @@ Duration bands are **indicative** for a small cross-functional squad (2–3 back
 
 **Exit criteria**
 
-- [ ] Driver assignable on proposal when licence class matches vehicle rules
-- [ ] App login works but trip APIs return “not assigned” until M8
+- [x] Driver assignable on proposal when licence class matches vehicle rules
+- [x] App login works but trip APIs return “not assigned” until M8
 
 **Maps to:** FR-1 (driver), FR-4 (driver ref on bid)
 

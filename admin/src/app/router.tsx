@@ -11,6 +11,10 @@ import { LoginPage } from '@/pages/login-page';
 import { ComplianceCasePage, ComplianceQueuePage } from '@/pages/compliance-pages';
 import { QaUploadPage } from '@/pages/qa-upload-page';
 import { AccountPage } from '@/pages/account-page';
+import { CarrierRegisterPage } from '@/pages/carrier-register-page';
+import { CarrierOnboardingPage } from '@/pages/carrier-onboarding-page';
+import { DriverInvitePage } from '@/pages/driver-invite-page';
+import { DriverOnboardingPage } from '@/pages/driver-onboarding-page';
 import { SenderRegisterPage } from '@/pages/sender-register-page';
 import { SenderOnboardingPage } from '@/pages/sender-onboarding-page';
 
@@ -61,6 +65,8 @@ export function AppRouter() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register/sender" element={<SenderRegisterPage />} />
+      <Route path="/register/carrier" element={<CarrierRegisterPage />} />
+      <Route path="/driver/invite/:token" element={<DriverInvitePage />} />
       <Route element={<ProtectedShell />}>
         <Route path="/" element={<HomePage />} />
         <Route
@@ -104,6 +110,8 @@ export function AppRouter() {
           }
         />
         <Route path="/sender/onboarding" element={<SenderOnboardingPage />} />
+        <Route path="/carrier/onboarding" element={<CarrierOnboardingPage />} />
+        <Route path="/driver/onboarding" element={<DriverOnboardingPage />} />
         <Route path="/qa/upload" element={<QaUploadPage />} />
         <Route path="/account" element={<AccountPage />} />
       </Route>

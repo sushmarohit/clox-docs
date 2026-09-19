@@ -175,16 +175,48 @@ async function seedMarketplaceUsers(vicRegionId: string) {
     where: { id: '00000000-0000-4000-8000-000000000002' },
     update: {
       legalName: 'QA Carrier Pty Ltd',
-      status: CompanyStatus.ACTIVE,
+      status: CompanyStatus.BID_ELIGIBLE,
       homeRegionId: vicRegionId,
+      abn: '53004085616',
+      stripeConnectAccountId: 'acct_mock_seed_carrier',
+      stripeConnectPayoutsEnabled: true,
+      capabilities: ['TAIL_LIFT'],
+      serviceRegionCodes: ['VIC'],
     },
     create: {
       id: '00000000-0000-4000-8000-000000000002',
       type: CompanyType.CARRIER,
-      status: CompanyStatus.ACTIVE,
+      status: CompanyStatus.BID_ELIGIBLE,
       legalName: 'QA Carrier Pty Ltd',
       abn: '53004085616',
       homeRegionId: vicRegionId,
+      stripeConnectAccountId: 'acct_mock_seed_carrier',
+      stripeConnectPayoutsEnabled: true,
+      capabilities: ['TAIL_LIFT'],
+      serviceRegionCodes: ['VIC'],
+    },
+  });
+
+  await prisma.vehicle.upsert({
+    where: { id: '00000000-0000-4000-8000-0000000000a1' },
+    update: {
+      companyId: carrierCompany.id,
+      status: 'ACTIVE',
+      label: 'QA Rigid',
+      registration: 'CLOX01',
+      vehicleClass: 'RIGID_1_2T',
+      tareKg: 3500,
+      gvmKg: 8000,
+    },
+    create: {
+      id: '00000000-0000-4000-8000-0000000000a1',
+      companyId: carrierCompany.id,
+      status: 'ACTIVE',
+      label: 'QA Rigid',
+      registration: 'CLOX01',
+      vehicleClass: 'RIGID_1_2T',
+      tareKg: 3500,
+      gvmKg: 8000,
     },
   });
 
@@ -233,6 +265,31 @@ async function seedMarketplaceUsers(vicRegionId: string) {
     });
     // eslint-disable-next-line no-console
     console.log(`Seeded ${u.role}: ${user.email}`);
+
+    if (u.role === PlatformRole.DRIVER) {
+      await prisma.driver.upsert({
+        where: { userId: user.id },
+        update: {
+          companyId: carrierCompany.id,
+          status: 'ACTIVE',
+          licenceNo: 'VIC-QA-001',
+          licenceClass: 'C',
+          licenceExpiry: new Date('2030-12-31T00:00:00.000Z'),
+          nhvrAcknowledgedAt: new Date(),
+          inviteAcceptedAt: new Date(),
+        },
+        create: {
+          userId: user.id,
+          companyId: carrierCompany.id,
+          status: 'ACTIVE',
+          licenceNo: 'VIC-QA-001',
+          licenceClass: 'C',
+          licenceExpiry: new Date('2030-12-31T00:00:00.000Z'),
+          nhvrAcknowledgedAt: new Date(),
+          inviteAcceptedAt: new Date(),
+        },
+      });
+    }
   }
 }
 

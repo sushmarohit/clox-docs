@@ -43,3 +43,26 @@ export {
   getBookingEligibility,
   type SenderOnboarding,
 } from '@/lib/api/sender';
+export {
+  registerCarrier,
+  getCarrierOnboarding,
+  updateCarrierProfile,
+  setupCarrierConnect,
+  confirmCarrierConnect,
+  addCarrierVehicle,
+  inviteCarrierDriver,
+  resendCarrierDriverInvite,
+  updateCarrierCapabilities,
+  submitCarrierVerification,
+  getBidEligibility,
+  type CarrierOnboarding,
+} from '@/lib/api/carrier';
+export {
+  peekDriverInvite,
+  acceptDriverInvite,
+  getDriverOnboarding,
+  submitDriverProfile,
+  getDriverAssignability,
+  type DriverOnboarding,
+  type DriverInvitePeek,
+} from '@/lib/api/driver';

@@ -41,9 +41,9 @@ export function HomeHero({ copy, locale }: HomeSectionProps) {
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-[900px] animate-hero-fade-up px-5 pb-16 pt-6 sm:px-8 sm:pb-20 sm:pt-8 xl:max-w-[1040px] xl:pb-24 xl:pt-10 2xl:max-w-[1120px]">
-        <span className="mb-6 inline-block rounded-full border border-clox-orange/60 bg-clox-navy/75 px-5 py-1.5 text-[0.8rem] font-bold uppercase tracking-[2px] text-clox-orange shadow-lg backdrop-blur-sm sm:mb-8 sm:px-6 sm:py-2 sm:text-[0.9rem] xl:mb-10 xl:text-base">
+        <p className="mx-auto mb-6 max-w-[21rem] rounded-2xl border border-clox-orange/40 bg-clox-navy/90 px-4 py-2.5 text-center text-[1.1rem] font-bold leading-snug tracking-[0.02em] text-clox-orange shadow-[0_8px_24px_rgba(0,0,0,0.45)] [text-wrap:balance] backdrop-blur-md sm:mb-8 sm:max-w-[34rem] sm:px-5 sm:py-3 sm:text-[1.2rem] sm:tracking-[0.03em] md:inline-block md:max-w-[40rem] md:rounded-full md:border-clox-orange/55 md:bg-clox-navy/80 md:px-6 md:py-2.5 md:text-[1.25rem] xl:mb-10 xl:max-w-none xl:px-8 xl:py-3 xl:text-[1.35rem] xl:tracking-[0.04em]">
           {copy.tagline}
-        </span>
+        </p>
 
         <div className="relative mx-auto mb-6 flex min-h-[210px] w-full items-center justify-center sm:mb-8 sm:min-h-[250px] xl:mb-10 xl:min-h-[280px]">
           {heroSlides.map((item, index) => {

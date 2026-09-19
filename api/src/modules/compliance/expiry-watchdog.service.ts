@@ -2,6 +2,7 @@ import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 import { ConfigService } from '@nestjs/config';
 import type { AppEnv } from '../../config/env.validation';
 import { ComplianceService } from './compliance.service';
+import { DriverService } from '../driver/driver.service';
 
 @Injectable()
 export class ExpiryWatchdogService implements OnModuleInit, OnModuleDestroy {
@@ -10,6 +11,7 @@ export class ExpiryWatchdogService implements OnModuleInit, OnModuleDestroy {
 
   constructor(
     private readonly compliance: ComplianceService,
+    private readonly drivers: DriverService,
     private readonly config: ConfigService<AppEnv, true>,
   ) {}
 
@@ -36,9 +38,10 @@ export class ExpiryWatchdogService implements OnModuleInit, OnModuleDestroy {
   private async tick() {
     try {
       const result = await this.compliance.runExpiryWatchdog();
-      if (result.expired > 0) {
+      const driverResult = await this.drivers.suspendExpiredLicences();
+      if (result.expired > 0 || driverResult.suspended > 0) {
         this.logger.warn(
-          `Expiry watchdog: expired=${result.expired} vehicles=${result.suspendedVehicles} companies=${result.suspendedCompanies}`,
+          `Expiry watchdog: expired=${result.expired} vehicles=${result.suspendedVehicles} companies=${result.suspendedCompanies} drivers=${driverResult.suspended}`,
         );
       }
     } catch (error) {

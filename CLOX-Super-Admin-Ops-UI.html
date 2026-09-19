@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLOX — Super Admin Ops Console UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1A2F4C; --navy-ink:#10192B; --navy-soft:#233F63;
+    --orange:#F26E22; --orange-deep:#C6551A; --orange-tint:#FDE7DA;
+    --wine:#7A2E3B; --wine-tint:#F5E4E7; --wine-deep:#5C1F29;
+    --bg:#F3F5F9; --surface:#FFFFFF; --surface-alt:#EEF1F6;
+    --border:#DCE2EC; --border-soft:#E9ECF3;
+    --text:#17233B; --text-mute:#5B6B84; --text-faint:#93A0B4;
+    --green:#1D7A4C; --green-bg:#E3F4EA; --green-bd:#BEE3CC;
+    --amber:#9C6A0A; --amber-bg:#FCF0D8; --amber-bd:#F0D397;
+    --red:#B93A2B; --red-bg:#FBE8E5; --red-bd:#F0C4BC;
+    --violet:#6547A8; --violet-bg:#EFE9F9; --violet-bd:#D6C7F0;
+    --radius-sm:6px; --radius-md:10px; --radius-lg:16px;
+    --shadow-1:0 1px 2px rgba(16,25,43,0.06), 0 1px 1px rgba(16,25,43,0.04);
+    --shadow-2:0 8px 24px rgba(16,25,43,0.10), 0 2px 6px rgba(16,25,43,0.06);
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'IBM Plex Sans', -apple-system, sans-serif;
+    --font-mono:'IBM Plex Mono', ui-monospace, monospace;
+  }
+  *{margin:0; padding:0; box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{ font-family:var(--font-body); color:var(--text); background:var(--bg); -webkit-font-smoothing:antialiased; }
+  ::selection{ background: var(--orange-tint); color:var(--navy-ink); }
+
+  .kit-cover{ background: linear-gradient(160deg, var(--navy) 0%, #142338 62%, #0F1B2C 100%); color:#fff; padding:72px 8vw 56px; position:relative; overflow:hidden; }
+  .kit-cover::after{ content:""; position:absolute; right:-120px; top:-160px; width:520px; height:520px; border-radius:50%; border:1px dashed rgba(122,46,59,0.5); pointer-events:none; }
+  .kit-cover::before{ content:""; position:absolute; right:-40px; top:-40px; width:340px; height:340px; border-radius:50%; border:1px dashed rgba(242,110,34,0.22); pointer-events:none; }
+  .kit-eyebrow{ font-family:var(--font-mono); font-size:12.5px; letter-spacing:2.5px; color:var(--orange); text-transform:uppercase; display:flex; align-items:center; gap:10px; margin-bottom:22px; }
+  .kit-eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--orange); display:inline-block;}
+  .kit-title{ font-family:var(--font-display); font-weight:700; font-size:clamp(32px,4.2vw,52px); line-height:1.05; letter-spacing:-0.5px; max-width:820px; }
+  .kit-title em{ font-style:normal; color:#E8A4AE; }
+  .kit-sub{ margin-top:18px; font-size:16.5px; color:#C7D2E3; max-width:640px; line-height:1.6; }
+  .kit-meta-row{ display:flex; gap:36px; margin-top:44px; flex-wrap:wrap; }
+  .kit-meta-row .m{ font-family:var(--font-mono); font-size:12.5px; color:#8FA0BC; }
+  .kit-meta-row .m b{ display:block; font-family:var(--font-body); font-weight:600; font-size:19px; color:#fff; margin-top:4px; }
+  .kit-toc{ background:var(--surface); border-bottom:1px solid var(--border); padding:28px 8vw 30px; position:sticky; top:0; z-index:50; box-shadow:var(--shadow-1); }
+  .kit-toc-label{ font-family:var(--font-mono); font-size:11px; letter-spacing:2px; color:var(--text-faint); text-transform:uppercase; margin-bottom:12px;}
+  .kit-toc-grid{ display:flex; flex-wrap:wrap; gap:8px; }
+  .kit-toc-grid a{ font-family:var(--font-mono); font-size:12.5px; color:var(--navy); text-decoration:none; background:var(--surface-alt); border:1px solid var(--border); padding:6px 11px; border-radius:20px; transition:all .15s ease; white-space:nowrap; }
+  .kit-toc-grid a:hover{ background:var(--wine); border-color:var(--wine); color:#fff; }
+
+  .section-divider{ padding:46px 8vw 10px; }
+  .section-divider h2{ font-family:var(--font-display); font-size:15px; letter-spacing:1px; text-transform:uppercase; color:var(--text-faint); display:flex; align-items:center; gap:14px; }
+  .section-divider h2::after{ content:""; flex:1; height:1px; background:var(--border); }
+
+  .screen-wrap{ padding:56px 8vw 8px; border-bottom:1px solid var(--border-soft); scroll-margin-top:96px; }
+  .screen-wrap:nth-of-type(even){ background:#F8F9FC; }
+  .screen-tag{ display:flex; align-items:baseline; gap:14px; margin-bottom:8px; flex-wrap:wrap; }
+  .screen-id{ font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:#fff; background:var(--wine); padding:4px 10px; border-radius:4px; letter-spacing:0.5px; }
+  .screen-name{ font-family:var(--font-display); font-weight:600; font-size:23px; color:var(--navy-ink); }
+  .screen-purpose{ color:var(--text-mute); font-size:14.5px; margin:6px 0 26px; max-width:760px; line-height:1.55; }
+  .screen-flags{ display:flex; gap:8px; margin-left:auto; flex-wrap:wrap; }
+  .flag{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:0.6px; padding:3px 8px; border-radius:4px; text-transform:uppercase; }
+  .flag.gated{ background:var(--red-bg); color:var(--red); border:1px solid var(--red-bd); }
+  .flag.web{ background:var(--wine-tint); color:var(--wine-deep); border:1px solid #E3C3C9; }
+  .flag.super{ background:#EFE0E3; color:var(--wine-deep); border:1px solid #E3C3C9; font-weight:700; }
+
+  .device{ background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-2); border:1px solid var(--border); overflow:hidden; margin-bottom:56px; }
+  .device-bar{ height:38px; background:#E7EAF0; display:flex; align-items:center; padding:0 14px; gap:8px; border-bottom:1px solid var(--border); }
+  .device-bar .dot{ width:10px; height:10px; border-radius:50%; }
+  .device-bar .r{background:#F0524A;} .device-bar .y{background:#F2B41D;} .device-bar .g{background:#25B551;}
+  .device-bar .url{ margin-left:14px; font-family:var(--font-mono); font-size:11px; color:#78829A; background:#fff; border-radius:5px; padding:4px 12px; flex:1; max-width:340px; }
+
+  .app-shell{ display:flex; min-height:640px; }
+  .app-sidebar{ width:222px; background:var(--navy-ink); color:#C9D3E4; flex-shrink:0; display:flex; flex-direction:column; padding:18px 0; }
+  .app-logo{ display:flex; align-items:center; gap:9px; padding:4px 20px 20px; }
+  .app-logo .mark{ width:26px; height:26px; border-radius:7px; background:var(--wine); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; color:#fff; font-size:13px; }
+  .app-logo .word{ font-family:var(--font-display); font-weight:700; font-size:16px; color:#fff; letter-spacing:0.5px; }
+  .nav-group-label{ font-family:var(--font-mono); font-size:10px; letter-spacing:1.6px; color:#5A6C8C; text-transform:uppercase; padding:14px 20px 6px; }
+  .nav-item{ display:flex; align-items:center; gap:11px; padding:9px 20px; font-size:13.5px; color:#B9C4DA; border-left:3px solid transparent; }
+  .nav-item .ic{ width:16px; text-align:center; font-size:13px; }
+  .nav-item.active{ background:rgba(122,46,59,0.28); border-left-color:#D98A96; color:#fff; font-weight:500; }
+  .nav-item .badge-count{ margin-left:auto; background:var(--wine); color:#fff; font-size:10px; font-family:var(--font-mono); padding:1px 6px; border-radius:9px; }
+  .app-sidebar-foot{ margin-top:auto; padding:14px 20px; border-top:1px solid rgba(255,255,255,0.08); }
+  .org-chip{ display:flex; gap:9px; align-items:center; }
+  .org-chip .av{ width:30px; height:30px; border-radius:8px; background:var(--wine); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:600; font-size:12px; color:#fff; }
+  .org-chip .t{ font-size:12px; line-height:1.3; } .org-chip .t b{ display:block; color:#fff; font-size:12.5px; font-weight:500; }
+  .app-main{ flex:1; min-width:0; background:var(--bg); display:flex; flex-direction:column; }
+  .app-topbar{ height:58px; background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 24px; gap:16px; flex-shrink:0; }
+  .breadcrumb{ font-size:12.5px; color:var(--text-faint); font-family:var(--font-mono); } .breadcrumb b{ color:var(--navy); font-weight:600; }
+  .context-badge{ font-family:var(--font-mono); font-size:11px; background:var(--wine-tint); color:var(--wine-deep); padding:4px 10px; border-radius:5px; border:1px solid #E3C3C9; font-weight:600; }
+  .topbar-right{ margin-left:auto; display:flex; align-items:center; gap:16px; }
+  .icon-btn{ width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:var(--surface-alt); color:var(--text-mute); font-size:14px; position:relative; }
+  .icon-btn .dot-badge{ position:absolute; top:5px; right:6px; width:7px; height:7px; border-radius:50%; background:var(--orange); border:1.5px solid #fff; }
+  .user-mini .av{ width:28px; height:28px; border-radius:50%; background:var(--wine); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-family:var(--font-display); font-weight:600; }
+  .app-content{ flex:1; padding:28px 30px 40px; overflow:auto; }
+  .page-head{ display:flex; align-items:flex-start; margin-bottom:22px; gap:16px; flex-wrap:wrap; }
+  .page-head h1{ font-family:var(--font-display); font-size:22px; font-weight:600; color:var(--navy-ink); }
+  .page-head .sub{ font-size:13px; color:var(--text-mute); margin-top:4px; }
+  .page-head .actions{ margin-left:auto; display:flex; gap:10px; }
+
+  .btn{ font-family:var(--font-body); font-size:13.5px; font-weight:600; padding:9px 16px; border-radius:8px; border:1px solid transparent; display:inline-flex; align-items:center; gap:7px; white-space:nowrap; }
+  .btn-primary{ background:var(--wine); color:#fff; }
+  .btn-secondary{ background:#fff; color:var(--navy); border-color:var(--border); }
+  .btn-ghost{ background:transparent; color:var(--text-mute); }
+  .btn-destructive{ background:#fff; color:var(--red); border-color:var(--red-bd); }
+  .btn-sm{ padding:6px 12px; font-size:12.5px; }
+  .btn[disabled], .btn.is-disabled{ background:var(--surface-alt); color:var(--text-faint); border-color:var(--border); }
+  .btn-block{ width:100%; justify-content:center; }
+
+  .pill{ font-family:var(--font-mono); font-size:11px; font-weight:500; padding:3px 9px; border-radius:20px; display:inline-flex; align-items:center; gap:5px; }
+  .pill::before{ content:""; width:6px; height:6px; border-radius:50%; }
+  .pill-green{ background:var(--green-bg); color:var(--green); border:1px solid var(--green-bd); } .pill-green::before{ background:var(--green); }
+  .pill-amber{ background:var(--amber-bg); color:var(--amber); border:1px solid var(--amber-bd); } .pill-amber::before{ background:var(--amber); }
+  .pill-red{ background:var(--red-bg); color:var(--red); border:1px solid var(--red-bd); } .pill-red::before{ background:var(--red); }
+  .pill-neutral{ background:var(--surface-alt); color:var(--text-mute); border:1px solid var(--border); } .pill-neutral::before{ background:var(--text-faint); }
+  .chip-clarify{ font-family:var(--font-mono); font-size:10px; color:var(--violet); background:var(--violet-bg); border:1px dashed var(--violet-bd); padding:3px 8px; border-radius:5px; }
+
+  .card{ background:#fff; border:1px solid var(--border); border-radius:var(--radius-md); }
+  .card-pad{ padding:18px 20px; }
+  .kpi-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:22px; }
+  .kpi{ background:#fff; border:1px solid var(--border); border-radius:var(--radius-md); padding:16px 18px; }
+  .kpi.urgent{ border-color:var(--wine); background:var(--wine-tint); }
+  .kpi .lbl{ font-size:11.5px; color:var(--text-mute); text-transform:uppercase; font-family:var(--font-mono); }
+  .kpi .val{ font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--navy-ink); margin-top:6px; }
+  .kpi .delta{ font-size:12px; margin-top:4px; } .kpi .delta.up{ color:var(--green); }
+
+  table.dtable{ width:100%; border-collapse:collapse; background:#fff; }
+  table.dtable th{ text-align:left; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; color:var(--text-faint); padding:10px 14px; border-bottom:1px solid var(--border); background:#FAFBFD; }
+  table.dtable td{ padding:13px 14px; border-bottom:1px solid var(--border-soft); font-size:13.5px; vertical-align:middle; }
+  table.dtable tr:last-child td{ border-bottom:none; }
+  .mono{ font-family:var(--font-mono); font-size:12.5px; color:var(--text-mute); }
+  .cell-strong{ font-weight:600; color:var(--navy-ink); }
+
+  .field{ margin-bottom:16px; } .field label{ display:block; font-size:12.5px; font-weight:600; color:var(--navy-ink); margin-bottom:6px; }
+  .field .hint{ font-size:11.5px; color:var(--text-faint); margin-top:5px; } .field .req{ color:var(--red); }
+  .input, select.input, textarea.input{ width:100%; border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:13.5px; font-family:var(--font-body); color:var(--text); background:#fff; }
+  .input::placeholder{ color:var(--text-faint); }
+  .input-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .radio-card-row{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  .radio-card{ border:1.5px solid var(--border); border-radius:10px; padding:14px 16px; text-align:center; }
+  .radio-card.selected{ border-color:var(--wine); background:var(--wine-tint); }
+  .radio-card .t{ font-weight:600; font-size:13.5px; color:var(--navy-ink); }
+  .radio-card .d{ font-size:12px; color:var(--text-mute); margin-top:3px; }
+
+  .notice{ display:flex; gap:12px; padding:13px 15px; border-radius:10px; font-size:13px; line-height:1.5; }
+  .notice-info{ background:#EEF1F6; border:1px solid var(--border); color:var(--text-mute); }
+  .notice-warn{ background:var(--amber-bg); border:1px solid var(--amber-bd); color:#7A550A; }
+  .notice-error{ background:var(--red-bg); border:1px solid var(--red-bd); color:var(--red); }
+  .divider{ height:1px; background:var(--border-soft); margin:20px 0; }
+  .tabs{ display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+  .tab{ padding:10px 4px; margin-right:22px; font-size:13.5px; color:var(--text-mute); border-bottom:2px solid transparent; font-weight:500; }
+  .tab.active{ color:var(--navy-ink); border-color:var(--wine); font-weight:600; }
+  .filter-bar{ display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+  .filter-chip{ font-size:12.5px; padding:7px 12px; border-radius:8px; background:#fff; border:1px solid var(--border); color:var(--text-mute); }
+  .search-box{ display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-size:12.5px; color:var(--text-faint); flex:1; max-width:280px; }
+  .grid-2{ display:grid; grid-template-columns:1.4fr 1fr; gap:20px; }
+  .side-card-title{ font-family:var(--font-mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--text-faint); margin-bottom:10px; }
+  .timeline{ position:relative; padding-left:26px; }
+  .timeline::before{ content:""; position:absolute; left:8px; top:4px; bottom:4px; width:1.5px; background:var(--border); }
+  .t-item{ position:relative; padding-bottom:22px; }
+  .t-item::before{ content:""; position:absolute; left:-26px; top:2px; width:10px; height:10px; border-radius:50%; background:#fff; border:2px solid var(--border); }
+  .t-item.done::before{ background:var(--green); border-color:var(--green); }
+  .t-item.now::before{ background:var(--wine); border-color:var(--wine); }
+  .t-item .tt{ font-size:13.5px; font-weight:600; color:var(--navy-ink); }
+  .t-item .ts{ font-family:var(--font-mono); font-size:11px; color:var(--text-faint); margin-top:2px; }
+  .doc-row{ display:flex; align-items:center; gap:14px; padding:14px 16px; border:1px solid var(--border); border-radius:10px; margin-bottom:10px; background:#fff; }
+  .doc-row .ic{ width:34px; height:34px; border-radius:8px; background:var(--surface-alt); display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--text-mute); flex-shrink:0; }
+  .doc-row .body{ flex:1; } .doc-row .name{ font-size:13px; font-weight:600; color:var(--navy-ink); }
+  .doc-row .meta{ font-size:11.5px; color:var(--text-faint); margin-top:2px; font-family:var(--font-mono); }
+  .modal-overlay{ background:rgba(16,25,43,0.55); padding:60px 40px; display:flex; align-items:flex-start; justify-content:center; }
+  .modal{ background:#fff; border-radius:14px; width:420px; box-shadow:var(--shadow-2); overflow:hidden; }
+  .modal-head{ padding:18px 22px; border-bottom:1px solid var(--border-soft); font-family:var(--font-display); font-weight:600; font-size:16px; }
+  .modal-body{ padding:20px 22px; }
+  .modal-foot{ padding:16px 22px; border-top:1px solid var(--border-soft); display:flex; justify-content:flex-end; gap:10px; }
+
+  .footer-note{ padding:40px 8vw 90px; color:var(--text-faint); font-size:12px; font-family:var(--font-mono); line-height:1.7; }
+</style>
+</head>
+<body>
+<section class="kit-cover">
+  <div class="kit-eyebrow"><span class="dot"></span> CLOX FREIGHT PLATFORM &nbsp;/&nbsp; UI SPECIFICATION</div>
+  <h1 class="kit-title">Super Admin — <em>national</em> ops, policy, and the ledger for the whole network.</h1>
+  <p class="kit-sub">The only role that can touch global tariff policy, provision State/Local admins, override KYB decisions, and see fortnightly settlement across every org. Everything here is built to be audit-defensible — actions leave a reason, a note, and a trail.</p>
+  <div class="kit-meta-row">
+    <div class="m">SCOPE<b>National — no region lock</b></div>
+    <div class="m">SCREENS<b>13</b></div>
+    <div class="m">UNIQUE POWERS<b>Policy publish · Admin provisioning</b></div>
+    <div class="m">CADENCE<b>Fortnightly settlement</b></div>
+  </div>
+</section>
+
+<nav class="kit-toc">
+  <div class="kit-toc-label">Jump to screen</div>
+  <div class="kit-toc-grid">
+    <a href="#dsh-01">DSH-01 National dashboard</a>
+    <a href="#cmp-01">CMP-01 Compliance queue</a>
+    <a href="#cmp-02">CMP-02 Compliance review detail</a>
+    <a href="#dsp-01">DSP-01 Disputes list</a>
+    <a href="#dsp-02">DSP-02 Dispute detail</a>
+    <a href="#pol-01">POL-01 Policy list</a>
+    <a href="#pol-02">POL-02 Policy edit / publish</a>
+    <a href="#adm-01">ADM-01 Admin management</a>
+    <a href="#adm-02">ADM-02 Provision admin</a>
+    <a href="#fin-01">FIN-01 Finance cycle</a>
+    <a href="#fin-02">FIN-02 Reconciliation</a>
+    <a href="#usr-02">USR-02 Suspend org</a>
+    <a href="#modals">Shared modals</a>
+  </div>
+</nav>
+<!-- ================= DSH-01 ================= -->
+<div class="screen-wrap" id="dsh-01">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-DSH-01</span><span class="screen-name">National dashboard</span><div class="screen-flags"><span class="flag super">SUPER ONLY</span></div></div>
+  <p class="screen-purpose">Priority queue sits above vanity KPIs — Super Admin's real job each morning is clearing the backlog, so "what needs a decision from me" leads, not "how big is the network."</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/dashboard</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar">
+        <div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div>
+        <div class="nav-group-label">Operate</div>
+        <a class="nav-item active"><span class="ic">◆</span>Dashboard</a>
+        <a class="nav-item"><span class="ic">🛡</span>Compliance <span class="badge-count">14</span></a>
+        <a class="nav-item"><span class="ic">⚖</span>Disputes <span class="badge-count">6</span></a>
+        <div class="nav-group-label">Govern</div>
+        <a class="nav-item"><span class="ic">📜</span>Policy</a>
+        <a class="nav-item"><span class="ic">👥</span>Admins</a>
+        <a class="nav-item"><span class="ic">$</span>Finance</a>
+        <div class="app-sidebar-foot"><div class="org-chip"><div class="av">SA</div><div class="t"><b>Super Admin</b>National · HQ</div></div></div>
+      </div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb"><b>National dashboard</b></span><span class="context-badge">🌐 National — all regions</span><div class="topbar-right"><div class="icon-btn">🔔<span class="dot-badge"></span></div><div class="user-mini"><div class="av">SA</div></div></div></div>
+        <div class="app-content">
+          <div class="page-head"><div><h1>National overview</h1><div class="sub">Wednesday 12 August, 08:00 AEST</div></div></div>
+          <div class="kpi-row">
+            <div class="kpi"><div class="lbl">Active trips</div><div class="val">312</div><div class="delta up">+18 vs yesterday</div></div>
+            <div class="kpi urgent"><div class="lbl">Pending review</div><div class="val">14</div><div class="delta">Compliance queue</div></div>
+            <div class="kpi urgent"><div class="lbl">Open disputes</div><div class="val">6</div><div class="delta">2 over SLA</div></div>
+            <div class="kpi"><div class="lbl">Settlement due</div><div class="val mono">$284,120</div><div class="delta">Fri 14 Aug cycle</div></div>
+          </div>
+          <div class="side-card-title">Priority queue</div>
+          <table class="dtable">
+            <thead><tr><th>Org</th><th>Reason</th><th>Region</th><th>Age</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="cell-strong">Southern Cross Logistics</td><td><span class="pill pill-red">Dispute — over SLA</span></td><td>NSW</td><td class="mono">2d 4h</td><td><button class="btn btn-primary btn-sm">Review</button></td></tr>
+              <tr><td class="cell-strong">Interstate Freight Solutions</td><td><span class="pill pill-amber">Compliance — expiring doc</span></td><td>VIC</td><td class="mono">6h</td><td><button class="btn btn-secondary btn-sm">Review</button></td></tr>
+              <tr><td class="cell-strong">QLD Bulk Carriers</td><td><span class="pill pill-amber">KYB — pending verification</span></td><td>QLD</td><td class="mono">1d 2h</td><td><button class="btn btn-secondary btn-sm">Review</button></td></tr>
+              <tr><td class="cell-strong">Perth Metro Transport</td><td><span class="pill pill-red">Dispute — mass discrepancy</span></td><td>WA</td><td class="mono">3d 1h</td><td><button class="btn btn-primary btn-sm">Review</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ================= CMP-01 ================= -->
+<div class="screen-wrap" id="cmp-01">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-CMP-01</span><span class="screen-name">Compliance queue</span><div class="screen-flags"><span class="flag web">WEB</span></div></div>
+  <p class="screen-purpose">National view of every org and driver awaiting a compliance decision — filterable by type and region, since Super Admin often needs to triage by urgency rather than work top-to-bottom.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/compliance</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar">
+        <div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div>
+        <a class="nav-item"><span class="ic">◆</span>Dashboard</a>
+        <a class="nav-item active"><span class="ic">🛡</span>Compliance</a>
+        <a class="nav-item"><span class="ic">⚖</span>Disputes</a>
+        <a class="nav-item"><span class="ic">📜</span>Policy</a>
+        <a class="nav-item"><span class="ic">👥</span>Admins</a>
+        <a class="nav-item"><span class="ic">$</span>Finance</a>
+      </div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb"><b>Compliance queue</b></span><span class="context-badge">🌐 National</span></div>
+        <div class="app-content">
+          <div class="page-head"><div><h1>Compliance queue</h1><div class="sub">14 items awaiting decision</div></div><div class="actions"><button class="btn btn-secondary">Export CSV</button></div></div>
+          <div class="filter-bar">
+            <div class="search-box">🔍 Search company, ABN</div>
+            <span class="filter-chip">Type: All ▾</span>
+            <span class="filter-chip">Region: All ▾</span>
+            <span class="filter-chip">Sort: Updated ▾ <span class="chip-clarify" style="margin-left:4px;">default TBD</span></span>
+          </div>
+          <table class="dtable">
+            <thead><tr><th>Company</th><th>Region</th><th>Type</th><th>Status</th><th>Updated</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="cell-strong">Interstate Freight Solutions</td><td>VIC</td><td>Document renewal</td><td><span class="pill pill-amber">Expiring soon</span></td><td class="mono">6h ago</td><td><button class="btn btn-primary btn-sm">Review</button></td></tr>
+              <tr><td class="cell-strong">QLD Bulk Carriers</td><td>QLD</td><td>KYB verification</td><td><span class="pill pill-amber">Pending</span></td><td class="mono">1d ago</td><td><button class="btn btn-primary btn-sm">Review</button></td></tr>
+              <tr><td class="cell-strong">Northline Transport</td><td>NT</td><td>New activation</td><td><span class="pill pill-amber">Auto-checks passed</span></td><td class="mono">3h ago</td><td><button class="btn btn-primary btn-sm">Review</button></td></tr>
+              <tr><td class="cell-strong">Yarra Valley Freight</td><td>VIC</td><td>Document renewal</td><td><span class="pill pill-red">Expired</span></td><td class="mono">2d ago</td><td><button class="btn btn-primary btn-sm">Review</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CMP-02 ================= -->
+<div class="screen-wrap" id="cmp-02">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-CMP-02</span><span class="screen-name">Compliance review detail</span><div class="screen-flags"><span class="flag super">SUPER: KYB OVERRIDE</span></div></div>
+  <p class="screen-purpose">Everything a reviewer needs on one screen — KYB status, every document with its own status, payout connection, fleet/driver counts — so approving doesn't require jumping between tabs. The KYB override is Super-exclusive and visually separated as a distinct power.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/compliance/QLD-BULK-CARRIERS</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar"><div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div><a class="nav-item active"><span class="ic">🛡</span>Compliance</a></div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb">Compliance / <b>QLD Bulk Carriers</b></span></div>
+        <div class="app-content">
+          <div class="page-head"><div><h1>QLD Bulk Carriers</h1><div class="sub">ABN 78 234 561 902 · KYB pending verification</div></div>
+            <div class="actions"><button class="btn btn-secondary">Request info</button><button class="btn btn-destructive">Reject</button><button class="btn btn-primary">Approve</button></div>
+          </div>
+          <div class="grid-2">
+            <div>
+              <div class="card" style="margin-bottom:16px;"><div class="card-pad">
+                <div class="side-card-title">Documents</div>
+                <div class="doc-row"><div class="ic">🛡️</div><div class="body"><div class="name">Public Liability — $20M</div><div class="meta">Uploaded 2 days ago</div></div><span class="pill pill-green">Verified</span></div>
+                <div class="doc-row"><div class="ic">🚚</div><div class="body"><div class="name">Goods in Transit — $100k</div><div class="meta">Uploaded 2 days ago</div></div><span class="pill pill-green">Verified</span></div>
+                <div class="doc-row"><div class="ic">📋</div><div class="body"><div class="name">NHVR Accreditation</div><div class="meta">Uploaded 2 days ago</div></div><span class="pill pill-amber">Under review</span></div>
+              </div></div>
+              <div class="card"><div class="card-pad">
+                <div class="side-card-title">Notes</div>
+                <textarea class="input" rows="3" placeholder="Add an internal note..."></textarea>
+              </div></div>
+            </div>
+            <div>
+              <div class="card" style="margin-bottom:16px;"><div class="card-pad">
+                <div class="side-card-title">KYB status</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><span style="font-size:13px;">ABN register</span><span class="pill pill-green">Matched</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:13px;">Entity check</span><span class="pill pill-amber">Manual review</span></div>
+                <div class="divider"></div>
+                <button class="btn btn-secondary btn-block" style="border-color:var(--wine); color:var(--wine);">⚠ Super override — force approve</button>
+              </div></div>
+              <div class="card" style="margin-bottom:16px;"><div class="card-pad">
+                <div class="side-card-title">Payout</div>
+                <div style="font-size:13px;">Stripe Connect — <span class="pill pill-green">Verified</span></div>
+              </div></div>
+              <div class="card"><div class="card-pad">
+                <div class="side-card-title">Fleet &amp; drivers</div>
+                <div style="font-size:13px;">3 vehicles · 2 drivers</div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ================= DSP-01 ================= -->
+<div class="screen-wrap" id="dsp-01">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-DSP-01</span><span class="screen-name">Disputes list</span><div class="screen-flags"><span class="flag web">WEB</span></div></div>
+  <p class="screen-purpose">SLA age is a first-class column, not an afterthought — disputes that blow past SLA get escalated visually (red) so the queue self-prioritizes rather than relying on someone remembering to check dates.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/disputes</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar"><div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div><a class="nav-item active"><span class="ic">⚖</span>Disputes</a></div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb"><b>Disputes</b></span><span class="context-badge">🌐 National</span></div>
+        <div class="app-content">
+          <div class="page-head"><div><h1>Disputes</h1><div class="sub">6 open · 2 over SLA (48h)</div></div></div>
+          <table class="dtable">
+            <thead><tr><th>Job</th><th>Type</th><th>Parties</th><th>Amount</th><th>Age</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="cell-strong">#JB-10388</td><td>Mass discrepancy</td><td>Sender vs Perth Metro</td><td class="mono">$85</td><td class="mono" style="color:var(--red);">3d 1h</td><td><span class="pill pill-red">Over SLA</span></td><td><button class="btn btn-primary btn-sm">Review</button></td></tr>
+              <tr><td class="cell-strong">#JB-10312</td><td>Wait-time charge</td><td>Sender vs Southern Cross</td><td class="mono">$40</td><td class="mono" style="color:var(--red);">2d 4h</td><td><span class="pill pill-red">Over SLA</span></td><td><button class="btn btn-primary btn-sm">Review</button></td></tr>
+              <tr><td class="cell-strong">#JB-10290</td><td>Damaged goods claim</td><td>Sender vs Yarra Valley</td><td class="mono">$1,200</td><td class="mono">1d 6h</td><td><span class="pill pill-amber">Open</span></td><td><button class="btn btn-secondary btn-sm">Review</button></td></tr>
+              <tr><td class="cell-strong">#JB-10240</td><td>Late delivery</td><td>Sender vs Northline</td><td class="mono">$0</td><td class="mono">14h</td><td><span class="pill pill-amber">Open</span></td><td><button class="btn btn-secondary btn-sm">Review</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= DSP-02 ================= -->
+<div class="screen-wrap" id="dsp-02">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-DSP-02</span><span class="screen-name">Dispute detail</span><div class="screen-flags"><span class="flag web">WEB</span></div></div>
+  <p class="screen-purpose">Timeline pulls together geofence, POD and chat events into one factual record so a ruling is evidence-based, not judgment calls made from a phone call. A typed reason on Resolve is included as the safer default since the spec leaves it open.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/disputes/JB-10388</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar"><div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div><a class="nav-item active"><span class="ic">⚖</span>Disputes</a></div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb">Disputes / <b>#JB-10388</b></span></div>
+        <div class="app-content">
+          <div class="page-head"><div><h1>#JB-10388 · Mass discrepancy</h1><div class="sub">$85 surcharge disputed · Sender vs Perth Metro Transport</div></div></div>
+          <div class="grid-2">
+            <div class="card"><div class="card-pad">
+              <div class="side-card-title">Evidence timeline</div>
+              <div class="timeline">
+                <div class="t-item done"><div class="tt">Geofence arrival — pickup</div><div class="ts">Fri 8 Aug, 09:52</div></div>
+                <div class="t-item done"><div class="tt">Mass check submitted — 2,120kg vs declared 1,840kg</div><div class="ts">Fri 8 Aug, 10:04</div></div>
+                <div class="t-item done"><div class="tt">Sender disputed surcharge</div><div class="ts">Fri 8 Aug, 10:20</div></div>
+                <div class="t-item done"><div class="tt">POD confirmed — delivery completed</div><div class="ts">Fri 8 Aug, 16:40</div></div>
+                <div class="t-item now"><div class="tt">Awaiting Super ruling</div><div class="ts">Open 3d 1h</div></div>
+              </div>
+            </div></div>
+            <div class="card"><div class="card-pad">
+              <div class="side-card-title">Ruling</div>
+              <div class="radio-card-row" style="grid-template-columns:1fr; gap:8px; margin-bottom:14px;">
+                <div class="radio-card selected" style="text-align:left;"><div class="t">Rule for Carrier</div><div class="d">Surcharge stands — $85</div></div>
+                <div class="radio-card" style="text-align:left;"><div class="t">Rule for Sender</div><div class="d">Waive surcharge</div></div>
+                <div class="radio-card" style="text-align:left;"><div class="t">Split</div><div class="d">Partial adjustment</div></div>
+              </div>
+              <div class="field"><label>Reason for ruling<span class="req">*</span></label><textarea class="input" rows="3" placeholder="Required — becomes part of the permanent record"></textarea></div>
+              <button class="btn btn-primary btn-block">Resolve dispute</button>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ================= POL-01 ================= -->
+<div class="screen-wrap" id="pol-01">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-POL-01</span><span class="screen-name">Policy list</span><div class="screen-flags"><span class="flag super">SUPER ONLY</span></div></div>
+  <p class="screen-purpose">Every tariff/policy change is versioned, never edited in place — the list itself is the audit trail, showing exactly what was live when.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/policy</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar"><div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div><a class="nav-item active"><span class="ic">📜</span>Policy</a></div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb"><b>Policy</b></span></div>
+        <div class="app-content">
+          <div class="page-head"><div><h1>Tariff &amp; policy versions</h1></div><div class="actions"><button class="btn btn-primary">+ New version</button></div></div>
+          <table class="dtable">
+            <thead><tr><th>Version</th><th>Effective</th><th>Min hours</th><th>Wait minutes</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="cell-strong">v4.2</td><td class="mono">01 Jul 2026</td><td class="mono">4h</td><td class="mono">30 min</td><td><span class="pill pill-green">Live</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+              <tr><td class="cell-strong">v4.3 (draft)</td><td class="mono">— not set</td><td class="mono">4h</td><td class="mono">25 min</td><td><span class="pill pill-neutral">Draft</span></td><td><button class="btn btn-secondary btn-sm">Edit</button></td></tr>
+              <tr><td class="cell-strong">v4.1</td><td class="mono">01 Apr–30 Jun 2026</td><td class="mono">4h</td><td class="mono">30 min</td><td><span class="pill pill-neutral">Superseded</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= POL-02 ================= -->
+<div class="screen-wrap" id="pol-02">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-POL-02</span><span class="screen-name">Policy edit / publish</span><div class="screen-flags"><span class="flag super">STEP-UP AUTH</span></div></div>
+  <p class="screen-purpose">Publishing is irreversible and network-wide, so it's gated behind step-up authentication (a second factor at the moment of publish, not just at login) — a mistake here affects every active job on the platform.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/policy/v4.3/edit</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar"><div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div><a class="nav-item active"><span class="ic">📜</span>Policy</a></div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb">Policy / <b>v4.3 (draft)</b></span></div>
+        <div class="app-content" style="max-width:640px;">
+          <div class="page-head"><div><h1>Edit policy v4.3</h1></div></div>
+          <div class="field"><label>Effective date<span class="req">*</span></label><input class="input" placeholder="DD/MM/YYYY"></div>
+          <div class="input-row">
+            <div class="field"><label>Minimum hours (hourly jobs)</label><input class="input" value="4"></div>
+            <div class="field"><label>Wait pickup minutes (before surcharge)</label><input class="input" value="25"></div>
+          </div>
+          <div class="field"><label>Change summary<span class="req">*</span></label><textarea class="input" rows="3" placeholder="What changed and why — shown in the audit log"></textarea></div>
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <button class="btn btn-secondary">Save draft</button>
+            <button class="btn btn-primary" style="margin-left:auto;">Publish version →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= POL-02 step-up ================= -->
+<div class="screen-wrap" id="pol-02-stepup">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-POL-02</span><span class="screen-name">Publish — step-up authentication</span><div class="screen-flags"><span class="flag gated">GATED</span></div></div>
+  <p class="screen-purpose">The confirmation modal itself states the blast radius in plain numbers, not just "are you sure?" — a Super Admin should never publish without knowing exactly how many active jobs are affected.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/policy/v4.3/publish</div></div>
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-head">Confirm publish — v4.3</div>
+        <div class="modal-body">
+          <p style="font-size:13px; color:var(--text-mute); line-height:1.6; margin-bottom:16px;">This will go live immediately and affects <b style="color:var(--navy-ink);">312 active trips</b>. This cannot be undone — a new version must be published to change it again.</p>
+          <div class="field"><label>Enter your 6-digit authenticator code<span class="req">*</span></label><input class="input" style="text-align:center; font-family:var(--font-mono); font-size:18px; letter-spacing:4px;" placeholder="••••••"></div>
+        </div>
+        <div class="modal-foot"><button class="btn btn-secondary">Cancel</button><button class="btn btn-primary">Publish now</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ================= ADM-01 ================= -->
+<div class="screen-wrap" id="adm-01">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-ADM-01</span><span class="screen-name">Admin management</span><div class="screen-flags"><span class="flag super">SUPER ONLY</span></div></div>
+  <p class="screen-purpose">The full State/Local admin roster with their scope visible per row — this is the screen that answers "who can act on VIC" at a glance, which matters when something regional needs escalating fast.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/admins</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar"><div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div><a class="nav-item active"><span class="ic">👥</span>Admins</a></div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb"><b>Admins</b></span></div>
+        <div class="app-content">
+          <div class="page-head"><div><h1>Admin management</h1><div class="sub">6 State/Local admins provisioned</div></div><div class="actions"><button class="btn btn-primary">+ Provision admin</button></div></div>
+          <table class="dtable">
+            <thead><tr><th>Name</th><th>Role</th><th>Scope</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="cell-strong">Priya Chandra</td><td>State Admin</td><td>VIC</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-ghost btn-sm">Manage</button></td></tr>
+              <tr><td class="cell-strong">Marcus Webb</td><td>Local Admin</td><td>Melbourne CBD</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-ghost btn-sm">Manage</button></td></tr>
+              <tr><td class="cell-strong">Aisha Rahman</td><td>State Admin</td><td>NSW</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-ghost btn-sm">Manage</button></td></tr>
+              <tr><td class="cell-strong">Dylan Foster</td><td>Local Admin</td><td>Sydney Metro</td><td><span class="pill pill-amber">Invite pending</span></td><td><button class="btn btn-ghost btn-sm">Resend</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ADM-02 ================= -->
+<div class="screen-wrap" id="adm-02">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-ADM-02</span><span class="screen-name">Provision admin</span><div class="screen-flags"><span class="flag super">SUPER ONLY</span></div></div>
+  <p class="screen-purpose">Role selection determines the scope fields that appear next — State needs only a state, Local needs both state and territory — so the form only asks what's relevant to the chosen role.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/admins/new</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar"><div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div><a class="nav-item active"><span class="ic">👥</span>Admins</a></div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb">Admins / <b>Provision</b></span></div>
+        <div class="app-content" style="max-width:560px;">
+          <div class="page-head"><div><h1>Provision a new admin</h1></div></div>
+          <div class="input-row">
+            <div class="field"><label>Full name<span class="req">*</span></label><input class="input" placeholder="e.g. Dylan Foster"></div>
+            <div class="field"><label>Email<span class="req">*</span></label><input class="input" placeholder="dylan@clox.com.au"></div>
+          </div>
+          <div class="field"><label>Role<span class="req">*</span></label>
+            <div class="radio-card-row" style="grid-template-columns:1fr 1fr;">
+              <div class="radio-card selected"><div class="t">Local Admin</div><div class="d">Territory-level</div></div>
+              <div class="radio-card"><div class="t">State Admin</div><div class="d">State-level</div></div>
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="field"><label>State<span class="req">*</span></label><select class="input"><option>NSW</option><option>VIC</option><option>QLD</option></select></div>
+            <div class="field"><label>Territory<span class="req">*</span></label><input class="input" placeholder="e.g. Sydney Metro"></div>
+          </div>
+          <button class="btn btn-primary btn-block">Send invite</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ================= FIN-01 ================= -->
+<div class="screen-wrap" id="fin-01">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-FIN-01</span><span class="screen-name">Finance cycle</span><div class="screen-flags"><span class="flag super">SUPER ONLY</span></div></div>
+  <p class="screen-purpose">Split reminder banner keeps the carrier T+7 vs admin-share T+14 distinction visible at the exact moment Super is about to process a cycle — the two clocks are easy to conflate and expensive to get wrong.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/finance</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar"><div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div><a class="nav-item active"><span class="ic">$</span>Finance</a></div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb"><b>Finance</b></span></div>
+        <div class="app-content">
+          <div class="page-head"><div><h1>Fortnightly settlement cycle</h1><div class="sub">Period ending Fri 14 Aug 2026</div></div><div class="actions"><button class="btn btn-primary">Process cycle</button></div></div>
+          <div class="notice notice-warn" style="margin-bottom:20px;">ℹ️ Carrier payouts settle T+7 from POD. Admin revenue share settles T+14. These are separate clocks — don't process one expecting the other's timing.</div>
+          <div class="kpi-row">
+            <div class="kpi"><div class="lbl">Carrier payouts due</div><div class="val mono">$248,900</div></div>
+            <div class="kpi"><div class="lbl">Admin shares due</div><div class="val mono">$35,220</div></div>
+            <div class="kpi"><div class="lbl">Orgs in this cycle</div><div class="val">142</div></div>
+          </div>
+          <table class="dtable">
+            <thead><tr><th>Org</th><th>Jobs</th><th>Gross</th><th>Platform fee</th><th>Net payout</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-strong">Interstate Freight Solutions</td><td>14</td><td class="mono">$9,240</td><td class="mono">−$924</td><td class="mono cell-strong">$8,316</td></tr>
+              <tr><td class="cell-strong">Southern Cross Logistics</td><td>22</td><td class="mono">$16,880</td><td class="mono">−$1,688</td><td class="mono cell-strong">$15,192</td></tr>
+              <tr><td class="cell-strong">QLD Bulk Carriers</td><td>9</td><td class="mono">$5,120</td><td class="mono">−$512</td><td class="mono cell-strong">$4,608</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FIN-02 ================= -->
+<div class="screen-wrap" id="fin-02">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-FIN-02</span><span class="screen-name">Reconciliation</span><div class="screen-flags"><span class="flag super">SUPER ONLY</span></div></div>
+  <p class="screen-purpose">Mismatches between platform-calculated and Stripe-reported amounts surface here before a cycle closes — this is the last checkpoint before money actually moves, so it errs toward showing too much detail rather than too little.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/finance/reconciliation</div></div>
+    <div class="app-shell">
+      <div class="app-sidebar"><div class="app-logo"><div class="mark">C</div><div class="word">CLOX OPS</div></div><a class="nav-item active"><span class="ic">$</span>Finance</a></div>
+      <div class="app-main">
+        <div class="app-topbar"><span class="breadcrumb">Finance / <b>Reconciliation</b></span></div>
+        <div class="app-content">
+          <div class="page-head"><div><h1>Reconciliation — 14 Aug cycle</h1><div class="sub">2 mismatches found · 140 of 142 orgs clean</div></div><div class="actions"><button class="btn btn-secondary">Export CSV</button></div></div>
+          <table class="dtable">
+            <thead><tr><th>Org</th><th>Platform calc.</th><th>Stripe reported</th><th>Variance</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="cell-strong">Perth Metro Transport</td><td class="mono">$4,120.00</td><td class="mono">$4,082.50</td><td class="mono" style="color:var(--red);">−$37.50</td><td><button class="btn btn-primary btn-sm">Investigate</button></td></tr>
+              <tr><td class="cell-strong">Northline Transport</td><td class="mono">$2,890.00</td><td class="mono">$2,905.00</td><td class="mono" style="color:var(--red);">+$15.00</td><td><button class="btn btn-primary btn-sm">Investigate</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= USR-02 ================= -->
+<div class="screen-wrap" id="usr-02">
+  <div class="screen-tag"><span class="screen-id">OPS-SUP-USR-02</span><span class="screen-name">Suspend org</span><div class="screen-flags"><span class="flag gated">DESTRUCTIVE</span></div></div>
+  <p class="screen-purpose">Both reason and note are required, not optional — this is the one action that immediately disables bidding for a live business, so the record of why has to exist before the click, not reconstructed afterward.</p>
+  <div class="device">
+    <div class="device-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">ops.clox.com.au/orgs/southern-cross/suspend</div></div>
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-head" style="color:var(--red);">Suspend Southern Cross Logistics</div>
+        <div class="modal-body">
+          <p style="font-size:13px; color:var(--text-mute); line-height:1.6; margin-bottom:16px;">Suspending disables bidding immediately. Active assignments in progress are not cancelled but no new jobs can be accepted.</p>
+          <div class="field"><label>Reason<span class="req">*</span></label><select class="input"><option>Compliance breach</option><option>Repeated disputes</option><option>Non-payment</option><option>Requested by org</option><option>Other</option></select></div>
+          <div class="field"><label>Note<span class="req">*</span></label><textarea class="input" rows="3" placeholder="Required — internal record of the decision"></textarea></div>
+        </div>
+        <div class="modal-foot"><button class="btn btn-secondary">Cancel</button><button class="btn" style="background:var(--red); color:#fff;">Confirm suspend</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider" id="modals"><h2>Shared modals reference</h2></div>
+<div class="screen-wrap">
+  <p class="screen-purpose" style="margin-bottom:24px;">Per §17, these patterns repeat across Ops screens — shown once here rather than duplicated on every screen that triggers them.</p>
+  <div style="display:flex; gap:16px; flex-wrap:wrap;">
+    <div class="card" style="width:280px;"><div class="card-pad">
+      <div class="side-card-title">Permission denied</div>
+      <div style="font-size:13px; color:var(--text-mute); margin-bottom:12px;">Shown when a scoped admin (State/Local) attempts an out-of-scope action.</div>
+      <button class="btn btn-secondary btn-sm btn-block">Go back</button>
+    </div></div>
+    <div class="card" style="width:280px;"><div class="card-pad">
+      <div class="side-card-title">Confirm reject compliance</div>
+      <div style="font-size:13px; color:var(--text-mute); margin-bottom:12px;">Terminal action — reason field <span class="chip-clarify">required: TBD</span></div>
+      <button class="btn btn-destructive btn-sm btn-block">Reject</button>
+    </div></div>
+    <div class="card" style="width:280px;"><div class="card-pad">
+      <div class="side-card-title">Sign out</div>
+      <div style="font-size:13px; color:var(--text-mute); margin-bottom:12px;">Standard end-session confirm.</div>
+      <button class="btn btn-destructive btn-sm btn-block">Sign out</button>
+    </div></div>
+  </div>
+</div>
+
+<footer class="footer-note">
+  CLOX · Super Admin Ops console UI specification build v1.0<br>
+  Generated against UI-UX-MASTER-SPECIFICATION.md · policy publish gated behind step-up auth, suspend org requires reason+note, dispute resolution requires typed reason (recommended default) · open items (queue default sort, reject-reason requirement) flagged inline.
+</footer>
+
+</body>
+</html>

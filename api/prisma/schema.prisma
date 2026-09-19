@@ -308,6 +308,12 @@ model Company {
   stripeCustomerId      String?
   stripeDefaultPaymentMethodId String?
   stripeConnectAccountId String?
+  /// Carrier Stripe Connect Express — payouts ready (M4)
+  stripeConnectPayoutsEnabled Boolean @default(false)
+  /// Carrier capability flags e.g. DG, REEFER, TAIL_LIFT
+  capabilities          String[]      @default([])
+  /// AU region codes carrier serves (in addition to homeRegion)
+  serviceRegionCodes    String[]      @default([])
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 
@@ -390,6 +396,9 @@ model Vehicle {
   registration String?
   /// e.g. UTE, RIGID_1_2T — floor G0-12
   vehicleClass String?
+  tareKg       Int?
+  gvmKg        Int?
+  gcmKg        Int?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
@@ -403,10 +412,18 @@ model Driver {
   id        String       @id @default(uuid())
   userId    String       @unique
   user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  companyId String
-  company   Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String?
+  company   Company?     @relation(fields: [companyId], references: [id], onDelete: SetNull)
   status    DriverStatus @default(INVITED)
   licenceNo String?
+  /// e.g. C, LR, MR, HR, HC, MC
+  licenceClass String?
+  licenceExpiry DateTime?
+  nhvrAcknowledgedAt DateTime?
+  /// SHA-256 of raw invite token (single-use until accept)
+  inviteTokenHash String?
+  inviteExpiresAt DateTime?
+  inviteAcceptedAt DateTime?
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
@@ -414,6 +431,7 @@ model Driver {
   complianceDocuments ComplianceDocument[]
 
   @@index([companyId, status])
+  @@index([inviteTokenHash])
 }
 
 model ComplianceDocument {
