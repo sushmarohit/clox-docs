@@ -23,7 +23,7 @@ export function HomeEcosystem({ copy, locale }: HomeSectionProps) {
   ];
 
   return (
-    <section id="ecosystem" className="scroll-mt-[9.5rem] bg-clox-surface px-5 py-12 sm:scroll-mt-28 sm:px-8 sm:py-20">
+    <section id="ecosystem" className="scroll-mt-[9.5rem] bg-clox-surface py-12 sm:scroll-mt-28 sm:py-20">
       <div className="clox-container">
         <p className="mb-2 text-center text-sm font-bold uppercase tracking-[0.2em] text-clox-orange sm:mb-3">
           {copy.ecosystemEyebrow}

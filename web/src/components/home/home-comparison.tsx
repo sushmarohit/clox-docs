@@ -40,7 +40,7 @@ export function HomeComparison({ copy }: { copy: HomeCopy }) {
         statClassName="text-sky-200"
       />
 
-      <div className="relative z-10 w-full bg-clox-navy px-6 py-8 text-center sm:py-10">
+      <div className="relative z-10 w-full bg-clox-navy py-8 text-center sm:py-10">
         <div className="clox-container flex flex-col items-center gap-4 sm:gap-6">
           <p className="text-[1.25rem] font-black uppercase tracking-wide sm:text-[2.2rem] 3xl:text-[2.6rem]">
             {copy.futureFooter.split(' ').slice(0, -2).join(' ')}{' '}

@@ -14,7 +14,7 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
   return (
     <section
       id="aboutus"
-      className="relative scroll-mt-[9.5rem] overflow-hidden bg-white px-5 py-14 sm:scroll-mt-28 sm:px-8 sm:py-28"
+      className="relative scroll-mt-[9.5rem] overflow-hidden bg-white py-14 sm:scroll-mt-28 sm:py-28"
     >
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-[0.05] motion-reduce:hidden"
@@ -29,7 +29,7 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
         </svg>
       </div>
 
-      <div className="clox-container relative z-10 grid items-center gap-10 px-0 lg:grid-cols-2 lg:gap-16 3xl:gap-20">
+      <div className="clox-container relative z-10 grid items-center gap-10 lg:grid-cols-2 lg:gap-16 3xl:gap-20">
         <div className="relative mx-auto hidden h-[500px] w-full max-w-none lg:block 3xl:h-[580px]">
           <img
             src="/landing/18771.jpg"

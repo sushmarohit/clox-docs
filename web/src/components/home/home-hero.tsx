@@ -40,7 +40,8 @@ export function HomeHero({ copy, locale }: HomeSectionProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-[rgba(5,20,40,0.42)] to-[rgba(0,7,17,0.55)] sm:from-black/65 sm:via-[rgba(5,20,40,0.5)] sm:to-[rgba(0,7,17,0.55)] xl:from-black/75 xl:via-[rgba(5,20,40,0.6)] xl:to-[rgba(0,7,17,0.6)]" />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-[900px] animate-hero-fade-up px-5 pb-16 pt-6 sm:px-8 sm:pb-20 sm:pt-8 xl:max-w-[1040px] xl:pb-24 xl:pt-10 2xl:max-w-[1200px] 3xl:max-w-[1320px] 3xl:pb-28">
+      <div className="clox-container relative z-10 animate-hero-fade-up pb-16 pt-6 sm:pb-20 sm:pt-8 xl:pb-24 xl:pt-10 3xl:pb-28">
+        <div className="mx-auto w-full max-w-[900px] xl:max-w-[1040px] 2xl:max-w-[1200px] 3xl:max-w-[1320px]">
         <p className="mx-auto mb-6 max-w-[21rem] rounded-2xl border border-clox-orange/40 bg-clox-navy/90 px-4 py-2.5 text-center text-[1.1rem] font-bold leading-snug tracking-[0.02em] text-clox-orange shadow-[0_8px_24px_rgba(0,0,0,0.45)] [text-wrap:balance] backdrop-blur-md sm:mb-8 sm:max-w-[34rem] sm:px-5 sm:py-3 sm:text-[1.2rem] sm:tracking-[0.03em] md:inline-block md:max-w-[40rem] md:rounded-full md:border-clox-orange/55 md:bg-clox-navy/80 md:px-6 md:py-2.5 md:text-[1.25rem] xl:mb-10 xl:max-w-none xl:px-8 xl:py-3 xl:text-[1.35rem] xl:tracking-[0.04em] 3xl:text-[1.45rem]">
           {copy.tagline}
         </p>
@@ -105,6 +106,7 @@ export function HomeHero({ copy, locale }: HomeSectionProps) {
               onClick={() => setSlide(index)}
             />
           ))}
+        </div>
         </div>
       </div>
     </section>

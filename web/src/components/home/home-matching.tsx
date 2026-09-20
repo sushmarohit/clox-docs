@@ -4,7 +4,7 @@ export function HomeMatching({ copy }: { copy: HomeCopy }) {
   return (
     <section
       id="matching"
-      className="scroll-mt-[9.5rem] bg-white px-5 py-12 sm:scroll-mt-28 sm:px-8 sm:py-28"
+      className="scroll-mt-[9.5rem] bg-white py-12 sm:scroll-mt-28 sm:py-28"
     >
       <div className="clox-container">
         <p className="mb-2 text-center text-sm font-bold uppercase tracking-[0.18em] text-clox-orange">

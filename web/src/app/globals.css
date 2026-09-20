@@ -81,9 +81,14 @@
     @apply w-full;
   }
 
-  /* Centered content width — scales up on large Retina / 5K desktops */
+  /* Shared page rail: max-width + horizontal gutters (nav → content → footer) */
   .clox-container {
-    @apply mx-auto w-full max-w-[1200px] 2xl:max-w-[1400px] 3xl:max-w-[1600px];
+    @apply mx-auto w-full max-w-[1200px] px-5 sm:px-8 xl:px-10 2xl:max-w-[1400px] 3xl:max-w-[1600px] 3xl:px-12;
+  }
+
+  /* Narrower reading measure inside the page rail (FAQ, long copy) */
+  .clox-measure {
+    @apply mx-auto w-full max-w-[800px] 2xl:max-w-[900px] 3xl:max-w-[1000px];
   }
 }
 

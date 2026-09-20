@@ -3,7 +3,7 @@ import { featureImages } from '@/components/home/types';
 
 export function HomeFeatures({ copy }: { copy: HomeCopy }) {
   return (
-    <section id="features" className="scroll-mt-[9.5rem] bg-slate-950 px-5 py-14 text-white sm:scroll-mt-28 sm:px-8 sm:py-28">
+    <section id="features" className="scroll-mt-[9.5rem] bg-slate-950 py-14 text-white sm:scroll-mt-28 sm:py-28">
       <div className="clox-container">
         <h2 className="mb-4 text-center text-[1.65rem] font-extrabold uppercase leading-tight text-white sm:text-[2.8rem] 3xl:text-[3.2rem]">
           {copy.featuresTitle}
