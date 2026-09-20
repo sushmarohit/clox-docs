@@ -1,13 +1,19 @@
 export const homeCopyEn = {
   nav: [
-    ['Home', '#banner'],
-    ['About', '#aboutus'],
-    ['Compare', '#comparison'],
-    ['Features', '#features'],
-    ['Matching', '#matching'],
-    ['Journey', '#process'],
-    ['Ecosystem', '#ecosystem'],
-    ['FAQ', '#faq'],
+    { label: 'Home', href: '#banner' },
+    {
+      label: 'Know Us',
+      children: [
+        { label: 'About', href: '#aboutus' },
+        { label: 'FAQs', href: '#faq' },
+      ],
+    },
+    { label: 'Compare', href: '#comparison' },
+    { label: 'Features', href: '#features' },
+    { label: 'Matching', href: '#matching' },
+    { label: 'Journey', href: '#process' },
+    { label: 'Ecosystem', href: '#ecosystem' },
+    { label: 'Verification', href: '#verification' },
   ],
   announceSoon: 'Coming Soon',
   announceBar:
@@ -198,7 +204,7 @@ export const homeCopyEn = {
       'Bidding privileges are reserved for properly vetted operators with valid ABN, Public Liability, and active vehicle compliance.',
     ],
   ],
-  verificationTitle: 'Carrier Verification Explained',
+  verificationTitle: 'How We Verify Carriers',
   verificationBody:
     'Before live bidding opens, carriers are reviewed for business and vehicle compliance. This is a pre-launch screening process — not a guarantee of admission or ongoing performance.',
   verificationItems: [
@@ -268,9 +274,7 @@ export const homeCopyEn = {
   termsShort: 'Terms',
   contactShort: 'Enquiries',
   contactHref: 'mailto:info@clox.com.au',
-  footerLine: '© 2026 CLOX Freight Forwarding. All rights reserved. | Australia Based',
-  footerEntity: 'Achieve Global Enterprises Pty Ltd · Trading as CLOX Freight Forwarding · ABN 48 626 269 387',
-  footerAddress: '18 Solferino Rd, Clyde North, VIC 3978, Australia',
-  footerTag: 'Australia’s Digital Full-Load Freight Marketplace',
+  footerLine:
+    '© 2026 CLOX Freight Forwarding ABN 48 626 269 387. All rights reserved. | Australia',
   footerContactHint: 'Commercial interest: use Registry or Partner EOI. Enquiries: info@clox.com.au.',
 } as const;

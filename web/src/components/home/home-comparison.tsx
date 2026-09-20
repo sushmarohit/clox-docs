@@ -3,7 +3,7 @@ import type { HomeCopy } from '@/components/home/copy';
 
 export function HomeComparison({ copy }: { copy: HomeCopy }) {
   return (
-    <section id="comparison" className="relative flex scroll-mt-28 flex-wrap bg-black p-0 text-white">
+    <section id="comparison" className="relative flex scroll-mt-[9.5rem] flex-wrap bg-black p-0 text-white sm:scroll-mt-28">
       <ComparisonPanel
         image="/landing/comparison-legacy.jpg"
         imageAlt={copy.legacyTitle}

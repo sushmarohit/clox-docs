@@ -141,7 +141,9 @@ export const registrySenderSchema = z.object({
   operationalModels: z
     .array(z.string().min(1))
     .min(1, 'Select at least one operational model'),
-  biddingType: z.string().trim().min(1, 'Select a bidding structure'),
+  biddingType: z
+    .array(z.string().min(1))
+    .min(1, 'Select at least one bidding structure'),
   monthlyVolume: z.string().trim().min(1, 'Select your monthly freight volume'),
   infraAcknowledged: z.array(z.string()).default([]),
   email: emailField,

@@ -23,7 +23,7 @@
   "close": "Close",
   "gotIt": "Got it",
   "draftLegal": "Pre-Launch & Early Access Phase",
-  "footerRights": "© 2026 CLOX Freight Forwarding. All rights reserved.",
+  "footerRights": "© 2026 CLOX Freight Forwarding ABN 48 626 269 387. All rights reserved. | Australia",
   "selectAllThatApply": "Select all that apply.",
   "shell": {
     "stepRole": "Role",
@@ -32,7 +32,6 @@
     "privacyShort": "Privacy",
     "termsShort": "Terms",
     "contactShort": "Enquiries",
-    "footerAddress": "18 Solferino Rd, Clyde North, VIC 3978, Australia",
     "footerContactHint": "Commercial interest: use Registry or Partner EOI. Enquiries: info@clox.com.au."
   },
   "home": {

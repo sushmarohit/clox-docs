@@ -1,13 +1,19 @@
 export const homeCopyHi = {
   nav: [
-    ['होम', '#banner'],
-    ['हमारे बारे में', '#aboutus'],
-    ['तुलना', '#comparison'],
-    ['विशेषताएँ', '#features'],
-    ['मैचिंग', '#matching'],
-    ['यात्रा', '#process'],
-    ['इकोसिस्टम', '#ecosystem'],
-    ['सामान्य प्रश्न', '#faq'],
+    { label: 'होम', href: '#banner' },
+    {
+      label: 'हमसे जानें',
+      children: [
+        { label: 'हमारे बारे में', href: '#aboutus' },
+        { label: 'सामान्य प्रश्न', href: '#faq' },
+      ],
+    },
+    { label: 'तुलना', href: '#comparison' },
+    { label: 'विशेषताएँ', href: '#features' },
+    { label: 'मैचिंग', href: '#matching' },
+    { label: 'यात्रा', href: '#process' },
+    { label: 'इकोसिस्टम', href: '#ecosystem' },
+    { label: 'सत्यापन', href: '#verification' },
   ],
   announceSoon: 'जल्द आ रहा है',
   announceBar:
@@ -198,7 +204,7 @@ export const homeCopyHi = {
       'बिडिंग विशेषाधिकार वैध ABN, पब्लिक लायबिलिटी और सक्रिय वाहन अनुपालन वाले जाँचे हुए ऑपरेटरों के लिए आरक्षित हैं।',
     ],
   ],
-  verificationTitle: 'कैरियर सत्यापन की व्याख्या',
+  verificationTitle: 'हम कैरियरों की जाँच कैसे करते हैं',
   verificationBody:
     'लाइव बिडिंग खुलने से पहले कैरियरों की व्यावसायिक और वाहन अनुपालन समीक्षा की जाती है। यह प्री-लॉन्च स्क्रीनिंग है — प्रवेश या निरंतर प्रदर्शन की गारंटी नहीं।',
   verificationItems: [
@@ -268,11 +274,8 @@ export const homeCopyHi = {
   termsShort: 'नियम',
   contactShort: 'पूछताछ',
   contactHref: 'mailto:info@clox.com.au',
-  footerLine: '© 2026 CLOX Freight Forwarding. सर्वाधिकार सुरक्षित। | ऑस्ट्रेलिया आधारित',
-  footerEntity:
-    'Achieve Global Enterprises Pty Ltd · ट्रेडिंग नाम CLOX Freight Forwarding · ABN 48 626 269 387',
-  footerAddress: '18 Solferino Rd, Clyde North, VIC 3978, Australia',
-  footerTag: 'ऑस्ट्रेलिया का डिजिटल फुल-लोड फ्रेट मार्केटप्लेस',
+  footerLine:
+    '© 2026 CLOX Freight Forwarding ABN 48 626 269 387. सर्वाधिकार सुरक्षित। | Australia',
   footerContactHint:
     'व्यावसायिक रुचि: Registry या Partner EOI का उपयोग करें। पूछताछ: info@clox.com.au।',
 } as const;

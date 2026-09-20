@@ -1,6 +1,6 @@
 'use client';
 
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
 
 const choiceControlBase =
   'mt-[3px] h-4 w-4 shrink-0 cursor-pointer accent-clox-orange';
@@ -10,32 +10,34 @@ function joinClassNames(...parts: Array<string | undefined | false>) {
 }
 
 /** Native checkbox aligned to the first line of its label. */
-export function ChoiceCheckbox({
-  className,
-  ...props
-}: Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>) {
+export const ChoiceCheckbox = forwardRef<
+  HTMLInputElement,
+  Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>
+>(function ChoiceCheckbox({ className, ...props }, ref) {
   return (
     <input
       {...props}
+      ref={ref}
       type="checkbox"
       className={joinClassNames(choiceControlBase, className)}
     />
   );
-}
+});
 
 /** Native radio aligned to the first line of its label. */
-export function ChoiceRadio({
-  className,
-  ...props
-}: Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>) {
+export const ChoiceRadio = forwardRef<
+  HTMLInputElement,
+  Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>
+>(function ChoiceRadio({ className, ...props }, ref) {
   return (
     <input
       {...props}
+      ref={ref}
       type="radio"
       className={joinClassNames(choiceControlBase, className)}
     />
   );
-}
+});
 
 /** Standard option row: control + label text (single or multi-line). */
 export function ChoiceRow({

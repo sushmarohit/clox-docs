@@ -1,13 +1,19 @@
 export const homeCopyPa = {
   nav: [
-    ['ਘਰ', '#banner'],
-    ['ਬਾਰੇ', '#aboutus'],
-    ['ਤੁਲਨਾ', '#comparison'],
-    ['ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ', '#features'],
-    ['ਮੈਚਿੰਗ', '#matching'],
-    ['ਯਾਤਰਾ', '#process'],
-    ['ਇਕੋਸਿਸਟਮ', '#ecosystem'],
-    ['ਆਮ ਸਵਾਲ', '#faq'],
+    { label: 'ਘਰ', href: '#banner' },
+    {
+      label: 'ਸਾਨੂੰ ਜਾਣੋ',
+      children: [
+        { label: 'ਬਾਰੇ', href: '#aboutus' },
+        { label: 'ਆਮ ਸਵਾਲ', href: '#faq' },
+      ],
+    },
+    { label: 'ਤੁਲਨਾ', href: '#comparison' },
+    { label: 'ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ', href: '#features' },
+    { label: 'ਮੈਚਿੰਗ', href: '#matching' },
+    { label: 'ਯਾਤਰਾ', href: '#process' },
+    { label: 'ਇਕੋਸਿਸਟਮ', href: '#ecosystem' },
+    { label: 'ਤਸਦੀਕ', href: '#verification' },
   ],
   announceSoon: 'ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ',
   announceBar:
@@ -198,7 +204,7 @@ export const homeCopyPa = {
       'ਬਿਡਿੰਗ ਅਧਿਕਾਰ ਵੈਧ ABN, ਪਬਲਿਕ ਲਾਇਬਿਲਿਟੀ ਅਤੇ ਸਰਗਰਮ ਵਾਹਨ ਅਨੁਪਾਲਨ ਵਾਲੇ ਜਾਂਚੇ ਹੋਏ ਓਪਰੇਟਰਾਂ ਲਈ ਰਾਖਵੇਂ ਹਨ।',
     ],
   ],
-  verificationTitle: 'ਕੈਰੀਅਰ ਤਸਦੀਕ ਦੀ ਵਿਆਖਿਆ',
+  verificationTitle: 'ਅਸੀਂ ਕੈਰੀਅਰਾਂ ਦੀ ਤਸਦੀਕ ਕਿਵੇਂ ਕਰਦੇ ਹਾਂ',
   verificationBody:
     'ਲਾਈਵ ਬਿਡਿੰਗ ਖੁੱਲ੍ਹਣ ਤੋਂ ਪਹਿਲਾਂ ਕੈਰੀਅਰਾਂ ਦੀ ਵਪਾਰਕ ਅਤੇ ਵਾਹਨ ਅਨੁਪਾਲਨ ਸਮੀਖਿਆ ਕੀਤੀ ਜਾਂਦੀ ਹੈ। ਇਹ ਪ੍ਰੀ-ਲਾਂਚ ਸਕ੍ਰੀਨਿੰਗ ਹੈ — ਦਾਖਲੇ ਜਾਂ ਲਗਾਤਾਰ ਪ੍ਰਦਰਸ਼ਨ ਦੀ ਗਾਰੰਟੀ ਨਹੀਂ।',
   verificationItems: [
@@ -268,11 +274,8 @@ export const homeCopyPa = {
   termsShort: 'ਸ਼ਰਤਾਂ',
   contactShort: 'ਪੁੱਛਗਿੱਛ',
   contactHref: 'mailto:info@clox.com.au',
-  footerLine: '© 2026 CLOX Freight Forwarding. ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ। | ਆਸਟ੍ਰੇਲੀਆ ਅਧਾਰਿਤ',
-  footerEntity:
-    'Achieve Global Enterprises Pty Ltd · ਟ੍ਰੇਡਿੰਗ ਨਾਮ CLOX Freight Forwarding · ABN 48 626 269 387',
-  footerAddress: '18 Solferino Rd, Clyde North, VIC 3978, Australia',
-  footerTag: 'ਆਸਟ੍ਰੇਲੀਆ ਦਾ ਡਿਜੀਟਲ ਫੁੱਲ-ਲੋਡ ਫਰੇਟ ਮਾਰਕੀਟਪਲੇਸ',
+  footerLine:
+    '© 2026 CLOX Freight Forwarding ABN 48 626 269 387. ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ। | Australia',
   footerContactHint:
     'ਵਪਾਰਕ ਦਿਲਚਸਪੀ: Registry ਜਾਂ Partner EOI ਵਰਤੋ। ਪੁੱਛਗਿੱਛ: info@clox.com.au।',
 } as const;

@@ -13,7 +13,7 @@ import {
   StepIndicator,
   inputClassName,
 } from '@/components/public-shell';
-import { ChoiceCheckbox, ChoiceRadio, ChoiceRow } from '@/components/form-controls';
+import { ChoiceCheckbox, ChoiceRow } from '@/components/form-controls';
 import { SuccessModal } from '@/components/success-modal';
 import { focusFirstFormError } from '@/lib/form-errors';
 import { getErrorDetail, submitRegistryLead } from '@/lib/api';
@@ -68,7 +68,7 @@ type FormValues = {
   shippingOrigin: string;
   depotState: string;
   operationalModels: string[];
-  biddingType: string;
+  biddingType: string[];
   monthlyVolume: string;
   fleetComposition: string[];
   capabilities: string[];
@@ -125,7 +125,7 @@ export function RegistryPage() {
       shippingOrigin: '',
       depotState: '',
       operationalModels: [],
-      biddingType: '',
+      biddingType: [],
       monthlyVolume: '',
       fleetComposition: [],
       capabilities: [],
@@ -537,10 +537,22 @@ function SenderFields({
 
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2 sm:p-4">
         <FieldLabel required>{t('registry.biddingStructure')}</FieldLabel>
+        <p className="mt-0.5 text-xs text-slate-500">{t('selectAllThatApply')}</p>
         <div className="mt-1 grid gap-2 sm:grid-cols-2">
           {BIDDING.map((option) => (
             <ChoiceRow key={option.value}>
-              <ChoiceRadio value={option.value} {...form.register('biddingType')} />
+              <ChoiceCheckbox
+                checked={values.biddingType.includes(option.value)}
+                onChange={(event) => {
+                  const next = event.target.checked
+                    ? [...values.biddingType, option.value]
+                    : values.biddingType.filter((item) => item !== option.value);
+                  form.setValue('biddingType', next, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+              />
               <span>{t(option.labelKey)}</span>
             </ChoiceRow>
           ))}

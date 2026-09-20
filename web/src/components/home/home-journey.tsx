@@ -2,7 +2,7 @@ import type { HomeCopy } from '@/components/home/copy';
 
 export function HomeJourney({ copy }: { copy: HomeCopy }) {
   return (
-    <section id="process" className="scroll-mt-28 px-5 py-14 sm:px-8 sm:py-28">
+    <section id="process" className="scroll-mt-[9.5rem] px-5 py-14 sm:scroll-mt-28 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-[1200px]">
         <h2 className="mb-2 text-center text-[1.65rem] font-extrabold uppercase leading-tight text-clox-navy sm:mb-3 sm:text-[2.8rem]">
           {copy.journeyTitle}

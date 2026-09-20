@@ -23,7 +23,7 @@
   "close": "ਬੰਦ ਕਰੋ",
   "gotIt": "ਸਮਝ ਗਏ",
   "draftLegal": "ਪ੍ਰੀ-ਲਾਂਚ ਅਤੇ ਅਰਲੀ ਐਕਸੈਸ ਪੜਾਅ",
-  "footerRights": "© 2026 CLOX Freight Forwarding. ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ।",
+  "footerRights": "© 2026 CLOX Freight Forwarding ABN 48 626 269 387. ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ। | Australia",
   "selectAllThatApply": "ਸਾਰੇ ਲਾਗੂ ਵਿਕਲਪ ਚੁਣੋ।",
   "shell": {
     "stepRole": "ਭੂਮਿਕਾ",
@@ -32,7 +32,6 @@
     "privacyShort": "ਪਰਾਈਵੇਸੀ",
     "termsShort": "ਸ਼ਰਤਾਂ",
     "contactShort": "ਪੁੱਛਗਿੱਛ",
-    "footerAddress": "18 Solferino Rd, Clyde North, VIC 3978, Australia",
     "footerContactHint": "ਵਪਾਰਕ ਦਿਲਚਸਪੀ: Registry ਜਾਂ Partner EOI ਵਰਤੋ। ਪੁੱਛਗਿੱਛ: info@clox.com.au।"
   },
   "home": {

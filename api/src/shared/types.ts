@@ -163,7 +163,7 @@ export const registrySenderSchema = z.object({
   abn: abnField,
   shippingOrigin: z.string().trim().min(2).max(120),
   operationalModels: z.array(z.string().min(1)).min(1),
-  biddingType: z.string().trim().min(1),
+  biddingType: z.array(z.string().min(1)).min(1),
   monthlyVolume: z.string().trim().min(1),
   infraAcknowledged: z.array(z.string()).default([]),
   email: emailField,

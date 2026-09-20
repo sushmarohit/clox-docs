@@ -13,9 +13,6 @@ export function HomeFooter({ copy, locale }: HomeSectionProps) {
           />
         </a>
         <p>{copy.footerLine}</p>
-        <p className="mt-2.5 text-[0.85rem] text-slate-500">{copy.footerEntity}</p>
-        <p className="mt-1.5 text-[0.8rem] text-slate-500">{copy.footerAddress}</p>
-        <p className="mt-2.5 text-[0.9rem]">{copy.footerTag}</p>
         <p className="mx-auto mt-3 max-w-xl text-[0.75rem] text-slate-500">{copy.footerContactHint}</p>
         <div className="relative z-10 mt-6 flex flex-wrap justify-center gap-5 pb-2 text-sm">
           <Link href={`/${locale}/privacy`} className="hover:text-white">

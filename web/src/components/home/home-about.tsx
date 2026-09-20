@@ -14,7 +14,7 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
   return (
     <section
       id="aboutus"
-      className="relative scroll-mt-28 overflow-hidden bg-white px-5 py-14 sm:px-8 sm:py-28"
+      className="relative scroll-mt-[9.5rem] overflow-hidden bg-white px-5 py-14 sm:scroll-mt-28 sm:px-8 sm:py-28"
     >
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-[0.05] motion-reduce:hidden"
@@ -30,7 +30,7 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
       </div>
 
       <div className="relative z-10 mx-auto grid max-w-[1200px] items-center gap-10 lg:grid-cols-2 lg:gap-16">
-        <div className="relative mx-auto h-[400px] w-full max-w-[520px] lg:mx-0 lg:h-[500px] lg:max-w-none">
+        <div className="relative mx-auto hidden h-[500px] w-full max-w-none lg:block">
           <img
             src="/landing/18771.jpg"
             alt="Logistics operations"
@@ -175,27 +175,29 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
             />
           </div>
 
-          <div
-            id={visionPanelId}
-            role="tabpanel"
-            aria-labelledby={`${baseId}-tab-vision`}
-            hidden={activeTab !== 'vision'}
-            className={activeTab === 'vision' ? 'animate-about-tab-in' : undefined}
-          >
-            <p className="text-base leading-7 text-slate-600 sm:text-[1.05rem] sm:leading-8">
-              {copy.visionBody}
-            </p>
-          </div>
-          <div
-            id={missionPanelId}
-            role="tabpanel"
-            aria-labelledby={`${baseId}-tab-mission`}
-            hidden={activeTab !== 'mission'}
-            className={activeTab === 'mission' ? 'animate-about-tab-in' : undefined}
-          >
-            <p className="text-base leading-7 text-slate-600 sm:text-[1.05rem] sm:leading-8">
-              {copy.missionBody}
-            </p>
+          <div className="min-h-[7.5rem] sm:min-h-[6.5rem]">
+            <div
+              id={visionPanelId}
+              role="tabpanel"
+              aria-labelledby={`${baseId}-tab-vision`}
+              hidden={activeTab !== 'vision'}
+              className={activeTab === 'vision' ? 'animate-about-tab-in' : undefined}
+            >
+              <p className="text-base leading-7 text-slate-600 sm:text-[1.05rem] sm:leading-8">
+                {copy.visionBody}
+              </p>
+            </div>
+            <div
+              id={missionPanelId}
+              role="tabpanel"
+              aria-labelledby={`${baseId}-tab-mission`}
+              hidden={activeTab !== 'mission'}
+              className={activeTab === 'mission' ? 'animate-about-tab-in' : undefined}
+            >
+              <p className="text-base leading-7 text-slate-600 sm:text-[1.05rem] sm:leading-8">
+                {copy.missionBody}
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import type { HomeSectionProps } from '@/components/home/types';
 
 export function HomeCohort({ copy, locale }: HomeSectionProps) {
   return (
-    <section id="cohort" className="scroll-mt-28 px-5 py-12 sm:px-8 sm:py-28">
+    <section id="cohort" className="scroll-mt-[9.5rem] px-5 py-12 sm:scroll-mt-28 sm:px-8 sm:py-28">
       <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-10 rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-8 lg:flex-row lg:gap-20 lg:p-16">
         <div className="flex-1">
           <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-clox-orange">
