@@ -4,12 +4,12 @@ import type { HomeSectionProps } from '@/components/home/types';
 export function HomeFooter({ copy, locale }: HomeSectionProps) {
   return (
     <footer className="border-t-[5px] border-clox-orange bg-clox-navy px-5 pb-28 pt-12 text-center text-slate-400 sm:px-8 sm:pb-24">
-      <div className="mx-auto max-w-[1200px]">
+      <div className="clox-container">
         <a href="#banner" className="mx-auto mb-6 inline-flex" aria-label="CLOX home">
           <img
             src="/brand/clox_updated_logo_light.png"
             alt="CLOX"
-            className="h-[64px] w-auto object-contain sm:h-[68px]"
+            className="h-[64px] w-auto object-contain sm:h-[68px] 3xl:h-[76px]"
           />
         </a>
         <p>{copy.footerLine}</p>

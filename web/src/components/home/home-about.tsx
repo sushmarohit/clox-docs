@@ -29,8 +29,8 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
         </svg>
       </div>
 
-      <div className="relative z-10 mx-auto grid max-w-[1200px] items-center gap-10 lg:grid-cols-2 lg:gap-16">
-        <div className="relative mx-auto hidden h-[500px] w-full max-w-none lg:block">
+      <div className="clox-container relative z-10 grid items-center gap-10 px-0 lg:grid-cols-2 lg:gap-16 3xl:gap-20">
+        <div className="relative mx-auto hidden h-[500px] w-full max-w-none lg:block 3xl:h-[580px]">
           <img
             src="/landing/18771.jpg"
             alt="Logistics operations"

@@ -24,14 +24,14 @@ export function HomeEcosystem({ copy, locale }: HomeSectionProps) {
 
   return (
     <section id="ecosystem" className="scroll-mt-[9.5rem] bg-clox-surface px-5 py-12 sm:scroll-mt-28 sm:px-8 sm:py-20">
-      <div className="mx-auto max-w-[1200px]">
+      <div className="clox-container">
         <p className="mb-2 text-center text-sm font-bold uppercase tracking-[0.2em] text-clox-orange sm:mb-3">
           {copy.ecosystemEyebrow}
         </p>
-        <h2 className="mb-8 text-center text-[1.65rem] font-extrabold uppercase leading-tight text-clox-navy sm:mb-16 sm:text-[2.8rem]">
+        <h2 className="mb-8 text-center text-[1.65rem] font-extrabold uppercase leading-tight text-clox-navy sm:mb-16 sm:text-[2.8rem] 3xl:text-[3.2rem]">
           {copy.ecosystemTitle}
         </h2>
-        <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 3xl:gap-10">
           {cards.map((card) => (
             <article
               key={card.title}

@@ -41,8 +41,8 @@ export function HomeComparison({ copy }: { copy: HomeCopy }) {
       />
 
       <div className="relative z-10 w-full bg-clox-navy px-6 py-8 text-center sm:py-10">
-        <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-4 sm:gap-6">
-          <p className="text-[1.25rem] font-black uppercase tracking-wide sm:text-[2.2rem]">
+        <div className="clox-container flex flex-col items-center gap-4 sm:gap-6">
+          <p className="text-[1.25rem] font-black uppercase tracking-wide sm:text-[2.2rem] 3xl:text-[2.6rem]">
             {copy.futureFooter.split(' ').slice(0, -2).join(' ')}{' '}
             <span className="text-clox-orange">
               {copy.futureFooter.split(' ').slice(-2).join(' ')}
@@ -87,7 +87,7 @@ function ComparisonPanel({
   statClassName: string;
 }) {
   return (
-    <article className="relative flex min-w-full flex-1 flex-col sm:min-w-[50%] sm:justify-center sm:px-12 sm:py-32">
+    <article className="relative flex min-w-full flex-1 flex-col sm:min-w-[50%] sm:justify-center sm:px-12 sm:py-32 2xl:px-16 2xl:py-40 3xl:px-20 3xl:py-48">
       {/* Mobile: dedicated clear photo band */}
       <div className="relative h-[210px] overflow-hidden sm:hidden">
         <img
@@ -114,13 +114,13 @@ function ComparisonPanel({
 
       <div className={`relative z-10 px-6 pb-12 pt-6 sm:bg-transparent sm:px-0 sm:py-0 ${panelBg} sm:bg-transparent`}>
         <div
-          className={`mx-auto w-full max-w-[500px] sm:[text-shadow:0_2px_14px_rgba(0,0,0,0.85)] ${contentAlign}`}
+          className={`mx-auto w-full max-w-[500px] sm:[text-shadow:0_2px_14px_rgba(0,0,0,0.85)] 2xl:max-w-[560px] 3xl:max-w-[620px] ${contentAlign}`}
         >
-          <h2 className="mb-2 text-[1.65rem] font-extrabold uppercase leading-none sm:text-[2.8rem]">
+          <h2 className="mb-2 text-[1.65rem] font-extrabold uppercase leading-none sm:text-[2.8rem] 3xl:text-[3.2rem]">
             {title}
           </h2>
           <p
-            className={`mb-6 text-[1.15rem] font-bold uppercase tracking-wide sm:mb-8 sm:text-[1.3rem] ${subtitleClassName}`}
+            className={`mb-6 text-[1.15rem] font-bold uppercase tracking-wide sm:mb-8 sm:text-[1.3rem] 3xl:text-[1.4rem] ${subtitleClassName}`}
           >
             {subtitle}
           </p>

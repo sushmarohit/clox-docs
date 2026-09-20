@@ -4,15 +4,15 @@ import { featureImages } from '@/components/home/types';
 export function HomeFeatures({ copy }: { copy: HomeCopy }) {
   return (
     <section id="features" className="scroll-mt-[9.5rem] bg-slate-950 px-5 py-14 text-white sm:scroll-mt-28 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-[1200px]">
-        <h2 className="mb-4 text-center text-[1.65rem] font-extrabold uppercase leading-tight text-white sm:text-[2.8rem]">
+      <div className="clox-container">
+        <h2 className="mb-4 text-center text-[1.65rem] font-extrabold uppercase leading-tight text-white sm:text-[2.8rem] 3xl:text-[3.2rem]">
           {copy.featuresTitle}
         </h2>
-        <div className="mt-8 grid gap-6 sm:mt-16 sm:gap-8 lg:grid-cols-3 lg:grid-rows-2">
+        <div className="mt-8 grid gap-6 sm:mt-16 sm:gap-8 lg:grid-cols-3 lg:grid-rows-2 3xl:gap-10">
           {copy.features.map(([title, body], index) => (
             <article
               key={title}
-              className={`group relative min-h-[320px] overflow-hidden rounded-3xl border border-white/5 bg-slate-800 transition duration-500 hover:-translate-y-2 hover:border-[rgba(255,86,14,0.4)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] ${
+              className={`group relative min-h-[320px] overflow-hidden rounded-3xl border border-white/5 bg-slate-800 transition duration-500 hover:-translate-y-2 hover:border-[rgba(255,86,14,0.4)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] 3xl:min-h-[380px] ${
                 index === 0 ? 'lg:col-span-2' : ''
               } ${index === 1 ? 'lg:row-span-2' : ''}`}
             >

@@ -6,11 +6,11 @@ export function HomeMatching({ copy }: { copy: HomeCopy }) {
       id="matching"
       className="scroll-mt-[9.5rem] bg-white px-5 py-12 sm:scroll-mt-28 sm:px-8 sm:py-28"
     >
-      <div className="mx-auto max-w-[1100px]">
+      <div className="clox-container">
         <p className="mb-2 text-center text-sm font-bold uppercase tracking-[0.18em] text-clox-orange">
           {copy.matchingEyebrow}
         </p>
-        <h2 className="mb-3 text-center text-[1.65rem] font-extrabold uppercase leading-tight tracking-tight text-clox-navy sm:mb-4 sm:text-[2.8rem]">
+        <h2 className="mb-3 text-center text-[1.65rem] font-extrabold uppercase leading-tight tracking-tight text-clox-navy sm:mb-4 sm:text-[2.8rem] 3xl:text-[3.2rem]">
           {copy.matchingTitle}
         </h2>
         <p className="mx-auto mb-8 max-w-3xl text-center text-base leading-7 text-slate-600 sm:mb-12 sm:text-[1.1rem] sm:leading-8">

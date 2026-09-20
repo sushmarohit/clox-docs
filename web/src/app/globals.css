@@ -80,6 +80,11 @@
   .clox-nav-link:hover::after {
     @apply w-full;
   }
+
+  /* Centered content width — scales up on large Retina / 5K desktops */
+  .clox-container {
+    @apply mx-auto w-full max-w-[1200px] 2xl:max-w-[1400px] 3xl:max-w-[1600px];
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

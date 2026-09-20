@@ -4,6 +4,10 @@ const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      screens: {
+        // Large Retina / 5K logical widths (e.g. 27" iMac ~2560 CSS px)
+        '3xl': '1920px',
+      },
       colors: {
         clox: {
           navy: '#0A1F3C',
