@@ -83,12 +83,25 @@
 
   /* Shared page rail: max-width + horizontal gutters (nav → content → footer) */
   .clox-container {
-    @apply mx-auto w-full max-w-[1200px] px-5 sm:px-8 xl:px-10 2xl:max-w-[1400px] 3xl:max-w-[1600px] 3xl:px-12;
+    @apply mx-auto w-full max-w-[1200px] px-5 sm:px-8 xl:px-10 2xl:max-w-[1400px];
   }
 
   /* Narrower reading measure inside the page rail (FAQ, long copy) */
   .clox-measure {
-    @apply mx-auto w-full max-w-[800px] 2xl:max-w-[900px] 3xl:max-w-[1000px];
+    @apply mx-auto w-full max-w-[800px] 2xl:max-w-[900px];
+  }
+}
+
+/* 3xl (1920px+) — custom breakpoint can't be @apply'd with arbitrary values */
+@media (min-width: 1920px) {
+  .clox-container {
+    max-width: 1600px;
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+
+  .clox-measure {
+    max-width: 1000px;
   }
 }
 
