@@ -13,3 +13,4 @@ Thumbs.db
 .pnpm-store
 .data/
 api/.data/
+docs/
