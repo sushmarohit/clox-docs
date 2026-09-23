@@ -5,7 +5,7 @@ export function HomeComparison({ copy }: { copy: HomeCopy }) {
   return (
     <section id="comparison" className="relative flex scroll-mt-[9.5rem] flex-wrap bg-black p-0 text-white sm:scroll-mt-28">
       <ComparisonPanel
-        image="/landing/comparison-legacy.jpg"
+        image="/landing/comparison-legacy-middleware.webp"
         imageAlt={copy.legacyTitle}
         overlayClassName="bg-gradient-to-b from-black/40 to-black/65"
         mobileScrim="from-transparent via-black/40 to-black"
@@ -25,8 +25,9 @@ export function HomeComparison({ copy }: { copy: HomeCopy }) {
       </div>
 
       <ComparisonPanel
-        image="/landing/comparison-future.jpg"
+        image="/landing/comparison-digital-marketplace.webp"
         imageAlt={copy.futureTitle}
+        imageFit="contain"
         overlayClassName="bg-gradient-to-b from-[rgba(10,31,60,0.35)] to-[rgba(10,31,60,0.6)]"
         mobileScrim="from-transparent via-clox-navy/45 to-[#061427]"
         contentAlign="sm:ml-12 sm:mr-auto"
@@ -39,20 +40,6 @@ export function HomeComparison({ copy }: { copy: HomeCopy }) {
         stats={copy.futureStats}
         statClassName="text-sky-200"
       />
-
-      <div className="relative z-10 w-full bg-clox-navy py-8 text-center sm:py-10">
-        <div className="clox-container flex flex-col items-center gap-4 sm:gap-6">
-          <p className="text-[1.25rem] font-black uppercase tracking-wide sm:text-[2.2rem] 3xl:text-[2.6rem]">
-            {copy.futureFooter.split(' ').slice(0, -2).join(' ')}{' '}
-            <span className="text-clox-orange">
-              {copy.futureFooter.split(' ').slice(-2).join(' ')}
-            </span>
-          </p>
-          <a href="#ecosystem" className="clox-btn-primary px-12 py-4 text-[1.2rem]">
-            {copy.joinEcosystem}
-          </a>
-        </div>
-      </div>
     </section>
   );
 }
@@ -60,6 +47,7 @@ export function HomeComparison({ copy }: { copy: HomeCopy }) {
 function ComparisonPanel({
   image,
   imageAlt,
+  imageFit = 'cover',
   overlayClassName,
   mobileScrim,
   contentAlign,
@@ -74,6 +62,7 @@ function ComparisonPanel({
 }: {
   image: string;
   imageAlt: string;
+  imageFit?: 'cover' | 'contain';
   overlayClassName: string;
   mobileScrim: string;
   contentAlign: string;
@@ -86,26 +75,36 @@ function ComparisonPanel({
   stats: readonly string[];
   statClassName: string;
 }) {
+  const objectClass =
+    imageFit === 'contain' ? 'object-contain object-center' : 'object-cover object-center';
+
   return (
     <article className="relative flex min-w-full flex-1 flex-col sm:min-w-[50%] sm:justify-center sm:px-12 sm:py-32 2xl:px-16 2xl:py-40 3xl:px-20 3xl:py-48">
-      {/* Mobile: dedicated clear photo band */}
-      <div className="relative h-[210px] overflow-hidden sm:hidden">
+      {/* Mobile: dedicated photo band */}
+      <div
+        className={`relative overflow-hidden sm:hidden ${
+          imageFit === 'contain' ? 'aspect-[16/10] min-h-[220px] bg-[#061427]' : 'h-[210px]'
+        }`}
+      >
         <img
           src={image}
           alt={imageAlt}
-          className="h-full w-full object-cover object-center"
+          className={`h-full w-full ${objectClass}`}
           loading="lazy"
           decoding="async"
         />
         <div className={`absolute inset-0 bg-gradient-to-b ${mobileScrim}`} aria-hidden />
       </div>
 
-      {/* Desktop: full-bleed background with lighter overlay */}
-      <div className="absolute inset-0 hidden sm:block" aria-hidden>
+      {/* Desktop: full-bleed background */}
+      <div
+        className={`absolute inset-0 hidden sm:block ${imageFit === 'contain' ? 'bg-[#061427]' : ''}`}
+        aria-hidden
+      >
         <img
           src={image}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className={`absolute inset-0 h-full w-full ${objectClass}`}
           loading="lazy"
           decoding="async"
         />

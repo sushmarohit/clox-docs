@@ -1,8 +1,9 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { resolveLeadLocale } from '@/locales';
 import { registryLeadSchema } from '@/shared/types';
@@ -113,6 +114,7 @@ function focusFirstError(errors: FieldErrors) {
 
 export function RegistryPage() {
   const { t, i18n } = useTranslation('common');
+  const searchParams = useSearchParams();
   const { step, userType, setStep, setUserType, reset } = useRegistryWizardStore();
   const [success, setSuccess] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -141,6 +143,21 @@ export function RegistryPage() {
 
   const form = useForm<FormValues>({ defaultValues, mode: 'onSubmit' });
   const values = form.watch();
+  const roleParam = searchParams.get('role');
+
+  // Apply role from CTA links (?role=sender|carrier); start clean when none.
+  useEffect(() => {
+    if (roleParam === 'sender' || roleParam === 'carrier') {
+      setUserType(roleParam);
+      form.reset(defaultValues);
+      setFieldErrors({});
+      setSuccess(false);
+      return;
+    }
+    reset();
+    form.reset(defaultValues);
+    setFieldErrors({});
+  }, [roleParam, setUserType, reset, form, defaultValues]);
 
   const mutation = useMutation({
     mutationFn: (payload: Parameters<typeof submitRegistryLead>[0]) =>

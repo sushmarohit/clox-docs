@@ -7,7 +7,7 @@ export function HomeFooter({ copy, locale }: HomeSectionProps) {
       <div className="clox-container">
         <a href="#banner" className="mx-auto mb-6 inline-flex" aria-label="CLOX home">
           <img
-            src="/brand/clox_updated_logo_light.png"
+            src="/brand/logo-clox-light.webp"
             alt="CLOX"
             className="h-[64px] w-auto object-contain sm:h-[68px] 3xl:h-[76px]"
           />

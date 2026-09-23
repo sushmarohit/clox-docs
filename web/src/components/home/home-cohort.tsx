@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { BulletList } from '@/components/home/bullet-list';
 import type { HomeSectionProps } from '@/components/home/types';
+import { registryPath } from '@/lib/registry-path';
 
 export function HomeCohort({ copy, locale }: HomeSectionProps) {
   return (
@@ -18,7 +19,7 @@ export function HomeCohort({ copy, locale }: HomeSectionProps) {
         </div>
         <div className="flex-1 rounded-2xl border border-slate-200 bg-clox-surface p-8 sm:p-10">
           <img
-            src="/brand/clox_updated_logo.png"
+            src="/brand/logo-clox.webp"
             alt="CLOX"
             className="mx-auto h-20 w-auto object-contain sm:h-24"
           />
@@ -28,11 +29,11 @@ export function HomeCohort({ copy, locale }: HomeSectionProps) {
               {copy.iAm}
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link href={`/${locale}/registry`} className="clox-btn-primary">
+              <Link href={registryPath(locale, 'sender')} className="clox-btn-primary">
                 {copy.senderCta}
               </Link>
               <Link
-                href={`/${locale}/registry`}
+                href={registryPath(locale, 'carrier')}
                 className="inline-flex items-center justify-center rounded-full border-2 border-clox-navy px-8 py-3.5 text-[1.05rem] font-semibold text-clox-navy transition hover:bg-clox-navy hover:text-white"
               >
                 {copy.carrierCta}
@@ -45,7 +46,7 @@ export function HomeCohort({ copy, locale }: HomeSectionProps) {
               </Link>
             </div>
             <div className="mt-7 text-center">
-              <Link href={`/${locale}/registry`} className="clox-btn-primary">
+              <Link href={registryPath(locale)} className="clox-btn-primary">
                 {copy.secureSpot}
               </Link>
             </div>

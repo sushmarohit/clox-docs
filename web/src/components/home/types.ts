@@ -8,25 +8,25 @@ export type HomeSectionProps = {
 
 export const heroSlides = [
   {
-    image: '/landing/1582.jpg',
+    image: '/landing/hero-freight-marketplace.webp',
     titleLeadKey: 'slide1TitleLead',
     titleAccentKey: 'slide1TitleAccent',
     bodyKey: 'slide1Body',
   },
   {
-    image: '/landing/12180.jpg',
+    image: '/landing/hero-highway-transport.webp',
     titleLeadKey: 'slide2TitleLead',
     titleAccentKey: 'slide2TitleAccent',
     bodyKey: 'slide2Body',
   },
   {
-    image: '/landing/656.jpg',
+    image: '/landing/hero-fleet-operations.webp',
     titleLeadKey: 'slide3TitleLead',
     titleAccentKey: 'slide3TitleAccent',
     bodyKey: 'slide3Body',
   },
   {
-    image: '/landing/133.jpg',
+    image: '/landing/hero-urban-freight-ecosystem.webp',
     titleLeadKey: 'slide4TitleLead',
     titleAccentKey: 'slide4TitleAccent',
     bodyKey: 'slide4Body',
@@ -34,8 +34,8 @@ export const heroSlides = [
 ] as const;
 
 export const featureImages = [
-  '/landing/2250.jpg',
-  '/landing/41687.jpg',
-  '/landing/60896.jpg',
-  '/landing/609377.jpg',
+  '/landing/feature-clear-comparisons.webp',
+  '/landing/feature-streamlined-booking.webp',
+  '/landing/feature-realtime-tracking.webp',
+  '/landing/feature-protected-payments.webp',
 ] as const;

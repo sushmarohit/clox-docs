@@ -1,19 +1,13 @@
 export const homeCopyEn = {
   nav: [
     { label: 'Home', href: '#banner' },
-    {
-      label: 'Know Us',
-      children: [
-        { label: 'About', href: '#aboutus' },
-        { label: 'FAQs', href: '#faq' },
-      ],
-    },
+    { label: 'About', href: '#aboutus' },
     { label: 'Compare', href: '#comparison' },
     { label: 'Features', href: '#features' },
     { label: 'Matching', href: '#matching' },
     { label: 'Journey', href: '#process' },
     { label: 'Ecosystem', href: '#ecosystem' },
-    { label: 'Verification', href: '#verification' },
+    { label: 'FAQ', href: '#faq' },
   ],
   announceSoon: 'Coming Soon',
   announceBar:
@@ -50,10 +44,6 @@ export const homeCopyEn = {
     "CLOX is a smarter way to ship full-load freight in Australia. We replace manual middleware with a digital marketplace, connecting corporate senders directly with vetted heavy vehicle operators via planned Protected Upfront Payments.",
   missionBody:
     'Our mission is to empower shippers and carriers through a digital full-load freight marketplace. We are designed to reduce frictional costs and operational bottlenecks to deliver faster, clearer logistics.',
-  nextTitle: 'Building Clearer Digital Logistics',
-  nextBody:
-    'CLOX is building a clearer digital full-load logistics experience. By modernizing Australian freight through an automated marketplace, the platform bridges the gap between shippers looking for competitive pricing and carriers looking to optimize asset utilization. Our technology is designed to reduce traditional frictional costs, returning control, speed, and visibility to the businesses that drive our economy.',
-  discover: 'Discover the Ecosystem',
   legacyTitle: 'Legacy Middleware',
   comparisonVs: 'Vs',
   legacySub: 'Slow. Manual. Error-Prone.',
@@ -89,8 +79,6 @@ export const homeCopyEn = {
     'Proactive Control & Insights',
     'Scalable Growth',
   ],
-  futureFooter: 'The Future of Freight Is Digital',
-  joinEcosystem: 'Join the Ecosystem',
   featuresTitle: 'How We Help You Ship With Clarity',
   features: [
     [
@@ -203,15 +191,6 @@ export const homeCopyEn = {
       'Verified Carrier Status',
       'Bidding privileges are reserved for properly vetted operators with valid ABN, Public Liability, and active vehicle compliance.',
     ],
-  ],
-  verificationTitle: 'How We Verify Carriers',
-  verificationBody:
-    'Before live bidding opens, carriers are reviewed for business and vehicle compliance. This is a pre-launch screening process — not a guarantee of admission or ongoing performance.',
-  verificationItems: [
-    'Valid Australian Business Number (ABN) checks',
-    'Public Liability insurance evidence (target $10M–$20M cover)',
-    'Active vehicle compliance / Roadworthy Certificates (RWC)',
-    'Manual admin review before live-bidding privileges',
   ],
   faqTitle: 'Frequently Asked Questions',
   faq: [

@@ -1,24 +1,25 @@
 import Link from 'next/link';
 import { BulletList } from '@/components/home/bullet-list';
 import type { HomeSectionProps } from '@/components/home/types';
+import { registryPath } from '@/lib/registry-path';
 
 export function HomeEcosystem({ copy, locale }: HomeSectionProps) {
   const cards = [
     {
-      image: '/landing/hero.jpg',
+      image: '/landing/ecosystem-corporate-sender.webp',
       label: 'Corporate Sender',
       title: copy.senderTitle,
       sub: copy.senderSub,
       items: copy.sender,
-      href: `/${locale}/registry`,
+      href: registryPath(locale, 'sender'),
     },
     {
-      image: '/landing/carrier.jpg',
+      image: '/landing/ecosystem-transport-carrier.webp',
       label: 'Transport Carrier',
       title: copy.carrierTitle,
       sub: copy.carrierSub,
       items: copy.carrier,
-      href: `/${locale}/registry`,
+      href: registryPath(locale, 'carrier'),
     },
   ];
 

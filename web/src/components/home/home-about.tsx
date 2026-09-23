@@ -32,12 +32,12 @@ export function HomeAbout({ copy }: { copy: HomeCopy }) {
       <div className="clox-container relative z-10 grid items-center gap-10 lg:grid-cols-2 lg:gap-16 3xl:gap-20">
         <div className="relative mx-auto hidden h-[500px] w-full max-w-none lg:block 3xl:h-[580px]">
           <img
-            src="/landing/18771.jpg"
+            src="/landing/hero-freight-marketplace.webp"
             alt="Logistics operations"
             className="absolute left-0 top-0 z-[2] aspect-[7/5] w-[70%] max-h-[350px] rounded-2xl border-8 border-white object-cover shadow-clox-card animate-about-float motion-reduce:animate-none"
           />
           <img
-            src="/landing/2151919254.jpg"
+            src="/landing/hero-fleet-operations.webp"
             alt="Freight transport"
             className="absolute bottom-0 right-0 z-[1] aspect-[3/2.5] w-[60%] max-h-[300px] rounded-2xl border-8 border-white object-cover shadow-clox-card animate-about-float-delayed motion-reduce:animate-none"
           />

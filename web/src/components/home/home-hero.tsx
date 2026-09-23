@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import type { HomeSectionProps } from '@/components/home/types';
 import { heroSlides } from '@/components/home/types';
+import { registryPath } from '@/lib/registry-path';
 
 export function HomeHero({ copy, locale }: HomeSectionProps) {
   const [slide, setSlide] = useState(0);
@@ -74,13 +75,13 @@ export function HomeHero({ copy, locale }: HomeSectionProps) {
 
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
           <Link
-            href={`/${locale}/registry`}
+            href={registryPath(locale, 'sender')}
             className="clox-btn-primary px-7 py-3 text-[0.95rem] sm:px-8 sm:py-3.5 sm:text-[1.05rem] xl:px-10 xl:py-4 xl:text-[1.15rem]"
           >
             {copy.sendFreightCta}
           </Link>
           <Link
-            href={`/${locale}/registry`}
+            href={registryPath(locale, 'carrier')}
             className="inline-flex items-center justify-center rounded-full border-2 border-white/80 bg-white/10 px-7 py-3 text-[0.95rem] font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-clox-navy sm:px-8 sm:py-3.5 sm:text-[1.05rem] xl:px-10 xl:py-4 xl:text-[1.15rem]"
           >
             {copy.joinCarrierCta}

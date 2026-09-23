@@ -96,7 +96,7 @@ export function buildPageMetadata(
       description,
       images: [
         {
-          url: `${siteUrl}/brand/og-share.png`,
+          url: `${siteUrl}/brand/og-share.webp`,
           width: 1200,
           height: 630,
           alt: appName,
@@ -107,7 +107,7 @@ export function buildPageMetadata(
       card: 'summary_large_image',
       title,
       description,
-      images: [`${siteUrl}/brand/og-share.png`],
+      images: [`${siteUrl}/brand/og-share.webp`],
     },
     robots:
       route === 'eoi'
@@ -133,7 +133,7 @@ export function buildJsonLd(locale: AppLocale, route: keyof typeof routeMeta) {
         legalName: 'Achieve Global Enterprises Pty Ltd',
         alternateName: 'CLOX Freight Forwarding',
         url: siteUrl,
-        logo: `${siteUrl}/brand/clox_updated_logo.png`,
+        logo: `${siteUrl}/brand/logo-clox.webp`,
         description: readNested(dict, 'tagline'),
         foundingLocation: {
           '@type': 'Place',

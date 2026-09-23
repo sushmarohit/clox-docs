@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { RegistryPage } from '@/components/registry-form';
 import { isAppLocale, type AppLocale } from '@/locales';
@@ -30,7 +31,9 @@ export default async function Page({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <RegistryPage />
+      <Suspense fallback={null}>
+        <RegistryPage />
+      </Suspense>
     </>
   );
 }

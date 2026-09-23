@@ -15,7 +15,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
       <div className="pointer-events-none absolute inset-0 clox-hero-backdrop opacity-95" aria-hidden />
       <div
         className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-35"
-        style={{ backgroundImage: "url('/brand/back.jpeg')" }}
+        style={{ backgroundImage: "url('/brand/shell-background.webp')" }}
         aria-hidden
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-clox-navy/55 via-clox-navy/82 to-clox-navy" />
@@ -24,7 +24,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex h-[72px] max-w-3xl items-center justify-between px-4 sm:h-[84px] sm:px-6 lg:max-w-4xl lg:px-0">
           <Link href={`/${locale}`} className="inline-flex shrink-0">
             <img
-              src="/brand/clox_updated_logo.png"
+              src="/brand/logo-clox.webp"
               alt="CLOX"
               className="h-[52px] w-auto object-contain sm:h-[64px]"
             />
