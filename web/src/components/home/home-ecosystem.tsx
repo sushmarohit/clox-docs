@@ -14,7 +14,7 @@ export function HomeEcosystem({ copy, locale }: HomeSectionProps) {
       href: registryPath(locale, 'sender'),
     },
     {
-      image: '/landing/ecosystem-transport-carrier.webp',
+      image: '/landing/hero-freight-marketplace.webp',
       label: 'Transport Carrier',
       title: copy.carrierTitle,
       sub: copy.carrierSub,

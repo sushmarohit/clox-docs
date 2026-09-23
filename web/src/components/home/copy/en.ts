@@ -90,6 +90,10 @@ export const homeCopyEn = {
       'Book shipments digitally in a few seamless clicks once the platform opens.',
     ],
     [
+      'Carrier Verification',
+      'Before live bidding opens, carriers are reviewed for business and vehicle compliance.',
+    ],
+    [
       'Real-Time Tracking',
       'Monitor freight from dispatch to delivery with planned live tracking updates.',
     ],
@@ -97,6 +101,12 @@ export const homeCopyEn = {
       'Protected Upfront Payments',
       'Secure payments through planned Protected Upfront Payments before dispatch.',
     ],
+  ],
+  featureVerificationItems: [
+    'Valid Australian Business Number (ABN) checks',
+    'Public Liability insurance evidence (target $10M–$20M cover)',
+    'Active vehicle compliance / Roadworthy Certificates (RWC)',
+    'Manual admin review before live-bidding privileges',
   ],
   matchingTitle: 'The Right Vehicle for the Job',
   matchingEyebrow: 'Vehicle & load matching',
@@ -119,11 +129,33 @@ export const homeCopyEn = {
   matchingNote:
     'Vehicle and load matching opens with live marketplace operations — register now for early access.',
   matchingClassesTitle: 'Full-load vehicle classes (indicative)',
+  matchingPayloadLabel: 'Payload',
+  matchingCapacityLabel: 'Capacity',
   matchingClasses: [
-    ['Medium Rigid (3–8T)', 'Regional distribution and warehouse lanes'],
-    ['Heavy Rigid / Tray', 'Bulk, steel, and site-access freight'],
-    ['Semi-trailer', 'Interstate full-load linehaul'],
-    ['B-Double', 'High-capacity corridor freight'],
+    [
+      'Medium Rigid (3–8T)',
+      'Regional distribution and warehouse lanes',
+      '3 – 8 T',
+      'Up to 16 pallets',
+    ],
+    [
+      'Heavy Rigid / Tray',
+      'Bulk, steel, and site-access freight',
+      '8 – 15 T',
+      'Up to 24 pallets',
+    ],
+    [
+      'Semi-trailer',
+      'Interstate full-load linehaul',
+      '20 – 36 T',
+      'Up to 42 pallets',
+    ],
+    [
+      'B-Double',
+      'High-capacity corridor freight',
+      'up to 60 T',
+      'Up to 72 pallets',
+    ],
   ],
   journeyTitle: 'The Digital Shipping Journey',
   journeySub: 'The Simple Four-Step Process',
