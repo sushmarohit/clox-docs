@@ -37,11 +37,11 @@ export const homeCopyEn = {
   overviewEyebrow: 'Modernising Australian Logistics',
   overviewTitle: 'Company Overview',
   overviewBody:
-    "Welcome to CLOX — Australia's digital full-load freight marketplace. We are transforming logistics by bringing simplicity, transparency, and visibility to the modern supply chain. By replacing high-overhead manual middleware with a high-efficiency digital ecosystem, CLOX connects corporate senders directly with vetted heavy vehicle operators while securing transactions via planned Protected Upfront Payments.",
+    "Welcome to CLOX. Book direct. Track every load. Australia's digital full-load freight marketplace, connecting senders with vetted heavy vehicle operators, backed by a planned Protected Payment Hold.",
   visionTab: 'Our Vision',
   missionTab: 'Our Mission',
   visionBody:
-    "CLOX is a smarter way to ship full-load freight in Australia. We replace manual middleware with a digital marketplace, connecting corporate senders directly with vetted heavy vehicle operators via planned Protected Upfront Payments.",
+    "We're building the marketplace where heavy vehicle operators find full loads and commit to them knowing payment is protected, and where senders know exactly who is moving their freight.",
   missionBody:
     'Our mission is to empower shippers and carriers through a digital full-load freight marketplace. We are designed to reduce frictional costs and operational bottlenecks to deliver faster, clearer logistics.',
   legacyTitle: 'Legacy Middleware',
