@@ -56,7 +56,7 @@ export const matchingStepImages = [
 
 export const journeyStepImages = [
   '/landing/journey-enter-details.webp',
-  '/landing/matching-carrier-bid.webp',
+  '/landing/journey-compare-book.webp',
   '/landing/journey-move-track.webp',
   '/landing/journey-deliver.webp',
 ] as const;
