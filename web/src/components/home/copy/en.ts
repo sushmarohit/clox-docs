@@ -267,13 +267,16 @@ export const homeCopyEn = {
   zeroDebtNote:
     '*Our team is manually reviewing early registrants to grant live-bidding privileges when the gates open. Have your ABN, insurance details, and RWCs ready.*',
   qrTitle: 'Scan to Secure Payout Priority & Register Free.',
-  cohortEyebrow: 'Web & App Platform Coming Soon.',
+  cohortEyebrow: 'Web & App Platform Coming Soon',
   cohortTitle: 'Join the Pre-Launch Cohort Today',
+  cohortBody:
+    'Register early to bypass onboarding queues and unlock exclusive ecosystem benefits.',
   benefitsTitle: 'Early registrants receive:',
   benefits: [
-    'Priority access when live bidding opens',
-    'Waived platform initiation fees for the first 90 days',
-    'Fast-tracked corporate onboarding',
+    'Priority Live-Bidding Access — instant privileges to priority booking tiers the moment the marketplace opens.',
+    'Zero Initiation Fees — join with completely waived setup and initiation costs.',
+    'Fast-Tracked Onboarding — prioritized corporate enterprise account configuration and expedited compliance audits.',
+    'Free Fleet Management SaaS — complimentary access to premium tools to track maintenance, assign drivers, and monitor operational costs across your fleet.',
   ],
   iAm: 'I am a...',
   senderCta: 'Sender',

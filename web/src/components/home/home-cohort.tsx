@@ -14,6 +14,9 @@ export function HomeCohort({ copy, locale }: HomeSectionProps) {
           <h2 className="mb-4 text-[1.65rem] font-extrabold uppercase leading-tight text-clox-navy sm:mb-6 sm:text-[2.8rem]">
             {copy.cohortTitle}
           </h2>
+          <p className="mb-6 max-w-xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+            {copy.cohortBody}
+          </p>
           <h3 className="mb-4 text-xl font-bold text-clox-navy">{copy.benefitsTitle}</h3>
           <BulletList items={copy.benefits} />
         </div>

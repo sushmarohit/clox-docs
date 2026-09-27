@@ -41,19 +41,6 @@ export const featureImages = [
   '/landing/feature-protected-payments.webp',
 ] as const;
 
-export const vehicleClassImages = [
-  '/landing/vehicle-medium-rigid.webp',
-  '/landing/vehicle-heavy-rigid.webp',
-  '/landing/vehicle-semi-trailer.webp',
-  '/landing/vehicle-b-double.webp',
-] as const;
-
-export const matchingStepImages = [
-  '/landing/matching-declare-load.webp',
-  '/landing/matching-vehicle-class.webp',
-  '/landing/matching-carrier-bid.webp',
-] as const;
-
 export const journeyStepImages = [
   '/landing/journey-enter-details.webp',
   '/landing/journey-compare-book.webp',
