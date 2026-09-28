@@ -13,6 +13,7 @@ import {
   inputClassName,
 } from '@/components/public-shell';
 import { ChoiceCheckbox } from '@/components/form-controls';
+import { CloxLoader } from '@/components/clox-loader';
 import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitEoiLead } from '@/lib/api';
 import { focusFirstFormError } from '@/lib/form-errors';
@@ -122,22 +123,22 @@ export function EoiPage() {
 
   return (
     <PublicShell>
-      <div className="mb-6 text-center sm:mb-8">
-        <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
+      <div className="mb-8 text-center sm:mb-10">
+        <h1 className="text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl">
           {t('eoi.pageTitle')}
         </h1>
-        <p className="mx-auto mt-2 max-w-2xl text-sm text-white/75 sm:text-base">
+        <p className="mx-auto mt-3 max-w-3xl text-sm text-white/75 sm:text-base lg:text-lg">
           {t('eoi.pageSubtitle')}
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl">
-        <div className="bg-clox-navy px-4 py-3 text-center text-white sm:px-6 sm:py-4">
-          <h2 className="text-lg font-bold sm:text-xl">{t('eoi.cardTitle')}</h2>
+      <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl">
+        <div className="bg-clox-navy px-5 py-4 text-center text-white sm:px-8 sm:py-5">
+          <h2 className="text-lg font-bold sm:text-xl lg:text-2xl">{t('eoi.cardTitle')}</h2>
         </div>
 
         <form
-          className="space-y-5 p-4 sm:space-y-6 sm:p-6 md:p-8"
+          className="space-y-6 p-5 sm:space-y-8 sm:p-8 lg:p-10"
           onSubmit={form.handleSubmit(onSubmit)}
           noValidate
         >
@@ -282,9 +283,16 @@ export function EoiPage() {
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="w-full rounded-full bg-clox-navy py-3 text-base font-bold text-white shadow disabled:opacity-50 sm:mx-auto sm:block sm:max-w-md sm:py-3.5"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-clox-navy py-3.5 text-base font-bold text-white shadow disabled:opacity-50 sm:mx-auto sm:max-w-md"
           >
-            {mutation.isPending ? t('submitting') : t('eoi.submit')}
+            {mutation.isPending ? (
+              <>
+                <CloxLoader size={28} label={t('submitting')} />
+                <span>{t('submitting')}</span>
+              </>
+            ) : (
+              t('eoi.submit')
+            )}
           </button>
         </form>
       </div>

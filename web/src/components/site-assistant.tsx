@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { CloxLoader } from '@/components/clox-loader';
 import type { AppLocale } from '@/locales';
 
 type Message = { role: 'user' | 'assistant'; content: string };
@@ -152,6 +153,11 @@ export function SiteAssistant({ locale }: { locale: AppLocale }) {
                 </div>
               ))
             )}
+            {pending ? (
+              <div className="mr-6 flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
+                <CloxLoader size={32} label={t.send} />
+              </div>
+            ) : null}
           </div>
 
           <form
@@ -177,9 +183,9 @@ export function SiteAssistant({ locale }: { locale: AppLocale }) {
               <button
                 type="submit"
                 disabled={pending || !input.trim()}
-                className="rounded-full bg-clox-orange px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
+                className="inline-flex min-w-[4.5rem] items-center justify-center rounded-full bg-clox-orange px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
               >
-                {t.send}
+                {pending ? <CloxLoader size={22} label={t.send} /> : t.send}
               </button>
             </div>
           </form>

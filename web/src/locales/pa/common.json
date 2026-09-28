@@ -23,7 +23,10 @@
   "close": "ਬੰਦ ਕਰੋ",
   "gotIt": "ਸਮਝ ਗਏ",
   "draftLegal": "ਪ੍ਰੀ-ਲਾਂਚ ਅਤੇ ਅਰਲੀ ਐਕਸੈਸ ਪੜਾਅ",
-  "footerRights": "© 2026 CLOX Freight Forwarding ABN 48 626 269 387. ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ। | Australia",
+  "footerCopyright": "© 2026 CLOX Freight Forwarding",
+  "footerAbn": "ABN 48 626 269 387",
+  "footerRightsLine": "ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ। | Australia",
+  "linkedinLabel": "LinkedIn",
   "selectAllThatApply": "ਸਾਰੇ ਲਾਗੂ ਵਿਕਲਪ ਚੁਣੋ।",
   "shell": {
     "stepRole": "ਭੂਮਿਕਾ",

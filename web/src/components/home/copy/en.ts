@@ -271,7 +271,7 @@ export const homeCopyEn = {
   cohortTitle: 'Join the Pre-Launch Cohort Today',
   cohortBody:
     'Register early to bypass onboarding queues and unlock exclusive ecosystem benefits.',
-  benefitsTitle: 'Early registrants receive:',
+  benefitsTitle: 'Early registrants receive these platform benefits:',
   benefits: [
     'Priority Live-Bidding Access — instant privileges to priority booking tiers the moment the marketplace opens.',
     'Zero Initiation Fees — join with completely waived setup and initiation costs.',
@@ -288,7 +288,9 @@ export const homeCopyEn = {
   termsShort: 'Terms',
   contactShort: 'Enquiries',
   contactHref: 'mailto:info@clox.com.au',
-  footerLine:
-    '© 2026 CLOX Freight Forwarding ABN 48 626 269 387. All rights reserved. | Australia',
+  footerCopyright: '© 2026 CLOX Freight Forwarding',
+  footerAbn: 'ABN 48 626 269 387',
+  footerRightsLine: 'All rights reserved. | Australia',
+  linkedinLabel: 'LinkedIn',
   footerContactHint: 'Commercial interest: use Registry or Partner EOI. Enquiries: info@clox.com.au.',
 } as const;

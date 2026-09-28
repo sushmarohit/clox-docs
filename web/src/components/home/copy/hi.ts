@@ -271,7 +271,7 @@ export const homeCopyHi = {
   cohortTitle: 'आज ही प्री-लॉन्च कोहॉर्ट से जुड़ें',
   cohortBody:
     'ऑनबोर्डिंग कतारों से बचने और विशेष इकोसिस्टम लाभ अनलॉक करने के लिए जल्दी रजिस्टर करें।',
-  benefitsTitle: 'शुरुआती रजिस्ट्रेंट्स को मिलता है:',
+  benefitsTitle: 'शुरुआती रजिस्ट्रेंट्स को ये प्लेटफ़ॉर्म लाभ मिलते हैं:',
   benefits: [
     'प्राथमिकता लाइव-बिडिंग एक्सेस — मार्केटप्लेस खुलते ही प्राथमिकता बुकिंग टियर के तत्काल अधिकार।',
     'शून्य आरंभ शुल्क — सेटअप और आरंभ लागत पूरी तरह माफ़।',
@@ -288,8 +288,10 @@ export const homeCopyHi = {
   termsShort: 'नियम',
   contactShort: 'पूछताछ',
   contactHref: 'mailto:info@clox.com.au',
-  footerLine:
-    '© 2026 CLOX Freight Forwarding ABN 48 626 269 387. सर्वाधिकार सुरक्षित। | Australia',
+  footerCopyright: '© 2026 CLOX Freight Forwarding',
+  footerAbn: 'ABN 48 626 269 387',
+  footerRightsLine: 'सर्वाधिकार सुरक्षित। | Australia',
+  linkedinLabel: 'LinkedIn',
   footerContactHint:
     'व्यावसायिक रुचि: Registry या Partner EOI का उपयोग करें। पूछताछ: info@clox.com.au।',
 } as const;

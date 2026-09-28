@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
+import { getHomeCopy } from '@/components/home/copy';
+import { HomeFooter } from '@/components/home/home-footer';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { useLocaleParam } from '@/lib/use-locale-param';
 
 export type LegalSection = {
@@ -23,16 +25,27 @@ export function LegalPage({
   intro: string;
   sections: LegalSection[];
 }) {
-  const { t } = useTranslation('common');
   const locale = useLocaleParam();
+  const copy = getHomeCopy(locale);
 
   return (
-    <main className="min-h-screen bg-clox-surface px-6 py-16 text-slate-900 sm:px-10">
-      <div className="mx-auto max-w-3xl lg:max-w-4xl">
-        <Link href={`/${locale}`} className="text-sm font-semibold text-clox-orange">
-          {t('legal.back')} {"->"}
-        </Link>
-        <p className="mt-4 inline-flex rounded-full bg-clox-navy/10 px-3 py-1 text-xs font-semibold text-clox-navy">
+    <div className="min-h-screen bg-clox-surface text-slate-900">
+      <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-[0_4px_24px_rgba(10,31,60,0.08)] backdrop-blur-[12px]">
+        <div className="clox-container flex items-center justify-between gap-4 py-3 sm:gap-5 sm:py-3.5">
+          <Link href={`/${locale}`} className="inline-flex shrink-0 items-center" aria-label="CLOX home">
+            <img
+              src="/brand/logo-clox.webp"
+              alt="CLOX"
+              className="h-[40px] w-auto object-contain sm:h-[48px] lg:h-[44px] xl:h-[48px] 3xl:h-[52px]"
+            />
+          </Link>
+          <LanguageSwitcher className="text-clox-navy" />
+        </div>
+      </header>
+
+      <main className="clox-container py-12 sm:py-16">
+        <div className="mx-auto max-w-4xl">
+        <p className="inline-flex rounded-full bg-clox-navy/10 px-3 py-1 text-xs font-semibold text-clox-navy">
           {phase}
         </p>
         <h1 className="mt-4 text-3xl font-bold text-clox-navy sm:text-4xl">{title}</h1>
@@ -59,7 +72,10 @@ export function LegalPage({
             </section>
           ))}
         </div>
-      </div>
-    </main>
+        </div>
+      </main>
+
+      <HomeFooter copy={copy} locale={locale} />
+    </div>
   );
 }

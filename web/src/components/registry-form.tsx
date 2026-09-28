@@ -15,6 +15,7 @@ import {
   inputClassName,
 } from '@/components/public-shell';
 import { ChoiceCheckbox, ChoiceRow } from '@/components/form-controls';
+import { CloxLoader } from '@/components/clox-loader';
 import { SuccessModal } from '@/components/success-modal';
 import { focusFirstFormError } from '@/lib/form-errors';
 import { getErrorDetail, submitRegistryLead } from '@/lib/api';
@@ -257,24 +258,24 @@ export function RegistryPage() {
 
   return (
     <PublicShell>
-      <div className="mb-6 text-center sm:mb-8">
+      <div className="mb-8 text-center sm:mb-10">
         <span className="inline-flex rounded-full bg-clox-orange px-3 py-1 text-xs font-semibold text-white">
           {t('preLaunch')}
         </span>
-        <h1 className="mt-3 text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
+        <h1 className="mt-4 text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl">
           {t('registry.heroTitleLine1')} <br className="sm:hidden" />
           <span className="sm:ml-2">{t('registry.heroTitleLine2')}</span>
         </h1>
-        <p className="mx-auto mt-2 max-w-2xl text-sm text-white/75 sm:text-base">
+        <p className="mx-auto mt-3 max-w-3xl text-sm text-white/75 sm:text-base lg:text-lg">
           {t('registry.heroWelcome')}
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl">
+      <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl">
         <StepIndicator activeStep={step} />
 
         <form
-          className="p-4 sm:p-6 md:p-8"
+          className="p-5 sm:p-8 lg:p-10"
           onSubmit={(event) => {
             event.preventDefault();
             onSubmit();
@@ -432,9 +433,16 @@ export function RegistryPage() {
                 <button
                   type="submit"
                   disabled={!canSubmit || mutation.isPending}
-                  className="w-full rounded-full bg-clox-navy py-3 text-base font-bold text-white shadow disabled:cursor-not-allowed disabled:opacity-50 sm:mx-auto sm:block sm:max-w-md sm:py-3.5"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-clox-navy py-3 text-base font-bold text-white shadow disabled:cursor-not-allowed disabled:opacity-50 sm:mx-auto sm:max-w-md sm:py-3.5"
                 >
-                  {mutation.isPending ? t('submitting') : t('registry.finalize')}
+                  {mutation.isPending ? (
+                    <>
+                      <CloxLoader size={28} label={t('submitting')} />
+                      <span>{t('submitting')}</span>
+                    </>
+                  ) : (
+                    t('registry.finalize')
+                  )}
                 </button>
                 <button
                   type="button"

@@ -271,7 +271,7 @@ export const homeCopyPa = {
   cohortTitle: 'ਅੱਜ ਹੀ ਪ੍ਰੀ-ਲਾਂਚ ਕੋਹੌਰਟ ਨਾਲ ਜੁੜੋ',
   cohortBody:
     'ਆਨਬੋਰਡਿੰਗ ਕਤਾਰਾਂ ਤੋਂ ਬਚਣ ਅਤੇ ਵਿਸ਼ੇਸ਼ ਇਕੋਸਿਸਟਮ ਲਾਭ ਅਨਲੌਕ ਕਰਨ ਲਈ ਛੇਤੀ ਰਜਿਸਟਰ ਕਰੋ।',
-  benefitsTitle: 'ਸ਼ੁਰੂਆਤੀ ਰਜਿਸਟਰੈਂਟਾਂ ਨੂੰ ਮਿਲਦਾ ਹੈ:',
+  benefitsTitle: 'ਸ਼ੁਰੂਆਤੀ ਰਜਿਸਟਰੈਂਟਾਂ ਨੂੰ ਇਹ ਪਲੇਟਫਾਰਮ ਲਾਭ ਮਿਲਦੇ ਹਨ:',
   benefits: [
     'ਤਰਜੀਹੀ ਲਾਈਵ-ਬਿਡਿੰਗ ਐਕਸੈਸ — ਮਾਰਕੀਟਪਲੇਸ ਖੁੱਲ੍ਹਦੇ ਹੀ ਤਰਜੀਹੀ ਬੁਕਿੰਗ ਟੀਅਰਾਂ ਲਈ ਤੁਰੰਤ ਅਧਿਕਾਰ।',
     'ਜ਼ੀਰੋ ਸ਼ੁਰੂਆਤੀ ਫੀਸ — ਸੈੱਟਅੱਪ ਅਤੇ ਸ਼ੁਰੂਆਤੀ ਲਾਗਤਾਂ ਪੂਰੀ ਤਰ੍ਹਾਂ ਮਾਫ਼।',
@@ -288,8 +288,10 @@ export const homeCopyPa = {
   termsShort: 'ਸ਼ਰਤਾਂ',
   contactShort: 'ਪੁੱਛਗਿੱਛ',
   contactHref: 'mailto:info@clox.com.au',
-  footerLine:
-    '© 2026 CLOX Freight Forwarding ABN 48 626 269 387. ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ। | Australia',
+  footerCopyright: '© 2026 CLOX Freight Forwarding',
+  footerAbn: 'ABN 48 626 269 387',
+  footerRightsLine: 'ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ। | Australia',
+  linkedinLabel: 'LinkedIn',
   footerContactHint:
     'ਵਪਾਰਕ ਦਿਲਚਸਪੀ: Registry ਜਾਂ Partner EOI ਵਰਤੋ। ਪੁੱਛਗਿੱਛ: info@clox.com.au।',
 } as const;
