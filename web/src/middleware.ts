@@ -36,23 +36,26 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Legacy Russian routes → Hindi
+  // Legacy Russian routes → Hindi (308 so Back skips the intermediate URL)
   if (maybeLocale === 'ru') {
     const url = request.nextUrl.clone();
     const rest = segments.slice(1).join('/');
     url.pathname = rest ? `/hi/${rest}` : '/hi';
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, 308);
   }
 
+  // Locale-less canonical paths (/privacy, /terms, …) → /{locale}/…
+  // 308 Permanent Redirect: browsers skip the bare path when going Back,
+  // avoiding the /privacy ↔ /en/privacy loop from temporary (307) redirects.
   if (LEGACY_PATHS.has(pathname) || pathname === '') {
     const url = request.nextUrl.clone();
     url.pathname = pathname === '/' ? `/${defaultLocale}` : `/${defaultLocale}${pathname}`;
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, 308);
   }
 
   const url = request.nextUrl.clone();
   url.pathname = `/${defaultLocale}`;
-  return NextResponse.redirect(url);
+  return NextResponse.redirect(url, 307);
 }
 
 export const config = {
