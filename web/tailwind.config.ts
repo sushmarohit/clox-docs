@@ -57,6 +57,18 @@ const config: Config = {
           from: { opacity: '0', transform: 'translateY(10px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
+        'journey-spin': {
+          from: { transform: 'rotate(0deg)' },
+          to: { transform: 'rotate(360deg)' },
+        },
+        'journey-float': {
+          '0%': { transform: 'scale(1) translateY(0)' },
+          '50%': { transform: 'scale(1.03) translateY(-4px)' },
+          '100%': { transform: 'scale(1) translateY(0)' },
+        },
+        'journey-dash': {
+          to: { strokeDashoffset: '-20' },
+        },
       },
       animation: {
         'hero-fade-up': 'hero-fade-up 1s ease-out',
@@ -65,6 +77,10 @@ const config: Config = {
         'about-truck-bg': 'about-truck-bg 25s linear infinite',
         'about-truck-scroll': 'about-truck-scroll 14s linear infinite',
         'about-tab-in': 'about-tab-in 0.5s ease-out forwards',
+        'journey-spin': 'journey-spin 18s linear infinite',
+        'journey-spin-fast': 'journey-spin 7s linear infinite',
+        'journey-float': 'journey-float 5s ease-in-out infinite alternate',
+        'journey-dash': 'journey-dash 1.4s linear infinite',
       },
     },
   },

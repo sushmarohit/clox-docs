@@ -90,6 +90,30 @@
   .clox-measure {
     @apply mx-auto w-full max-w-[800px] 2xl:max-w-[900px];
   }
+
+  .journey-ring {
+    animation: journey-spin 18s linear infinite;
+  }
+
+  .journey-card:hover .journey-ring,
+  .journey-card:focus-within .journey-ring {
+    animation-duration: 15s;
+  }
+
+  @keyframes journey-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .journey-ring {
+      animation: none;
+    }
+  }
 }
 
 /* 3xl (1920px+) — custom breakpoint can't be @apply'd with arbitrary values */
