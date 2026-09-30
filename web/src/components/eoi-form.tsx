@@ -3,6 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { resolveLeadLocale } from '@/locales';
 import { eoiLeadSchema } from '@/shared/types';
@@ -17,6 +18,7 @@ import { CloxLoader } from '@/components/clox-loader';
 import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitEoiLead } from '@/lib/api';
 import { focusFirstFormError } from '@/lib/form-errors';
+import { useLocaleParam } from '@/lib/use-locale-param';
 
 type FormValues = {
   role: 'local_bde';
@@ -39,6 +41,8 @@ type FieldErrors = Partial<Record<keyof FormValues, string>>;
 
 export function EoiPage() {
   const { t, i18n } = useTranslation('common');
+  const router = useRouter();
+  const locale = useLocaleParam();
   const [success, setSuccess] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
@@ -301,7 +305,10 @@ export function EoiPage() {
         open={success}
         title={t('eoi.successTitle')}
         body={t('eoi.successBody')}
-        onClose={() => setSuccess(false)}
+        onClose={() => {
+          setSuccess(false);
+          router.push(`/${locale}`);
+        }}
       />
     </PublicShell>
   );

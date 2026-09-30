@@ -3,7 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { resolveLeadLocale } from '@/locales';
 import { registryLeadSchema } from '@/shared/types';
@@ -20,6 +20,7 @@ import { SuccessModal } from '@/components/success-modal';
 import { focusFirstFormError } from '@/lib/form-errors';
 import { getErrorDetail, submitRegistryLead } from '@/lib/api';
 import { useRegistryWizardStore } from '@/stores/registry-wizard-store';
+import { useLocaleParam } from '@/lib/use-locale-param';
 
 const OPS = [
   { value: 'Local Couriers & P2P On-Demand', labelKey: 'registry.ops.localCouriers' },
@@ -116,6 +117,8 @@ function focusFirstError(errors: FieldErrors) {
 export function RegistryPage() {
   const { t, i18n } = useTranslation('common');
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const locale = useLocaleParam();
   const { step, userType, setStep, setUserType, reset } = useRegistryWizardStore();
   const [success, setSuccess] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -463,7 +466,10 @@ export function RegistryPage() {
         open={success}
         title={t('registry.successTitle')}
         body={t('registry.successBody')}
-        onClose={() => setSuccess(false)}
+        onClose={() => {
+          setSuccess(false);
+          router.push(`/${locale}`);
+        }}
       />
     </PublicShell>
   );

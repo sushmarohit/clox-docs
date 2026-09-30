@@ -3,6 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { resolveLeadLocale } from '@/locales';
 import {
@@ -27,6 +28,7 @@ import {
 import { SuccessModal } from '@/components/success-modal';
 import { getErrorDetail, submitInvestorLead } from '@/lib/api';
 import { focusFirstFormError } from '@/lib/form-errors';
+import { useLocaleParam } from '@/lib/use-locale-param';
 
 type Classification = (typeof investorClassificationSchema.options)[number];
 type CapitalBand = (typeof capitalAllocationSchema.options)[number];
@@ -95,6 +97,8 @@ const focusAreas: {
 
 export function InvestorsPage() {
   const { t, i18n } = useTranslation('common');
+  const router = useRouter();
+  const locale = useLocaleParam();
   const [success, setSuccess] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
@@ -380,7 +384,10 @@ export function InvestorsPage() {
         open={success}
         title={t('investors.successTitle')}
         body={t('investors.successBody')}
-        onClose={() => setSuccess(false)}
+        onClose={() => {
+          setSuccess(false);
+          router.push(`/${locale}`);
+        }}
       />
     </PublicShell>
   );
