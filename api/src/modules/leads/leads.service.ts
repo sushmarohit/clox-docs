@@ -14,9 +14,19 @@ import { hashIp } from '../../common/utils/crypto';
 import { AuditService } from '../audit/audit.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
+type IdempotentLeadMatch = {
+  id: string;
+  type: PrismaLeadType;
+  status: PrismaLeadStatus;
+  createdAt: Date;
+};
+
 @Injectable()
 export class LeadsService {
   private readonly logger = new Logger(LeadsService.name);
+
+  /** Retry window for timeout-after-commit: same email+type(+ABN) returns existing lead. */
+  private static readonly IDEMPOTENT_WINDOW_MS = 24 * 60 * 60 * 1000;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -46,6 +56,39 @@ export class LeadsService {
       type: LeadType.REGISTRY_SENDER,
       status: LeadStatus.NEW,
       createdAt: new Date().toISOString(),
+    };
+  }
+
+  /**
+   * Idempotent retry guard — if the client timed out after a successful create,
+   * return the recent lead instead of inserting another row. Does not re-send mail.
+   */
+  private async findRecentIdempotentLead(params: {
+    email: string;
+    type: PrismaLeadType;
+    abn?: string;
+  }): Promise<IdempotentLeadMatch | null> {
+    const since = new Date(Date.now() - LeadsService.IDEMPOTENT_WINDOW_MS);
+
+    return this.prisma.lead.findFirst({
+      where: {
+        email: params.email.trim().toLowerCase(),
+        type: params.type,
+        createdAt: { gte: since },
+        ...(params.abn ? { abn: params.abn } : {}),
+      },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, type: true, status: true, createdAt: true },
+    });
+  }
+
+  private toIdempotentResponse(lead: IdempotentLeadMatch): CreateLeadResponse {
+    return {
+      id: lead.id,
+      type: lead.type as CreateLeadResponse['type'],
+      status: lead.status as CreateLeadResponse['status'],
+      createdAt: lead.createdAt.toISOString(),
+      warnings: ['Already received — returning your previous submission'],
     };
   }
 
@@ -90,12 +133,24 @@ export class LeadsService {
     this.ensureDatabase();
 
     const abn = this.normalizeAbn(input.abn)!;
-    const duplicateIds = await this.findDuplicateAbns(abn);
-
     const type =
       input.userType === 'sender'
         ? PrismaLeadType.REGISTRY_SENDER
         : PrismaLeadType.REGISTRY_CARRIER;
+
+    const existing = await this.findRecentIdempotentLead({
+      email: input.email,
+      type,
+      abn,
+    });
+    if (existing) {
+      this.logger.log(
+        `Idempotent registry retry — returning existing lead ${existing.id}`,
+      );
+      return this.toIdempotentResponse(existing);
+    }
+
+    const duplicateIds = await this.findDuplicateAbns(abn);
 
     const companyName =
       input.userType === 'sender' ? input.companyLegalName : input.fleetEntityName;
@@ -173,12 +228,22 @@ export class LeadsService {
     this.ensureDatabase();
 
     const abn = this.normalizeAbn(input.abn)!;
-    const duplicateIds = await this.findDuplicateAbns(abn);
-
     const type =
       input.role === 'state_master'
         ? PrismaLeadType.EOI_STATE_MASTER
         : PrismaLeadType.EOI_LOCAL_BDE;
+
+    const existing = await this.findRecentIdempotentLead({
+      email: input.email,
+      type,
+      abn,
+    });
+    if (existing) {
+      this.logger.log(`Idempotent EOI retry — returning existing lead ${existing.id}`);
+      return this.toIdempotentResponse(existing);
+    }
+
+    const duplicateIds = await this.findDuplicateAbns(abn);
 
     const { honeypot: _honeypot, ...payload } = input;
 
@@ -254,6 +319,19 @@ export class LeadsService {
     this.ensureDatabase();
 
     const abn = this.normalizeAbn(input.abn);
+
+    const existing = await this.findRecentIdempotentLead({
+      email: input.email,
+      type: PrismaLeadType.INVESTOR,
+      abn,
+    });
+    if (existing) {
+      this.logger.log(
+        `Idempotent investor retry — returning existing lead ${existing.id}`,
+      );
+      return this.toIdempotentResponse(existing);
+    }
+
     const duplicateIds = abn ? await this.findDuplicateAbns(abn) : [];
 
     const { honeypot: _honeypot, ...payload } = input;

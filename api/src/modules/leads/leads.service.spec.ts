@@ -8,7 +8,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 describe('LeadsService', () => {
   const prisma = {
     isConnected: jest.fn(),
-    lead: { create: jest.fn(), findMany: jest.fn() },
+    lead: { create: jest.fn(), findMany: jest.fn(), findFirst: jest.fn() },
   } as unknown as PrismaService;
 
   const audit = {
@@ -38,6 +38,7 @@ describe('LeadsService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (prisma.lead.findMany as jest.Mock).mockResolvedValue([]);
+    (prisma.lead.findFirst as jest.Mock).mockResolvedValue(null);
   });
 
   it('returns a fake success when honeypot is filled', async () => {
@@ -139,5 +140,24 @@ describe('LeadsService', () => {
         data: expect.objectContaining({ priority: true }),
       }),
     );
+  });
+
+  it('returns existing registry lead on idempotent retry (timeout-after-commit)', async () => {
+    (prisma.isConnected as jest.Mock).mockReturnValue(true);
+    const createdAt = new Date('2026-07-27T12:00:00.000Z');
+    (prisma.lead.findFirst as jest.Mock).mockResolvedValue({
+      id: '66666666-6666-4666-8666-666666666666',
+      type: LeadType.REGISTRY_SENDER,
+      status: LeadStatus.NEW,
+      createdAt,
+    });
+
+    const result = await service.createRegistryLead(senderPayload, { ip: '127.0.0.1' });
+
+    expect(result.id).toBe('66666666-6666-4666-8666-666666666666');
+    expect(result.warnings?.[0]).toMatch(/already received/i);
+    expect(prisma.lead.create).not.toHaveBeenCalled();
+    expect(audit.record).not.toHaveBeenCalled();
+    expect(notifications.notifyLeadSubmitted).not.toHaveBeenCalled();
   });
 });
