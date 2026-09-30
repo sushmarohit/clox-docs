@@ -250,6 +250,7 @@ export function RegistryPage() {
   }
 
   function onSubmit() {
+    if (mutation.isPending) return;
     if (!validateCurrentStep(true)) return;
     const parsed = registryLeadSchema.safeParse(buildPayload());
     if (!parsed.success) return;
@@ -446,7 +447,8 @@ export function RegistryPage() {
                 </button>
                 <button
                   type="button"
-                  className="mx-auto text-sm text-slate-500"
+                  className="mx-auto text-sm text-slate-500 disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={mutation.isPending}
                   onClick={() => setStep(2)}
                 >
                   {t('registry.backToDetails')}

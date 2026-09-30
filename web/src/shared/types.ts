@@ -70,19 +70,23 @@ const emailField = z
   .min(1, 'Enter your email address')
   .email('Enter a valid email address')
   .transform((value) => value.toLowerCase());
-/** AU-friendly phone: +61… / 0… with spaces/dashes; rejects obvious junk. */
+const PHONE_MESSAGE =
+  'Enter a valid Australian phone number (e.g. 04xx xxx xxx or +61…)';
+
+/** AU-friendly phone: +61… / 0… with spaces/dashes; rejects letters and junk. */
 const phoneField = z
   .string()
   .trim()
   .min(1, 'Enter your phone number')
-  .min(8, 'Enter a valid Australian phone number (e.g. 04xx xxx xxx or +61…)')
-  .max(30, 'Enter a valid Australian phone number (e.g. 04xx xxx xxx or +61…)')
+  .min(8, PHONE_MESSAGE)
+  .max(30, PHONE_MESSAGE)
+  .refine((value) => /^[+\d\s().\-]+$/.test(value), PHONE_MESSAGE)
   .refine((value) => {
     const digits = value.replace(/\D/g, '');
     if (/^61\d{8,10}$/.test(digits)) return true;
     if (/^0\d{8,10}$/.test(digits)) return true;
     return false;
-  }, 'Enter a valid Australian phone number (e.g. 04xx xxx xxx or +61…)');
+  }, PHONE_MESSAGE);
 
 function acceptedTrue(message: string) {
   return z.preprocess(
@@ -98,6 +102,22 @@ function requiredText(message: string, min = 2, max = 200) {
     .min(1, message)
     .min(min, message)
     .max(max, `Keep this under ${max} characters`);
+}
+
+/** Org/legal names: letters, digits, spaces, and common business punctuation only. */
+function organizationNameField(message: string, min = 2, max = 200) {
+  return requiredText(message, min, max).regex(
+    /^[\p{L}\p{N}][\p{L}\p{N}\s.'&\-()/]*$/u,
+    'Use letters, numbers, and common punctuation only (e.g. Pty Ltd, & Co.)',
+  );
+}
+
+/** Person names: letters plus spaces / apostrophes / hyphens / periods. */
+function personNameField(message: string, min = 2, max = 120) {
+  return requiredText(message, min, max).regex(
+    /^[\p{L}][\p{L}\s.'\-]*$/u,
+    'Use letters and common name punctuation only',
+  );
 }
 
 function requiredLongText(message: string, min = 10, max = 4000) {
@@ -135,7 +155,7 @@ export const leadStatusSchema = z.enum([
 
 export const registrySenderSchema = z.object({
   userType: z.literal('sender'),
-  companyLegalName: requiredText('Enter your company legal name', 2, 200),
+  companyLegalName: organizationNameField('Enter your company legal name', 2, 200),
   abn: abnField,
   shippingOrigin: requiredText('Select a shipping origin city', 2, 120),
   operationalModels: z
@@ -155,7 +175,7 @@ export const registrySenderSchema = z.object({
 
 export const registryCarrierSchema = z.object({
   userType: z.literal('carrier'),
-  fleetEntityName: requiredText('Enter your fleet / company name', 2, 200),
+  fleetEntityName: organizationNameField('Enter your fleet / company name', 2, 200),
   abn: abnField,
   depotState: requiredText('Select a depot state', 2, 80),
   fleetComposition: z
@@ -186,8 +206,8 @@ export const eoiLeadSchema = z.object({
   }),
   targetState: requiredText('Enter your target state or region', 2, 80),
   targetTerritory: requiredText('Enter your target suburbs or city', 2, 120),
-  fullLegalName: requiredText('Enter your full legal name', 2, 120),
-  companyName: requiredText('Enter your company name', 2, 200),
+  fullLegalName: personNameField('Enter your full legal name', 2, 120),
+  companyName: organizationNameField('Enter your company name', 2, 200),
   abn: abnField,
   acn: z.string().trim().max(20, 'Keep ACN under 20 characters').optional(),
   email: emailField,
@@ -234,11 +254,15 @@ export const ecosystemFocusSchema = z.enum(
 );
 
 export const investorLeadSchema = z.object({
-  fullNameOrEntity: requiredText('Enter your full name or entity name', 2, 200),
+  fullNameOrEntity: organizationNameField(
+    'Enter your full name or entity name',
+    2,
+    200,
+  ),
   contactPersonName: z.preprocess(
     (value) =>
       typeof value === 'string' && value.trim().length === 0 ? undefined : value,
-    z.string().trim().max(120, 'Keep contact name under 120 characters').optional(),
+    personNameField('Enter a valid contact name', 2, 120).optional(),
   ),
   email: emailField,
   phone: phoneField,
@@ -259,7 +283,7 @@ export const investorLeadSchema = z.object({
   capitalAllocation: capitalAllocationSchema,
   ecosystemFocus: ecosystemFocusSchema,
   strategicNotes: requiredLongText('Add your strategic notes', 10, 4000),
-  authorizedName: requiredText('Enter the authorized signatory name', 2, 120),
+  authorizedName: personNameField('Enter the authorized signatory name', 2, 120),
   declarationAccepted: acceptedTrue(
     'Accept the investor declaration to continue',
   ),

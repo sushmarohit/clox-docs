@@ -128,6 +128,45 @@ const emailField = z
   .trim()
   .email()
   .transform((value) => value.toLowerCase());
+
+const PHONE_MESSAGE = 'Enter a valid Australian phone number (e.g. 04xx xxx xxx or +61…)';
+
+/** AU-friendly phone: formatting chars only; rejects letters/junk; +61 or 0… digits. */
+const phoneField = z
+  .string()
+  .trim()
+  .min(8, PHONE_MESSAGE)
+  .max(30, PHONE_MESSAGE)
+  .refine((value) => /^[+\d\s().\-]+$/.test(value), PHONE_MESSAGE)
+  .refine((value) => {
+    const digits = value.replace(/\D/g, '');
+    if (/^61\d{8,10}$/.test(digits)) return true;
+    if (/^0\d{8,10}$/.test(digits)) return true;
+    return false;
+  }, PHONE_MESSAGE);
+
+const ORG_NAME_MESSAGE =
+  'Use letters, numbers, and common punctuation only (e.g. Pty Ltd, & Co.)';
+const PERSON_NAME_MESSAGE = 'Use letters and common name punctuation only';
+
+function organizationNameField(min = 2, max = 200) {
+  return z
+    .string()
+    .trim()
+    .min(min)
+    .max(max)
+    .regex(/^[\p{L}\p{N}][\p{L}\p{N}\s.'&\-()/]*$/u, ORG_NAME_MESSAGE);
+}
+
+function personNameField(min = 2, max = 120) {
+  return z
+    .string()
+    .trim()
+    .min(min)
+    .max(max)
+    .regex(/^[\p{L}][\p{L}\s.'\-]*$/u, PERSON_NAME_MESSAGE);
+}
+
 const acceptedTrue = z.preprocess(
   (value) => value === true || value === 'true' || value === 'on' || value === 1 || value === '1',
   z.literal(true),
@@ -159,7 +198,7 @@ export const leadStatusSchema = z.enum([
 
 export const registrySenderSchema = z.object({
   userType: z.literal('sender'),
-  companyLegalName: z.string().trim().min(2).max(200),
+  companyLegalName: organizationNameField(2, 200),
   abn: abnField,
   shippingOrigin: z.string().trim().min(2).max(120),
   operationalModels: z.array(z.string().min(1)).min(1),
@@ -167,7 +206,7 @@ export const registrySenderSchema = z.object({
   monthlyVolume: z.string().trim().min(1),
   infraAcknowledged: z.array(z.string()).default([]),
   email: emailField,
-  phone: z.string().trim().min(8).max(30),
+  phone: phoneField,
   locale: localeField,
   source: z.string().trim().max(200).optional(),
   honeypot: honeypotField,
@@ -175,7 +214,7 @@ export const registrySenderSchema = z.object({
 
 export const registryCarrierSchema = z.object({
   userType: z.literal('carrier'),
-  fleetEntityName: z.string().trim().min(2).max(200),
+  fleetEntityName: organizationNameField(2, 200),
   abn: abnField,
   depotState: z.string().trim().min(2).max(80),
   fleetComposition: z.array(z.string().min(1)).min(1),
@@ -183,7 +222,7 @@ export const registryCarrierSchema = z.object({
   complianceAuthorized: acceptedTrue,
   infraAcknowledged: z.array(z.string()).default([]),
   email: emailField,
-  phone: z.string().trim().min(8).max(30),
+  phone: phoneField,
   locale: localeField,
   source: z.string().trim().max(200).optional(),
   honeypot: honeypotField,
@@ -200,12 +239,12 @@ export const eoiLeadSchema = z.object({
   role: z.enum(['state_master', 'local_bde']),
   targetState: z.string().trim().min(2).max(80),
   targetTerritory: z.string().trim().min(2).max(120),
-  fullLegalName: z.string().trim().min(2).max(120),
-  companyName: z.string().trim().min(2).max(200),
+  fullLegalName: personNameField(2, 120),
+  companyName: organizationNameField(2, 200),
   abn: abnField,
   acn: z.string().trim().max(20).optional(),
   email: emailField,
-  phone: z.string().trim().min(8).max(30),
+  phone: phoneField,
   corporateAddress: z.string().trim().min(5).max(300),
   networkExperience: z.string().trim().min(10).max(4000),
   executionStrategy: z.string().trim().min(10).max(4000),
@@ -238,14 +277,14 @@ export const ecosystemFocusSchema = z.enum([
 ]);
 
 export const investorLeadSchema = z.object({
-  fullNameOrEntity: z.string().trim().min(2).max(200),
+  fullNameOrEntity: organizationNameField(2, 200),
   contactPersonName: z.preprocess(
     (value) =>
       typeof value === 'string' && value.trim().length === 0 ? undefined : value,
-    z.string().trim().max(120).optional(),
+    personNameField(2, 120).optional(),
   ),
   email: emailField,
-  phone: z.string().trim().min(8).max(30),
+  phone: phoneField,
   abn: z.preprocess(
     (value) =>
       typeof value === 'string' && value.trim().length === 0 ? undefined : value,
@@ -261,7 +300,7 @@ export const investorLeadSchema = z.object({
   capitalAllocation: capitalAllocationSchema,
   ecosystemFocus: ecosystemFocusSchema,
   strategicNotes: z.string().trim().min(10).max(4000),
-  authorizedName: z.string().trim().min(2).max(120),
+  authorizedName: personNameField(2, 120),
   declarationAccepted: acceptedTrue,
   locale: localeField,
   source: z.string().trim().max(200).optional(),

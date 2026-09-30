@@ -26,11 +26,17 @@ type ProblemBody = {
 export function getErrorDetail(error: unknown): string {
   if (error instanceof ApiError) return error.detail;
   if (isAxiosError(error)) {
+    if (error.code === 'ECONNABORTED' || error.code === 'ERR_CANCELED') {
+      return 'The request timed out. If you already submitted, wait a moment and check your email before trying again.';
+    }
     const data = error.response?.data as ProblemBody | undefined;
     if (typeof data?.detail === 'string') return data.detail;
     if (typeof data?.message === 'string') return data.message;
     if (Array.isArray(data?.message)) return data.message.join('; ');
     if (typeof data?.title === 'string') return data.title;
+    if (!error.response && error.message.toLowerCase().includes('timeout')) {
+      return 'The request timed out. If you already submitted, wait a moment and check your email before trying again.';
+    }
     return error.message;
   }
   if (error instanceof Error) return error.message;

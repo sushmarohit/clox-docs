@@ -4,6 +4,7 @@ import {
   senderProfileSchema,
   senderRegisterSchema,
   createUploadIntentSchema,
+  registryLeadSchema,
 } from './types';
 
 describe('Zod schemas — M1/M2/M3 edge validation', () => {
@@ -88,5 +89,68 @@ describe('Zod schemas — M1/M2/M3 edge validation', () => {
       });
       expect(r.success).toBe(false);
     });
+  });
+});
+
+describe('Registry lead schema — QA regression', () => {
+  const validSender = {
+    userType: 'sender' as const,
+    companyLegalName: 'Acme Manufacturing Pty Ltd',
+    abn: '51824753556',
+    shippingOrigin: 'Melbourne',
+    operationalModels: ['Interstate Linehaul Lanes'],
+    biddingType: ['Per-KM Dynamic Spot Market Bidding'],
+    monthlyVolume: '$10k - $50k',
+    infraAcknowledged: ['easyAML'],
+    email: 'ops@acme.example',
+    phone: '0412345678',
+    locale: 'en' as const,
+  };
+
+  it('accepts a valid sender registry payload', () => {
+    expect(registryLeadSchema.safeParse(validSender).success).toBe(true);
+  });
+
+  it('rejects company legal name that is only symbols', () => {
+    const r = registryLeadSchema.safeParse({
+      ...validSender,
+      companyLegalName: '!@#$%^&*()_+',
+    });
+    expect(r.success).toBe(false);
+  });
+
+  it('rejects phone numbers containing letters', () => {
+    const r = registryLeadSchema.safeParse({
+      ...validSender,
+      phone: '+044800894tr',
+    });
+    expect(r.success).toBe(false);
+  });
+
+  it('accepts formatted AU mobile numbers', () => {
+    expect(
+      registryLeadSchema.safeParse({ ...validSender, phone: '+61 412 345 678' })
+        .success,
+    ).toBe(true);
+    expect(
+      registryLeadSchema.safeParse({ ...validSender, phone: '04 1234 5678' }).success,
+    ).toBe(true);
+  });
+
+  it('rejects fleet entity names with junk symbols', () => {
+    const r = registryLeadSchema.safeParse({
+      userType: 'carrier',
+      fleetEntityName: '!!!@@@',
+      abn: '51824753556',
+      depotState: 'VIC',
+      fleetComposition: ['Light Commercial / Courier Vans'],
+      capabilities: [],
+      complianceAuthorized: true,
+      infraAcknowledged: ['easyAML'],
+      email: 'fleet@acme.example',
+      phone: '0412345678',
+      locale: 'en',
+    });
+    expect(r.success).toBe(false);
   });
 });
