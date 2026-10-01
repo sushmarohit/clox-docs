@@ -10,34 +10,44 @@ const copy = {
   en: {
     open: 'Ask CLOX',
     title: 'CLOX site guide',
-    disclaimer: 'AI-generated answers from approved site content. No personal lead details.',
-    placeholder: 'Ask about registry or partners…',
+    disclaimer: 'Answers only about CLOX and this site. No personal lead details.',
+    placeholder: 'e.g. How does CLOX help carriers?',
     send: 'Send',
     close: 'Close assistant',
-    empty: 'I can point you to the right pre-launch form.',
+    empty: 'Ask what CLOX is, how it works, or how senders, carriers, and partners apply.',
     error: 'Something went wrong. Please try again.',
   },
   hi: {
     open: 'CLOX से पूछें',
     title: 'CLOX साइट गाइड',
-    disclaimer: 'स्वीकृत साइट सामग्री से AI उत्तर। कोई व्यक्तिगत लीड विवरण नहीं।',
-    placeholder: 'रजिस्ट्री या पार्टनर के बारे में पूछें…',
+    disclaimer: 'केवल CLOX और इस साइट के बारे में उत्तर। कोई व्यक्तिगत लीड विवरण नहीं।',
+    placeholder: 'जैसे: CLOX कैरियर की कैसे मदद करता है?',
     send: 'भेजें',
     close: 'सहायक बंद करें',
-    empty: 'मैं आपको सही प्री-लॉन्च फ़ॉर्म दिखा सकता हूँ।',
+    empty: 'पूछें CLOX क्या है, कैसे काम करता है, या सेंडर/कैरियर/पार्टनर कैसे आवेदन करें।',
     error: 'कुछ गलत हो गया। कृपया फिर से कोशिश करें।',
   },
   pa: {
     open: 'CLOX ਤੋਂ ਪੁੱਛੋ',
     title: 'CLOX ਸਾਈਟ ਗਾਈਡ',
-    disclaimer: 'ਮਨਜ਼ੂਰ ਸਾਈਟ ਸਮੱਗਰੀ ਤੋਂ AI ਜਵਾਬ। ਕੋਈ ਨਿੱਜੀ ਲੀਡ ਵੇਰਵੇ ਨਹੀਂ।',
-    placeholder: 'ਰਜਿਸਟਰੀ ਜਾਂ ਪਾਰਟਨਰ ਬਾਰੇ ਪੁੱਛੋ…',
+    disclaimer: 'ਸਿਰਫ਼ CLOX ਅਤੇ ਇਸ ਸਾਈਟ ਬਾਰੇ ਜਵਾਬ। ਕੋਈ ਨਿੱਜੀ ਲੀਡ ਵੇਰਵੇ ਨਹੀਂ।',
+    placeholder: 'ਜਿਵੇਂ: CLOX ਕੈਰੀਅਰਾਂ ਦੀ ਕਿਵੇਂ ਮਦਦ ਕਰਦਾ ਹੈ?',
     send: 'ਭੇਜੋ',
     close: 'ਸਹਾਇਕ ਬੰਦ ਕਰੋ',
-    empty: 'ਮੈਂ ਤੁਹਾਨੂੰ ਸਹੀ ਪ੍ਰੀ-ਲਾਂਚ ਫਾਰਮ ਵੱਲ ਭੇਜ ਸਕਦਾ ਹਾਂ।',
+    empty: 'ਪੁੱਛੋ CLOX ਕੀ ਹੈ, ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ, ਜਾਂ ਸੈਂਡਰ/ਕੈਰੀਅਰ/ਪਾਰਟਨਰ ਕਿਵੇਂ ਅਰਜ਼ੀ ਦੇਣ।',
     error: 'ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।',
   },
 } as const;
+
+function setLastAssistant(prev: Message[], content: string): Message[] {
+  const next = [...prev];
+  const last = next[next.length - 1];
+  if (last?.role === 'assistant') {
+    next[next.length - 1] = { role: 'assistant', content };
+    return next;
+  }
+  return [...next, { role: 'assistant', content }];
+}
 
 export function SiteAssistant({ locale }: { locale: AppLocale }) {
   const t = copy[locale];
@@ -50,7 +60,7 @@ export function SiteAssistant({ locale }: { locale: AppLocale }) {
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
-  }, [messages, open]);
+  }, [messages, open, pending]);
 
   useEffect(() => {
     return () => abortRef.current?.abort();
@@ -61,7 +71,7 @@ export function SiteAssistant({ locale }: { locale: AppLocale }) {
     if (!content || pending) return;
 
     const nextMessages: Message[] = [...messages, { role: 'user', content }];
-    setMessages(nextMessages);
+    setMessages([...nextMessages, { role: 'assistant', content: '' }]);
     setInput('');
     setPending(true);
 
@@ -86,28 +96,21 @@ export function SiteAssistant({ locale }: { locale: AppLocale }) {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let assistant = '';
-      setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         assistant += decoder.decode(value, { stream: true });
         const snapshot = assistant;
-        setMessages((prev) => {
-          const copyMessages = [...prev];
-          copyMessages[copyMessages.length - 1] = {
-            role: 'assistant',
-            content: snapshot,
-          };
-          return copyMessages;
-        });
+        setMessages((prev) => setLastAssistant(prev, snapshot));
+      }
+
+      if (!assistant.trim()) {
+        setMessages((prev) => setLastAssistant(prev, t.error));
       }
     } catch (error) {
       if ((error as Error).name === 'AbortError') return;
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: t.error },
-      ]);
+      setMessages((prev) => setLastAssistant(prev, t.error));
     } finally {
       setPending(false);
       abortRef.current = null;
@@ -143,21 +146,22 @@ export function SiteAssistant({ locale }: { locale: AppLocale }) {
               messages.map((message, index) => (
                 <div
                   key={`${message.role}-${index}`}
-                  className={`rounded-xl px-3 py-2 ${
+                  className={`whitespace-pre-wrap rounded-xl px-3 py-2 ${
                     message.role === 'user'
                       ? 'ml-6 bg-clox-orange text-white'
                       : 'mr-6 bg-white/10 text-white/90'
                   }`}
                 >
-                  {message.content || '…'}
+                  {message.content || (pending && index === messages.length - 1 ? (
+                    <span className="inline-flex items-center gap-2">
+                      <CloxLoader size={28} label={t.send} />
+                    </span>
+                  ) : (
+                    '…'
+                  ))}
                 </div>
               ))
             )}
-            {pending ? (
-              <div className="mr-6 flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
-                <CloxLoader size={32} label={t.send} />
-              </div>
-            ) : null}
           </div>
 
           <form
@@ -179,6 +183,7 @@ export function SiteAssistant({ locale }: { locale: AppLocale }) {
                 className="min-w-0 flex-1 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm text-white outline-none placeholder:text-white/40 focus:ring-2 focus:ring-clox-orange"
                 maxLength={2000}
                 disabled={pending}
+                autoComplete="off"
               />
               <button
                 type="submit"

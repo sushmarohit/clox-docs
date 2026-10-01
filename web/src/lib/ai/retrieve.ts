@@ -28,12 +28,59 @@ const STOPWORDS = new Set([
   'please',
 ]);
 
+/** Expand common user phrasing so retrieval still hits the right funnel. */
+const SYNONYMS: Record<string, string[]> = {
+  register: ['registry', 'sender', 'carrier', 'apply'],
+  registration: ['registry', 'sender', 'carrier', 'apply'],
+  signup: ['registry', 'sender', 'carrier', 'apply'],
+  'sign-up': ['registry', 'sender', 'carrier', 'apply'],
+  join: ['apply', 'registry', 'partner'],
+  apply: ['apply', 'registry', 'partner', 'eoi'],
+  application: ['apply', 'registry', 'eoi'],
+  shipper: ['sender', 'registry', 'business'],
+  corporate: ['sender', 'business'],
+  business: ['sender', 'carrier', 'partner', 'benefit'],
+  help: ['benefit', 'works', 'about'],
+  benefit: ['benefit', 'sender', 'carrier', 'partner'],
+  works: ['works', 'journey', 'features'],
+  working: ['works', 'journey'],
+  process: ['works', 'journey'],
+  feature: ['features', 'works'],
+  features: ['features', 'works'],
+  fleet: ['carrier', 'registry'],
+  truck: ['carrier', 'registry'],
+  transport: ['carrier', 'registry'],
+  freight: ['registry', 'about', 'works'],
+  marketplace: ['about', 'works'],
+  partner: ['partner', 'eoi'],
+  partnership: ['partner', 'eoi'],
+  territory: ['partner', 'eoi'],
+  bde: ['partner', 'eoi'],
+  commission: ['partner', 'eoi'],
+  investor: ['about'],
+  invest: ['about'],
+  privacy: ['privacy', 'legal'],
+  terms: ['terms', 'legal'],
+  abn: ['registry', 'privacy', 'apply'],
+  bidding: ['works', 'sender', 'carrier'],
+  payment: ['works', 'carrier', 'payment'],
+  payments: ['works', 'carrier', 'payment'],
+  tracking: ['works', 'features'],
+  matching: ['works', 'features'],
+};
+
 function tokenize(input: string): string[] {
-  return input
+  const base = input
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\s/-]+/gu, ' ')
     .split(/\s+/)
     .filter((token) => token.length > 1 && !STOPWORDS.has(token));
+
+  const expanded = new Set<string>(base);
+  for (const token of base) {
+    for (const syn of SYNONYMS[token] ?? []) expanded.add(syn);
+  }
+  return [...expanded];
 }
 
 function scoreChunk(queryTokens: string[], chunk: KnowledgeChunk): number {
