@@ -47,3 +47,18 @@ export const journeyStepImages = [
   '/landing/journey-move-track.webp',
   '/landing/journey-deliver.webp',
 ] as const;
+
+export const matchingVehicleImages = [
+  '/landing/matching-vehicle-ute.webp',
+  '/landing/matching-vehicle-van.webp',
+  '/landing/matching-vehicle-rigid.webp',
+  '/landing/matching-vehicle-4x2-6x2.webp',
+  '/landing/matching-vehicle-articulated.webp',
+  '/landing/matching-vehicle-tipper.webp',
+  '/landing/matching-vehicle-flatbed.webp',
+  '/landing/matching-vehicle-refrigerated.webp',
+  '/landing/matching-vehicle-oversize.webp',
+  '/landing/matching-vehicle-b-double.webp',
+] as const;
+
+export const matchingAppPhoneImage = '/landing/matching-app-phone.webp';

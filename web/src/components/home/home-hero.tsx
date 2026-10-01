@@ -12,7 +12,7 @@ export function HomeHero({ copy, locale }: HomeSectionProps) {
   useEffect(() => {
     const timer = window.setInterval(() => {
       setSlide((current) => (current + 1) % heroSlides.length);
-    }, 5000);
+    }, 8000);
     return () => window.clearInterval(timer);
   }, []);
 

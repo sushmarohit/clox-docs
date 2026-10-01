@@ -14,18 +14,25 @@ import { HomeJourney } from '@/components/home/home-journey';
 import { HomeMatching } from '@/components/home/home-matching';
 import { useLocaleParam } from '@/lib/use-locale-param';
 
+/**
+ * Page band rhythm (blue ↔ white):
+ * Hero(B) → About(W) → Compare(B) → Matching(W) → Features(B)
+ * → Journey(W) → Ecosystem(B) → Cohort(W) → FAQ(B) → Footer(W)
+ *
+ * Rule: navy bands use dark/glass cards; light bands use white/surface cards.
+ */
 export function HomePage() {
   const locale = useLocaleParam();
   const copy = getHomeCopy(locale);
 
   return (
-    <main className="overflow-x-hidden bg-clox-surface text-clox-ink">
+    <main className="overflow-x-hidden bg-white text-clox-ink">
       <HomeHeader copy={copy} locale={locale} />
       <HomeHero copy={copy} locale={locale} />
       <HomeAbout copy={copy} />
       <HomeComparison copy={copy} />
-      <HomeFeatures copy={copy} />
       <HomeMatching copy={copy} />
+      <HomeFeatures copy={copy} />
       <HomeJourney copy={copy} />
       <HomeEcosystem copy={copy} locale={locale} />
       <HomeCohort copy={copy} locale={locale} />

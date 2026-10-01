@@ -5,11 +5,11 @@ const LINKEDIN_URL = 'https://www.linkedin.com/company/clox-freight-forwarding/'
 
 export function HomeFooter({ copy, locale }: HomeSectionProps) {
   return (
-    <footer className="border-t-[5px] border-clox-orange bg-clox-navy pb-28 pt-12 text-center text-slate-400 sm:pb-24">
+    <footer className="border-t-[5px] border-clox-orange bg-white pb-28 pt-12 text-center text-slate-600 sm:pb-24">
       <div className="clox-container">
         <Link href={`/${locale}`} className="mx-auto mb-6 inline-flex" aria-label="CLOX home">
           <img
-            src="/brand/logo-clox-light.webp"
+            src="/brand/logo-clox.webp"
             alt="CLOX"
             className="h-[64px] w-auto object-contain sm:h-[68px] 3xl:h-[76px]"
           />
@@ -20,24 +20,24 @@ export function HomeFooter({ copy, locale }: HomeSectionProps) {
         </p>
         <p className="mt-1 whitespace-nowrap text-[0.7rem] sm:text-sm">{copy.footerRightsLine}</p>
         <p className="mx-auto mt-3 max-w-xl text-[0.75rem] text-slate-500">{copy.footerContactHint}</p>
-        <div className="relative z-10 mt-6 flex flex-wrap items-center justify-center gap-5 pb-2 text-sm">
-          <Link href={`/${locale}/privacy`} className="hover:text-white">
+        <div className="relative z-10 mt-6 flex flex-wrap items-center justify-center gap-5 pb-2 text-sm text-clox-navy">
+          <Link href={`/${locale}/privacy`} className="hover:text-clox-orange">
             {copy.privacyShort}
           </Link>
-          <Link href={`/${locale}/terms`} className="hover:text-white">
+          <Link href={`/${locale}/terms`} className="hover:text-clox-orange">
             {copy.termsShort}
           </Link>
-          <a href={copy.contactHref} className="hover:text-white">
+          <a href={copy.contactHref} className="hover:text-clox-orange">
             {copy.contactShort}
           </a>
-          <Link href={`/${locale}/partner/eoi`} className="hover:text-white">
+          <Link href={`/${locale}/partner/eoi`} className="hover:text-clox-orange">
             {copy.partnerCta}
           </Link>
           <a
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 hover:text-white"
+            className="inline-flex items-center gap-1.5 hover:text-clox-orange"
             aria-label={copy.linkedinLabel}
           >
             <LinkedInIcon />

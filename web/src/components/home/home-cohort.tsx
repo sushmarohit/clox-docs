@@ -5,8 +5,8 @@ import { registryPath } from '@/lib/registry-path';
 
 export function HomeCohort({ copy, locale }: HomeSectionProps) {
   return (
-    <section id="cohort" className="scroll-mt-[9.5rem] py-12 sm:scroll-mt-28 sm:py-28">
-      <div className="clox-container flex flex-col items-center gap-10 rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-8 lg:flex-row lg:gap-20 lg:p-16 3xl:gap-24 3xl:p-20">
+    <section id="cohort" className="scroll-mt-[9.5rem] bg-white py-12 sm:scroll-mt-28 sm:py-28">
+      <div className="clox-container flex flex-col items-center gap-10 rounded-3xl border border-slate-200 bg-clox-surface p-6 shadow-[0_20px_50px_rgba(10,31,60,0.06)] sm:p-8 lg:flex-row lg:gap-20 lg:p-16 3xl:gap-24 3xl:p-20">
         <div className="flex-1">
           <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-clox-orange">
             {copy.cohortEyebrow}
@@ -20,7 +20,7 @@ export function HomeCohort({ copy, locale }: HomeSectionProps) {
           <h3 className="mb-4 text-xl font-bold text-clox-navy">{copy.benefitsTitle}</h3>
           <BulletList items={copy.benefits} />
         </div>
-        <div className="flex-1 rounded-2xl border border-slate-200 bg-clox-surface p-8 sm:p-10">
+        <div className="flex-1 rounded-2xl border border-slate-200 bg-white p-8 sm:p-10">
           <img
             src="/brand/logo-clox.webp"
             alt="CLOX"

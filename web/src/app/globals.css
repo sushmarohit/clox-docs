@@ -114,6 +114,29 @@
       animation: none;
     }
   }
+
+  .matching-marquee-track {
+    animation: matching-marquee 40s linear infinite;
+  }
+
+  .matching-marquee:hover .matching-marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes matching-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .matching-marquee-track {
+      animation: none;
+    }
+  }
 }
 
 /* 3xl (1920px+) — custom breakpoint can't be @apply'd with arbitrary values */
