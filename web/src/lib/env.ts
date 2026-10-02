@@ -14,3 +14,6 @@ export function getAppName() {
   // Public brand is always CLOX — ignore staging/env values like "CLOX WEB".
   return 'CLOX';
 }
+
+/** Prefer apex canonical in production; set SITE_URL in deploy to match. */
+export const PRODUCTION_SITE_URL = 'https://clox.com.au';

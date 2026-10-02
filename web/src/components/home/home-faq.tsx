@@ -1,9 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useId, useState } from 'react';
-import type { HomeCopy } from '@/components/home/copy';
+import type { HomeSectionProps } from '@/components/home/types';
 
-export function HomeFaq({ copy }: { copy: HomeCopy }) {
+export function HomeFaq({ copy, locale }: HomeSectionProps) {
   const baseId = useId();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -63,6 +64,21 @@ export function HomeFaq({ copy }: { copy: HomeCopy }) {
               );
             })}
           </div>
+          <p className="mt-8 text-center text-sm text-white/70 sm:text-base">
+            <Link
+              href={`/${locale}/faq`}
+              className="font-semibold text-clox-orange underline-offset-4 hover:underline"
+            >
+              {copy.faqTitle}
+            </Link>
+            {' · '}
+            <Link
+              href={`/${locale}/how-it-works`}
+              className="font-semibold text-white underline-offset-4 hover:text-clox-orange hover:underline"
+            >
+              {copy.journeyTitle}
+            </Link>
+          </p>
         </div>
       </div>
     </section>

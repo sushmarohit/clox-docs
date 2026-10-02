@@ -43,9 +43,9 @@ export function HomeHero({ copy, locale }: HomeSectionProps) {
 
       <div className="clox-container relative z-10 animate-hero-fade-up pb-16 pt-6 sm:pb-20 sm:pt-8 xl:pb-24 xl:pt-10 3xl:pb-28">
         <div className="mx-auto w-full max-w-[900px] xl:max-w-[1040px] 2xl:max-w-[1200px] 3xl:max-w-[1320px]">
-        <p className="mx-auto mb-6 max-w-[21rem] rounded-2xl border border-clox-orange/40 bg-clox-navy/90 px-4 py-2.5 text-center text-[1.1rem] font-bold leading-snug tracking-[0.02em] text-clox-orange shadow-[0_8px_24px_rgba(0,0,0,0.45)] [text-wrap:balance] backdrop-blur-md sm:mb-8 sm:max-w-[34rem] sm:px-5 sm:py-3 sm:text-[1.2rem] sm:tracking-[0.03em] md:inline-block md:max-w-[40rem] md:rounded-full md:border-clox-orange/55 md:bg-clox-navy/80 md:px-6 md:py-2.5 md:text-[1.25rem] xl:mb-10 xl:max-w-none xl:px-8 xl:py-3 xl:text-[1.35rem] xl:tracking-[0.04em] 3xl:text-[1.45rem]">
+        <h1 className="mx-auto mb-6 max-w-[21rem] rounded-2xl border border-clox-orange/40 bg-clox-navy/90 px-4 py-2.5 text-center text-[1.1rem] font-bold leading-snug tracking-[0.02em] text-clox-orange shadow-[0_8px_24px_rgba(0,0,0,0.45)] [text-wrap:balance] backdrop-blur-md sm:mb-8 sm:max-w-[34rem] sm:px-5 sm:py-3 sm:text-[1.2rem] sm:tracking-[0.03em] md:inline-block md:max-w-[40rem] md:rounded-full md:border-clox-orange/55 md:bg-clox-navy/80 md:px-6 md:py-2.5 md:text-[1.25rem] xl:mb-10 xl:max-w-none xl:px-8 xl:py-3 xl:text-[1.35rem] xl:tracking-[0.04em] 3xl:text-[1.45rem]">
           {copy.tagline}
-        </p>
+        </h1>
 
         <div className="relative mx-auto mb-6 flex min-h-[210px] w-full items-center justify-center sm:mb-8 sm:min-h-[250px] xl:mb-10 xl:min-h-[280px] 3xl:mb-12 3xl:min-h-[320px]">
           {heroSlides.map((item, index) => {
@@ -60,11 +60,11 @@ export function HomeHero({ copy, locale }: HomeSectionProps) {
                 }`}
                 aria-hidden={!active}
               >
-                <h1 className="mb-4 text-[1.75rem] font-extrabold leading-tight [text-shadow:0_4px_20px_rgba(0,0,0,0.55)] sm:mb-6 sm:text-[2.2rem] lg:text-[3.2rem] xl:mb-7 xl:text-[3.6rem] 2xl:text-[4rem] 3xl:text-[4.35rem]">
+                <p className="mb-4 text-[1.75rem] font-extrabold leading-tight [text-shadow:0_4px_20px_rgba(0,0,0,0.55)] sm:mb-6 sm:text-[2.2rem] lg:text-[3.2rem] xl:mb-7 xl:text-[3.6rem] 2xl:text-[4rem] 3xl:text-[4.35rem]">
                   {copy[item.titleLeadKey]}
                   <br />
                   <span className="text-clox-orange">{copy[item.titleAccentKey]}</span>
-                </h1>
+                </p>
                 <p className="mx-auto mb-0 max-w-[800px] text-base font-light leading-7 text-[#e2e8f0] sm:text-[1.25rem] sm:leading-8 xl:max-w-[920px] xl:text-[1.35rem] xl:leading-9 2xl:max-w-[1000px] 2xl:text-[1.45rem] 3xl:max-w-[1100px] 3xl:text-[1.55rem] 3xl:leading-10">
                   {copy[item.bodyKey]}
                 </p>

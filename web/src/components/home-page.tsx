@@ -36,7 +36,7 @@ export function HomePage() {
       <HomeJourney copy={copy} />
       <HomeEcosystem copy={copy} locale={locale} />
       <HomeCohort copy={copy} locale={locale} />
-      <HomeFaq copy={copy} />
+      <HomeFaq copy={copy} locale={locale} />
       <HomeFooter copy={copy} locale={locale} />
     </main>
   );

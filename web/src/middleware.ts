@@ -9,7 +9,24 @@ const LEGACY_PATHS = new Set([
   '/investors',
   '/privacy',
   '/terms',
+  '/faq',
+  '/how-it-works',
 ]);
+
+const PASSTHROUGH = new Set([
+  '/robots.txt',
+  '/sitemap.xml',
+  '/manifest.webmanifest',
+  '/llms.txt',
+  '/llms-full.txt',
+  '/ai.txt',
+  '/humans.txt',
+]);
+
+function withLocaleHeader(response: NextResponse, locale: string) {
+  response.headers.set('x-clox-locale', locale);
+  return response;
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -19,11 +36,8 @@ export function middleware(request: NextRequest) {
     pathname.startsWith('/_next') ||
     pathname.startsWith('/sw.js') ||
     pathname.startsWith('/offline') ||
-    pathname === '/robots.txt' ||
-    pathname === '/sitemap.xml' ||
-    pathname === '/manifest.webmanifest' ||
-    pathname === '/llms.txt' ||
-    pathname === '/llms-full.txt' ||
+    pathname.startsWith('/.well-known') ||
+    PASSTHROUGH.has(pathname) ||
     PUBLIC_FILE.test(pathname)
   ) {
     return NextResponse.next();
@@ -33,7 +47,7 @@ export function middleware(request: NextRequest) {
   const maybeLocale = segments[0];
 
   if (isAppLocale(maybeLocale)) {
-    return NextResponse.next();
+    return withLocaleHeader(NextResponse.next(), maybeLocale);
   }
 
   // Legacy Russian routes → Hindi (308 so Back skips the intermediate URL)
@@ -41,7 +55,7 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     const rest = segments.slice(1).join('/');
     url.pathname = rest ? `/hi/${rest}` : '/hi';
-    return NextResponse.redirect(url, 308);
+    return withLocaleHeader(NextResponse.redirect(url, 308), 'hi');
   }
 
   // Locale-less canonical paths (/privacy, /terms, …) → /{locale}/…
@@ -50,12 +64,12 @@ export function middleware(request: NextRequest) {
   if (LEGACY_PATHS.has(pathname) || pathname === '') {
     const url = request.nextUrl.clone();
     url.pathname = pathname === '/' ? `/${defaultLocale}` : `/${defaultLocale}${pathname}`;
-    return NextResponse.redirect(url, 308);
+    return withLocaleHeader(NextResponse.redirect(url, 308), defaultLocale);
   }
 
   const url = request.nextUrl.clone();
   url.pathname = `/${defaultLocale}`;
-  return NextResponse.redirect(url, 307);
+  return withLocaleHeader(NextResponse.redirect(url, 307), defaultLocale);
 }
 
 export const config = {

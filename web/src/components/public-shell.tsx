@@ -46,6 +46,14 @@ export function PublicShell({ children }: { children: ReactNode }) {
           <p className="mt-1 whitespace-nowrap text-[0.7rem] sm:text-[0.75rem]">{t('footerRightsLine')}</p>
           <p className="mt-1 text-white/35">{t('shell.footerContactHint')}</p>
           <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm">
+            <Link href={`/${locale}/how-it-works`} className="relative z-10 underline-offset-2 hover:underline">
+              {t('shell.howItWorksShort')}
+            </Link>
+            <span aria-hidden>·</span>
+            <Link href={`/${locale}/faq`} className="relative z-10 underline-offset-2 hover:underline">
+              {t('shell.faqShort')}
+            </Link>
+            <span aria-hidden>·</span>
             <Link href={`/${locale}/privacy`} className="relative z-10 underline-offset-2 hover:underline">
               {t('shell.privacyShort')}
             </Link>

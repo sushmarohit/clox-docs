@@ -25,7 +25,7 @@ export default async function Page({
   const locale = raw as AppLocale;
   const copy = getHomeCopy(locale);
   const jsonLd = buildJsonLd(locale, 'home');
-  const faqLd = buildFaqJsonLd(copy.faq);
+  const faqLd = buildFaqJsonLd(locale, copy.faq);
 
   return (
     <>

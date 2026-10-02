@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
+import { headers } from 'next/headers';
 import { Noto_Sans_Devanagari, Noto_Sans_Gurmukhi, Poppins } from 'next/font/google';
+import { isAppLocale } from '@/locales';
 import { getAppName, getSiteUrl } from '@/lib/env';
 import './globals.css';
 
@@ -25,19 +27,27 @@ const notoGurmukhi = Noto_Sans_Gurmukhi({
   display: 'swap',
 });
 
+const siteUrl = getSiteUrl();
+const appName = getAppName();
+
 export const metadata: Metadata = {
-  metadataBase: new URL(getSiteUrl()),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: `${getAppName()} — Australia-first full-load freight marketplace`,
-    template: `%s | ${getAppName()}`,
+    default: `${appName} — Australia’s digital full-load freight marketplace`,
+    template: `%s | ${appName}`,
   },
-  description: 'Australia-first full-load freight marketplace — pre-launch registry',
-  applicationName: getAppName(),
+  description:
+    'CLOX is Australia’s digital full-load freight marketplace (pre-launch) — transparent bidding, vetted carriers, and Protected Upfront Payments. Register early for priority access.',
+  applicationName: appName,
+  authors: [{ name: 'Achieve Global Enterprises Pty Ltd', url: siteUrl }],
+  creator: appName,
+  publisher: 'Achieve Global Enterprises Pty Ltd',
+  category: 'business',
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: getAppName(),
+    title: appName,
   },
   icons: {
     icon: [
@@ -53,7 +63,20 @@ export const metadata: Metadata = {
   other: {
     'llms-txt': '/llms.txt',
     'llms-full-txt': '/llms-full.txt',
+    'ai-txt': '/ai.txt',
   },
+  ...(process.env.GOOGLE_SITE_VERIFICATION || process.env.BING_SITE_VERIFICATION
+    ? {
+        verification: {
+          ...(process.env.GOOGLE_SITE_VERIFICATION
+            ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+            : {}),
+          ...(process.env.BING_SITE_VERIFICATION
+            ? { other: { 'msvalidate.01': process.env.BING_SITE_VERIFICATION } }
+            : {}),
+        },
+      }
+    : {}),
 };
 
 export const viewport: Viewport = {
@@ -62,10 +85,14 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const headerList = await headers();
+  const rawLocale = headerList.get('x-clox-locale') || 'en';
+  const lang = isAppLocale(rawLocale) ? rawLocale : 'en';
+
   return (
     <html
-      lang="en"
+      lang={lang}
       suppressHydrationWarning
       className={`${poppins.variable} ${notoDevanagari.variable} ${notoGurmukhi.variable}`}
     >

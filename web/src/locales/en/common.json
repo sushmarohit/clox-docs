@@ -1,6 +1,6 @@
 {
   "brand": "CLOX",
-  "tagline": "Australia-first full-load freight marketplace",
+  "tagline": "Australia’s digital full-load freight marketplace",
   "loading": "Loading…",
   "continue": "Continue",
   "back": "Back",
@@ -32,13 +32,32 @@
     "stepRole": "Role",
     "stepDetails": "Details",
     "stepVerify": "Verify",
-    "privacyShort": "Privacy",
-    "termsShort": "Terms",
-    "contactShort": "Enquiries",
-    "footerContactHint": "Commercial interest: use Registry or Partner EOI. Enquiries: info@clox.com.au."
-  },
+            "privacyShort": "Privacy",
+            "termsShort": "Terms",
+            "faqShort": "FAQ",
+            "howItWorksShort": "How it works",
+            "contactShort": "Enquiries",
+            "footerContactHint": "Commercial interest: use Registry or Partner EOI. Enquiries: info@clox.com.au."
+          },
   "home": {
     "eyebrow": "Pre-Launch"
+  },
+  "seo": {
+    "homeDescription": "CLOX is Australia’s digital full-load freight marketplace (pre-launch), connecting corporate senders with vetted heavy-vehicle operators for transparent bidding, live tracking, and Protected Upfront Payments. Register early for priority access."
+  },
+  "faqPage": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Clear answers about CLOX — Australia’s digital full-load freight marketplace — covering pre-launch status, pricing, carrier verification, Protected Upfront Payments, tracking, and coverage.",
+    "backHome": "Back to home",
+    "ctaRegistry": "Join pre-launch registry",
+    "intro": "These answers are written for shippers, carriers, and partners researching CLOX. Live booking is not open yet; the public site collects early interest only."
+  },
+  "howItWorksPage": {
+    "title": "How CLOX Works",
+    "subtitle": "The planned four-step digital shipping journey for full-load / full-truckload freight across Australia — from consignment posting to Automated Carrier Payments.",
+    "backHome": "Back to home",
+    "ctaRegistry": "Register for early access",
+    "intro": "CLOX is built for full-load freight (not parcel courier). When live, senders post consignments, vetted carriers bid, Protected Upfront Payments can secure funds before dispatch, and shipments are tracked through delivery."
   },
   "registry": {
     "title": "Pre-launch registry",

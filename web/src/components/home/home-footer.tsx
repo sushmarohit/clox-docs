@@ -21,6 +21,12 @@ export function HomeFooter({ copy, locale }: HomeSectionProps) {
         <p className="mt-1 whitespace-nowrap text-[0.7rem] sm:text-sm">{copy.footerRightsLine}</p>
         <p className="mx-auto mt-3 max-w-xl text-[0.75rem] text-slate-500">{copy.footerContactHint}</p>
         <div className="relative z-10 mt-6 flex flex-wrap items-center justify-center gap-5 pb-2 text-sm text-clox-navy">
+          <Link href={`/${locale}/how-it-works`} className="hover:text-clox-orange">
+            {copy.journeyTitle}
+          </Link>
+          <Link href={`/${locale}/faq`} className="hover:text-clox-orange">
+            {copy.faqTitle}
+          </Link>
           <Link href={`/${locale}/privacy`} className="hover:text-clox-orange">
             {copy.privacyShort}
           </Link>
