@@ -30,7 +30,7 @@ export function HomePage() {
       <HomeHeader copy={copy} locale={locale} />
       <HomeHero copy={copy} locale={locale} />
       <HomeAbout copy={copy} />
-      <HomeComparison copy={copy} />
+      <HomeComparison />
       <HomeMatching copy={copy} />
       <HomeFeatures copy={copy} />
       <HomeJourney copy={copy} />

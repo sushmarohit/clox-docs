@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { FaqAccordion } from '@/components/faq-accordion';
 import { getHomeCopy } from '@/components/home/copy';
 import { PublicShell } from '@/components/public-shell';
 import { getDictionary, isAppLocale, type AppLocale } from '@/locales';
@@ -59,16 +60,8 @@ export default async function FaqPage({
           <p className="mt-4 text-base leading-7 text-white/80 sm:text-lg">{t.faqPage.intro}</p>
           <p className="mt-3 text-sm leading-6 text-white/55">{t.faqPage.subtitle}</p>
 
-          <div className="mt-10 space-y-6">
-            {copy.faq.map(([question, answer]) => (
-              <section
-                key={question}
-                className="border-b border-white/10 pb-6 last:border-b-0"
-              >
-                <h2 className="text-lg font-semibold text-white sm:text-xl">{question}</h2>
-                <p className="mt-2 text-base leading-7 text-white/75">{answer}</p>
-              </section>
-            ))}
+          <div className="mt-10">
+            <FaqAccordion items={copy.faq} headingLevel="h2" />
           </div>
 
           <div className="mt-10 flex flex-wrap gap-3">

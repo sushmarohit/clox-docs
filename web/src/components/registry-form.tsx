@@ -190,6 +190,7 @@ export function RegistryPage() {
         email: values.email,
         phone: values.phone,
         locale: resolveLeadLocale(i18n.language),
+        source: `web:/${resolveLeadLocale(i18n.language)}/registry?role=sender`,
         honeypot: values.honeypot,
       };
     }
@@ -206,6 +207,7 @@ export function RegistryPage() {
       email: values.email,
       phone: values.phone,
       locale: resolveLeadLocale(i18n.language),
+      source: `web:/${resolveLeadLocale(i18n.language)}/registry?role=carrier`,
       honeypot: values.honeypot,
     };
   }
@@ -380,12 +382,22 @@ export function RegistryPage() {
                           : [...values.infraAcknowledged, option.value];
                         form.setValue('infraAcknowledged', next);
                       }}
-                      className={`relative flex items-start gap-3 rounded-xl border p-3 text-left shadow-sm sm:flex-col sm:items-center sm:p-4 sm:text-center ${
-                        selected ? 'border-clox-orange bg-orange-50' : 'border-slate-200 bg-white'
+                      className={`relative flex items-start gap-3 rounded-xl border p-3 text-left shadow-sm transition sm:flex-col sm:items-center sm:p-4 sm:text-center ${
+                        selected
+                          ? 'border-clox-orange bg-orange-50 ring-1 ring-clox-orange/30'
+                          : 'border-slate-200 bg-white hover:border-slate-300'
                       }`}
+                      aria-pressed={selected}
                     >
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-clox-navy text-white">
-                        ✓
+                      <div
+                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 text-lg font-bold ${
+                          selected
+                            ? 'border-clox-navy bg-clox-navy text-white'
+                            : 'border-slate-300 bg-white text-transparent'
+                        }`}
+                        aria-hidden
+                      >
+                        {selected ? '✓' : ''}
                       </div>
                       <div>
                         <div className="font-bold text-clox-navy">{t(option.labelKey)}</div>

@@ -12,13 +12,13 @@ export function PublicShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="relative min-h-screen bg-clox-navy text-white">
-      <div className="pointer-events-none absolute inset-0 clox-hero-backdrop opacity-95" aria-hidden />
+      <div className="pointer-events-none fixed inset-0 clox-hero-backdrop opacity-95" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-35"
+        className="pointer-events-none fixed inset-0 bg-cover bg-center bg-no-repeat opacity-35"
         style={{ backgroundImage: "url('/brand/shell-background.webp')" }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-clox-navy/55 via-clox-navy/82 to-clox-navy" />
+      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-clox-navy/55 via-clox-navy/82 to-clox-navy" />
 
       <header className="fixed inset-x-0 top-0 z-[1000] border-b border-slate-200/80 bg-white/95 shadow-[0_4px_24px_rgba(10,31,60,0.08)] backdrop-blur-[12px]">
         <div className="clox-container flex items-center justify-between gap-4 py-3 sm:gap-5 sm:py-3.5">

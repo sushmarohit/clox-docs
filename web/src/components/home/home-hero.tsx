@@ -21,24 +21,25 @@ export function HomeHero({ copy, locale }: HomeSectionProps) {
       id="banner"
       className="relative isolate flex min-h-[640px] items-center overflow-hidden bg-clox-navy pt-[170px] text-center text-white sm:min-h-screen sm:pt-[220px] xl:items-start xl:pt-[200px] 2xl:pt-[220px] 3xl:min-h-[100svh] 3xl:items-center 3xl:pt-[240px]"
     >
-      <div className="absolute inset-0 z-0" aria-hidden>
+      <div className="absolute inset-0 z-0 overflow-hidden bg-clox-navy" aria-hidden>
         {heroSlides.map((item, index) => (
           <div
             key={item.image}
-            className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out ${
+            className={`absolute inset-0 overflow-hidden transition-opacity duration-[1500ms] ease-in-out ${
               index === slide ? 'opacity-100' : 'opacity-0'
             }`}
           >
             <img
               src={item.image}
               alt=""
-              className="h-full w-full scale-[1.03] object-cover object-[center_28%] blur-[1.5px] sm:object-center sm:blur-[1px] xl:scale-[1.02] 3xl:scale-100"
+              className="pointer-events-none h-[112%] w-[112%] max-w-none -translate-x-[6%] -translate-y-[6%] object-cover object-[center_28%] blur-[1.5px] sm:object-center sm:blur-[1px]"
               decoding="async"
               fetchPriority={index === 0 ? 'high' : 'auto'}
             />
           </div>
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-[rgba(5,20,40,0.42)] to-[rgba(0,7,17,0.55)] sm:from-black/65 sm:via-[rgba(5,20,40,0.5)] sm:to-[rgba(0,7,17,0.55)] xl:from-black/75 xl:via-[rgba(5,20,40,0.6)] xl:to-[rgba(0,7,17,0.6)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-[rgba(5,20,40,0.45)] to-[rgba(0,7,17,0.58)] sm:from-black/70 sm:via-[rgba(5,20,40,0.52)] sm:to-[rgba(0,7,17,0.58)] xl:from-black/78 xl:via-[rgba(5,20,40,0.62)] xl:to-[rgba(0,7,17,0.62)]" />
+        <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_rgba(0,7,17,0.55)]" />
       </div>
 
       <div className="clox-container relative z-10 animate-hero-fade-up pb-16 pt-6 sm:pb-20 sm:pt-8 xl:pb-24 xl:pt-10 3xl:pb-28">

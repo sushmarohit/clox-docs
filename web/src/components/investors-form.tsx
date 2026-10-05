@@ -153,7 +153,7 @@ export function InvestorsPage() {
       acn: values.acn || undefined,
       contactPersonName: values.contactPersonName || undefined,
       locale: resolveLeadLocale(i18n.language),
-      source: 'web:/investors',
+      source: `web:/${resolveLeadLocale(i18n.language)}/investors`,
     });
 
     if (!parsed.success) {

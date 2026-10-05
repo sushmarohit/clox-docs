@@ -95,6 +95,7 @@ export function EoiPage() {
       role: 'local_bde',
       locale: resolveLeadLocale(i18n.language),
       acn: values.acn || undefined,
+      source: `web:/${resolveLeadLocale(i18n.language)}/partner/eoi`,
     });
 
     if (!parsed.success) {
