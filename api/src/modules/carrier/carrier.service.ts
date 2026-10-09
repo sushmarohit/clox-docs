@@ -23,7 +23,6 @@ import type { AppEnv } from '../../config/env.validation';
 import type { AuthenticatedPrincipal } from '../../common/guards/jwt-auth.guard';
 import {
   AuditAction,
-  type CarrierBidStubInput,
   type CarrierCapabilitiesInput,
   type CarrierDriverInviteInput,
   type CarrierDriverResendInput,
@@ -83,8 +82,13 @@ export class CarrierService {
     return user;
   }
 
-  private fleetReady(company: { vehicles: unknown[]; drivers: unknown[] }) {
-    return company.vehicles.length >= 1 && company.drivers.length >= 1;
+  private fleetReady(company: {
+    vehicles: Array<{ status: string }>;
+    drivers: Array<{ status: string }>;
+  }) {
+    const activeVehicles = company.vehicles.filter((v) => v.status === 'ACTIVE').length;
+    const activeDrivers = company.drivers.filter((d) => d.status === 'ACTIVE').length;
+    return activeVehicles >= 1 && activeDrivers >= 1;
   }
 
   private goNoGo(company: {
@@ -93,8 +97,8 @@ export class CarrierService {
     abn: string | null;
     capabilities: string[];
     serviceRegionCodes: string[];
-    vehicles: unknown[];
-    drivers: unknown[];
+    vehicles: Array<{ status: string }>;
+    drivers: Array<{ status: string }>;
   }) {
     const opsApproved = company.status === CompanyStatus.BID_ELIGIBLE;
     const connectOk = company.stripeConnectPayoutsEnabled;
@@ -118,8 +122,8 @@ export class CarrierService {
     stripeConnectAccountId: string | null;
     stripeConnectPayoutsEnabled: boolean;
     serviceRegionCodes: string[];
-    vehicles: unknown[];
-    drivers: unknown[];
+    vehicles: Array<{ status: string }>;
+    drivers: Array<{ status: string }>;
     complianceDocuments: { docType: ComplianceDocType }[];
   }): string {
     if (company.status === CompanyStatus.REJECTED) return 'rejected';
@@ -136,12 +140,21 @@ export class CarrierService {
     }
     if (!company.abn) return 'profile';
     const docs = new Set(company.complianceDocuments.map((d) => d.docType));
-    if (!docs.has(ComplianceDocType.PUBLIC_LIABILITY) || !docs.has(ComplianceDocType.CARGO_INSURANCE)) {
+    if (
+      !docs.has(ComplianceDocType.PUBLIC_LIABILITY) ||
+      !docs.has(ComplianceDocType.CARGO_INSURANCE) ||
+      !docs.has(ComplianceDocType.RWC)
+    ) {
       return 'documents';
     }
     if (!company.stripeConnectPayoutsEnabled) return 'connect';
-    if (company.vehicles.length < 1) return 'vehicles';
-    if (company.drivers.length < 1) return 'drivers';
+    // Align with fleetReady / submitForReview — DRAFT fleet does not unlock submit.
+    if (company.vehicles.filter((v) => v.status === 'ACTIVE').length < 1) {
+      return 'vehicles';
+    }
+    if (company.drivers.filter((d) => d.status === 'ACTIVE').length < 1) {
+      return 'drivers';
+    }
     if (company.serviceRegionCodes.length < 1) return 'capabilities';
     return 'submit';
   }
@@ -310,9 +323,10 @@ export class CarrierService {
         data: { stripeConnectAccountId: accountId },
       });
     }
-    const adminOrigin =
-      this.config.get('CORS_ORIGINS', { infer: true })?.split(',')[1]?.trim() ||
-      'http://localhost:5174';
+    const corsRaw = this.config.get('CORS_ORIGINS', { infer: true }) || '';
+    const corsOrigins = corsRaw.split(',');
+    const secondOrigin = corsOrigins.length > 1 ? corsOrigins[1].trim() : '';
+    const adminOrigin = secondOrigin || 'http://localhost:5174';
     const refreshUrl = urls?.refreshUrl ?? `${adminOrigin}/carrier/onboarding`;
     const returnUrl = urls?.returnUrl ?? `${adminOrigin}/carrier/onboarding?connect=return`;
     const link = await this.stripe.createAccountLink({
@@ -406,25 +420,28 @@ export class CarrierService {
       throw new ConflictException('Email already registered');
     }
     const token = this.drivers.createInviteToken();
-    const driverUser = await this.prisma.user.create({
-      data: {
-        email: input.email,
-        name: input.name,
-        phone: input.phone,
-        role: PlatformRole.DRIVER,
-        status: UserStatus.PENDING,
-        companyId: company.id,
-      },
-    });
-    const driver = await this.prisma.driver.create({
-      data: {
-        userId: driverUser.id,
-        companyId: company.id,
-        status: DriverStatus.INVITED,
-        licenceNo: input.licenceNo,
-        inviteTokenHash: token.hash,
-        inviteExpiresAt: token.expiresAt,
-      },
+    const { driverUser, driver } = await this.prisma.$transaction(async (tx) => {
+      const driverUser = await tx.user.create({
+        data: {
+          email: input.email,
+          name: input.name,
+          phone: input.phone,
+          role: PlatformRole.DRIVER,
+          status: UserStatus.PENDING,
+          companyId: company.id,
+        },
+      });
+      const driver = await tx.driver.create({
+        data: {
+          userId: driverUser.id,
+          companyId: company.id,
+          status: DriverStatus.INVITED,
+          licenceNo: input.licenceNo,
+          inviteTokenHash: token.hash,
+          inviteExpiresAt: token.expiresAt,
+        },
+      });
+      return { driverUser, driver };
     });
     await this.audit.recordPlatform({
       action: AuditAction.CARRIER_DRIVER_INVITED,
@@ -444,7 +461,7 @@ export class CarrierService {
       ...onboarding,
       invite: {
         driverId: driver.id,
-        email: input.email,
+        email: driverUser.email,
         inviteUrl: this.drivers.inviteUrl(token.raw),
         expiresAt: token.expiresAt,
         mailSkipped: mail.skipped === true,
@@ -549,7 +566,9 @@ export class CarrierService {
       throw new BadRequestException('Complete Stripe Connect before submit');
     }
     if (!this.fleetReady(company)) {
-      throw new BadRequestException('Add at least one vehicle and one driver before submit');
+      throw new BadRequestException(
+        'Add at least one ACTIVE vehicle and one ACTIVE driver before submit',
+      );
     }
     if (company.serviceRegionCodes.length < 1) {
       throw new BadRequestException('Set service regions before submit');
@@ -566,7 +585,11 @@ export class CarrierService {
       throw new BadRequestException('All documents must be uploaded for this company');
     }
     const types = new Set(docs.map((d) => d.docType));
-    for (const required of [ComplianceDocType.PUBLIC_LIABILITY, ComplianceDocType.CARGO_INSURANCE]) {
+    for (const required of [
+      ComplianceDocType.PUBLIC_LIABILITY,
+      ComplianceDocType.CARGO_INSURANCE,
+      ComplianceDocType.RWC,
+    ]) {
       if (!types.has(required)) {
         throw new BadRequestException(`Missing required doc: ${required}`);
       }
@@ -640,23 +663,6 @@ export class CarrierService {
       canBid: goNoGo.canBid,
       goNoGo,
       companyStatus: user.company!.status,
-    };
-  }
-
-  async createBidStub(principal: AuthenticatedPrincipal, _input: CarrierBidStubInput) {
-    const eligibility = await this.getBidEligibility(principal);
-    if (!eligibility.canBid) {
-      throw new ForbiddenException({
-        message: 'Carrier cannot bid until Ops approve + Connect + fleet readiness',
-        code: 'CARRIER_NOT_BID_ELIGIBLE',
-        goNoGo: eligibility.goNoGo,
-      });
-    }
-    return {
-      success: false,
-      message: 'Bid create full implementation is M6 — eligibility gate passed',
-      code: 'BIDS_M6_PENDING',
-      eligibility,
     };
   }
 }

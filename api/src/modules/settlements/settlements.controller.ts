@@ -5,8 +5,13 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 @Controller('settlements')
 export class SettlementsController {
   @Get('_status')
-  @ApiOperation({ summary: 'Settlements module scaffold (M0)' })
+  @ApiOperation({ summary: 'Settlements module scaffold (M10+)' })
   status() {
-    return { module: 'settlements', status: 'ready', milestone: 'M0' };
+    return {
+      module: 'settlements',
+      status: 'scaffold',
+      milestone: 'M10',
+      implemented: false,
+    };
   }
 }

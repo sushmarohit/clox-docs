@@ -128,7 +128,7 @@ export class AuthService {
       }
 
       const user = await this.prisma.user.findUnique({ where: { email: input.email } });
-      if (user && user.status !== UserStatus.DISABLED && user.status !== UserStatus.SUSPENDED) {
+      if (user && user.status === UserStatus.ACTIVE) {
         return {
           kind: 'user',
           id: user.id,
@@ -145,7 +145,7 @@ export class AuthService {
       const user = await this.prisma.user.findFirst({
         where: { phone: input.phone },
       });
-      if (user && user.status !== UserStatus.DISABLED && user.status !== UserStatus.SUSPENDED) {
+      if (user && user.status === UserStatus.ACTIVE) {
         return {
           kind: 'user',
           id: user.id,
@@ -280,10 +280,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or code');
     }
 
-    await this.prisma.otpChallenge.update({
-      where: { id: challenge.id },
+    // Atomic consume — concurrent verify with same code issues at most one session.
+    const consumed = await this.prisma.otpChallenge.updateMany({
+      where: { id: challenge.id, consumedAt: null },
       data: { consumedAt: new Date() },
     });
+    if (consumed.count !== 1) {
+      throw new UnauthorizedException('Invalid email or code');
+    }
 
     await this.audit.recordPlatform({
       action: AuditAction.AUTH_OTP_VERIFIED,
@@ -333,8 +337,8 @@ export class AuthService {
       session.expiresAt <= new Date() ||
       !safeEqual(session.refreshTokenHash, tokenHash)
     ) {
-      if (session && !session.revokedAt) {
-        // Possible reuse — revoke whole family
+      // Reuse of a rotated/revoked refresh token → kill the whole family.
+      if (session?.familyId) {
         await this.prisma.authSession.updateMany({
           where: { familyId: session.familyId, revokedAt: null },
           data: { revokedAt: new Date() },
@@ -535,10 +539,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid or expired step-up code');
     }
 
-    await this.prisma.otpChallenge.update({
-      where: { id: challenge.id },
+    const consumed = await this.prisma.otpChallenge.updateMany({
+      where: { id: challenge.id, consumedAt: null },
       data: { consumedAt: new Date() },
     });
+    if (consumed.count !== 1) {
+      throw new UnauthorizedException('Invalid or expired step-up code');
+    }
 
     await this.audit.recordPlatform({
       action: AuditAction.AUTH_STEP_UP_VERIFIED,

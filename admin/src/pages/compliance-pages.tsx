@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { EmptyBlock, LoadingBlock } from '@/components/status-blocks';
 import {
   decideCompliance,
@@ -8,11 +9,22 @@ import {
   getErrorDetail,
   listComplianceCases,
 } from '@/lib/api';
-import { fieldClassName } from '@/components/admin-shell';
+import {
+  Button,
+  DataCardList,
+  DataTable,
+  Notice,
+  ResponsiveDataView,
+  Select,
+  TextArea,
+  dataCardClassName,
+  useToast,
+} from '@/components/ui';
 import { useAuthStore } from '@/stores/auth-store';
 import { AdminRole } from '@/shared/types';
 
 export function ComplianceQueuePage() {
+  const { t } = useTranslation('common');
   const role = useAuthStore((s) => s.role);
   const [status, setStatus] = useState('OPEN');
   const [regionCode, setRegionCode] = useState(
@@ -29,95 +41,135 @@ export function ComplianceQueuePage() {
       }),
   });
 
+  const rows = query.data?.data ?? [];
+
   return (
     <div>
-      <h1 className="text-2xl font-bold sm:text-3xl">Compliance queue</h1>
-      <p className="mt-2 text-sm text-slate-400">
-        M2 verification UI — scoped by AdminScope. Local BDE: view + escalate only.
-      </p>
+      <h1 className="font-display text-2xl font-bold text-clox-ink sm:text-3xl">
+        {t('compliance.queueTitle')}
+      </h1>
+      <p className="mt-2 text-sm text-clox-mute">{t('compliance.queueSubtitle')}</p>
 
-      <div className="mt-6 flex flex-wrap gap-3">
-        <select
-          className={`${fieldClassName} w-auto`}
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+        <Select
+          className="mb-0 w-full min-w-[10rem] sm:w-auto"
+          label={t('compliance.colStatus')}
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         >
-          <option value="">All statuses</option>
-          <option value="OPEN">OPEN</option>
-          <option value="ESCALATED">ESCALATED</option>
-          <option value="INFO_REQUESTED">INFO_REQUESTED</option>
-          <option value="APPROVED">APPROVED</option>
-          <option value="REJECTED">REJECTED</option>
-        </select>
-        <input
-          className={`${fieldClassName} w-28`}
-          placeholder="Region"
-          value={regionCode}
-          onChange={(e) => setRegionCode(e.target.value.toUpperCase())}
-        />
+          <option value="">{t('compliance.statusAll')}</option>
+          <option value="OPEN">{t('compliance.statusOpen')}</option>
+          <option value="ESCALATED">{t('compliance.statusEscalated')}</option>
+          <option value="INFO_REQUESTED">{t('compliance.statusInfoRequested')}</option>
+          <option value="APPROVED">{t('compliance.statusApproved')}</option>
+          <option value="REJECTED">{t('compliance.statusRejected')}</option>
+        </Select>
+        <label className="mb-0 block w-full sm:w-auto">
+          <span className="mb-1.5 block text-[12.5px] font-semibold text-clox-ink">
+            {t('compliance.colRegion')}
+          </span>
+          <input
+            className="clox-field-control w-full sm:w-28"
+            placeholder={t('compliance.regionPlaceholder')}
+            value={regionCode}
+            onChange={(e) => setRegionCode(e.target.value.toUpperCase())}
+          />
+        </label>
       </div>
 
       {query.isLoading ? (
         <div className="mt-8">
-          <LoadingBlock label="Loading cases…" />
+          <LoadingBlock label={t('compliance.loadingCases')} />
         </div>
       ) : null}
 
       {query.isError ? (
-        <p className="mt-8 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <Notice tone="error" className="mt-8">
           {getErrorDetail(query.error)}
-        </p>
+        </Notice>
       ) : null}
 
-      {query.data?.data.length === 0 ? (
+      {!query.isLoading && !query.isError && rows.length === 0 ? (
         <div className="mt-8">
-          <EmptyBlock title="No cases" description="Submit a carrier/sender package from QA upload." />
+          <EmptyBlock
+            title={t('compliance.noCasesTitle')}
+            description={t('compliance.noCasesDesc')}
+          />
         </div>
       ) : null}
 
-      {query.data && query.data.data.length > 0 ? (
-        <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-white/5 text-xs uppercase tracking-wide text-slate-400">
-              <tr>
-                <th className="px-4 py-3">Company</th>
-                <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Region</th>
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {query.data.data.map((row) => (
-                <tr key={row.id} className="border-t border-white/10">
+      {rows.length > 0 ? (
+        <ResponsiveDataView
+          className="mt-6"
+          cards={
+            <DataCardList
+              items={rows}
+              getKey={(row) => row.id}
+              renderItem={(row) => (
+                <Link to={`/compliance/${row.id}`} className={`block ${dataCardClassName}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold text-clox-ink">
+                        {row.company.legalName}
+                      </p>
+                      <p className="mt-0.5 text-xs text-clox-faint">{row.company.status}</p>
+                    </div>
+                    <span className="clox-status clox-status-info shrink-0">{row.status}</span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-clox-mute">
+                    <span>{row.caseType}</span>
+                    <span>{row.region?.code ?? t('dash')}</span>
+                  </div>
+                  <p className="mt-3 text-sm font-semibold text-clox-orange">
+                    {t('compliance.open')} →
+                  </p>
+                </Link>
+              )}
+            />
+          }
+          table={
+            <DataTable
+              headers={[
+                t('compliance.colCompany'),
+                t('compliance.colType'),
+                t('compliance.colStatus'),
+                t('compliance.colRegion'),
+                '',
+              ]}
+            >
+              {rows.map((row) => (
+                <tr key={row.id} className="border-t border-clox-border-soft hover:bg-clox-surface-alt/60">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-white">{row.company.legalName}</p>
-                    <p className="text-xs text-slate-500">{row.company.status}</p>
+                    <p className="font-medium text-clox-ink">{row.company.legalName}</p>
+                    <p className="text-xs text-clox-faint">{row.company.status}</p>
                   </td>
                   <td className="px-4 py-3 font-mono text-xs">{row.caseType}</td>
                   <td className="px-4 py-3">
                     <span className="clox-status clox-status-info">{row.status}</span>
                   </td>
-                  <td className="px-4 py-3">{row.region?.code ?? '—'}</td>
+                  <td className="px-4 py-3">{row.region?.code ?? t('dash')}</td>
                   <td className="px-4 py-3 text-right">
                     <Link to={`/compliance/${row.id}`} className="text-clox-orange hover:underline">
-                      Open
+                      {t('compliance.open')}
                     </Link>
                   </td>
                 </tr>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </DataTable>
+          }
+        />
       ) : null}
     </div>
   );
 }
 
 export function ComplianceCasePage({ caseId }: { caseId: string }) {
+  const { t } = useTranslation('common');
   const role = useAuthStore((s) => s.role);
   const qc = useQueryClient();
+  const toast = useToast();
   const [note, setNote] = useState('');
+  const [noteError, setNoteError] = useState<string | null>(null);
 
   const query = useQuery({
     queryKey: ['compliance', 'case', caseId],
@@ -126,123 +178,129 @@ export function ComplianceCasePage({ caseId }: { caseId: string }) {
 
   const decide = useMutation({
     mutationFn: (action: 'approve' | 'reject' | 'request-info' | 'escalate') =>
-      decideCompliance(caseId, action, note || undefined),
+      decideCompliance(caseId, action, note.trim() || undefined),
     onSuccess: async () => {
+      setNoteError(null);
+      toast.success(t('compliance.decisionApplied'));
       await qc.invalidateQueries({ queryKey: ['compliance'] });
     },
+    onError: (err) => toast.error(getErrorDetail(err)),
   });
 
   const canDecide = role === AdminRole.SUPER_ADMIN || role === AdminRole.STATE_MASTER;
   const canEscalate = role === AdminRole.LOCAL_BDE;
 
+  function runDecision(action: 'approve' | 'reject' | 'request-info' | 'escalate') {
+    const trimmed = note.trim();
+    if (action === 'reject' && !trimmed) {
+      setNoteError(t('validation.noteRejectRequired'));
+      return;
+    }
+    if (action === 'request-info' && !trimmed) {
+      setNoteError(t('validation.noteInfoRequired'));
+      return;
+    }
+    setNoteError(null);
+    decide.mutate(action);
+  }
+
   if (query.isLoading) {
-    return <LoadingBlock label="Loading case…" />;
+    return <LoadingBlock label={t('compliance.loadingCase')} />;
   }
 
   if (query.isError || !query.data) {
-    return (
-      <p className="rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300">
-        {getErrorDetail(query.error)}
-      </p>
-    );
+    return <Notice tone="error">{getErrorDetail(query.error)}</Notice>;
   }
 
   const c = query.data;
 
   return (
     <div>
-      <Link to="/compliance" className="text-sm text-slate-400 hover:text-white">
-        ← Queue
+      <Link to="/compliance" className="text-sm text-clox-mute hover:text-clox-ink">
+        {t('compliance.backQueue')}
       </Link>
-      <h1 className="mt-3 text-2xl font-bold">{c.company.legalName}</h1>
-      <p className="mt-1 font-mono text-sm text-slate-400">
+      <h1 className="mt-3 font-display text-2xl font-bold text-clox-ink">{c.company.legalName}</h1>
+      <p className="mt-1 font-mono text-sm text-clox-mute">
         {c.caseType} · {c.status} · company {c.company.status}
       </p>
 
       {c.abrAssist ? (
-        <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-4 text-sm">
-          <p className="font-semibold">ABR assist (not auto-approve)</p>
-          <p className="mt-1 text-slate-300">{c.abrAssist.message}</p>
-          <p className="mt-1 text-xs text-slate-500">
-            active={String(c.abrAssist.active)} · {c.abrAssist.entityName ?? '—'}
+        <div className="clox-card mt-4 p-4 text-sm">
+          <p className="font-semibold text-clox-ink">{t('compliance.abrTitle')}</p>
+          <p className="mt-1 text-clox-mute">{c.abrAssist.message}</p>
+          <p className="mt-1 text-xs text-clox-faint">
+            active={String(c.abrAssist.active)} · {c.abrAssist.entityName ?? t('dash')}
           </p>
         </div>
       ) : null}
 
       <section className="mt-6">
-        <h2 className="text-lg font-semibold">Documents</h2>
+        <h2 className="font-display text-lg font-semibold">{t('compliance.docsTitle')}</h2>
         <ul className="mt-2 space-y-2">
           {c.documents.map((d) => (
-            <li key={d.id} className="rounded-xl border border-white/10 px-3 py-2 text-sm">
+            <li key={d.id} className="rounded-clox-md border border-clox-border px-3 py-2 text-sm">
               <span className="font-mono text-xs text-clox-orange">{d.docType}</span>{' '}
-              <span className="text-slate-400">{d.status}</span>
-              <span className="ml-2 text-slate-500">{d.originalFilename}</span>
+              <span className="text-clox-mute">{d.status}</span>
+              <span className="ml-2 text-clox-faint">{d.originalFilename}</span>
             </li>
           ))}
         </ul>
       </section>
 
       <section className="mt-8 max-w-xl">
-        <label className="mb-1.5 block text-sm font-medium">Decision note</label>
-        <textarea
-          className={`${fieldClassName} min-h-24`}
+        <TextArea
+          label={t('compliance.decisionNote')}
+          placeholder={t('compliance.noteHint')}
           value={note}
-          onChange={(e) => setNote(e.target.value)}
-          placeholder="Optional note for audit"
+          onChange={(e) => {
+            setNote(e.target.value);
+            if (noteError) setNoteError(null);
+          }}
+          error={noteError ?? undefined}
+          hint={t('compliance.noteHint')}
         />
 
-        {decide.isError ? (
-          <p className="mt-3 rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">
-            {getErrorDetail(decide.error)}
-          </p>
-        ) : null}
-        {decide.isSuccess ? (
-          <p className="mt-3 rounded-lg bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300">
-            Decision applied. Refresh shows new status.
-          </p>
-        ) : null}
-
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-2 flex flex-wrap gap-2">
           {canDecide ? (
             <>
-              <button
+              <Button
                 type="button"
-                className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold disabled:opacity-50"
+                variant="primary"
                 disabled={decide.isPending}
-                onClick={() => decide.mutate('approve')}
+                onClick={() => runDecision('approve')}
               >
-                Approve
-              </button>
-              <button
+                {t('compliance.approve')}
+              </Button>
+              <Button
                 type="button"
-                className="rounded-xl bg-amber-600 px-4 py-2 text-sm font-semibold disabled:opacity-50"
+                variant="secondary"
                 disabled={decide.isPending}
-                onClick={() => decide.mutate('request-info')}
+                onClick={() => runDecision('request-info')}
               >
-                Request info
-              </button>
-              <button
+                {t('compliance.requestInfo')}
+              </Button>
+              <Button
                 type="button"
-                className="rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold disabled:opacity-50"
+                variant="destructive"
                 disabled={decide.isPending}
-                onClick={() => decide.mutate('reject')}
+                onClick={() => runDecision('reject')}
               >
-                Reject
-              </button>
+                {t('compliance.reject')}
+              </Button>
             </>
           ) : null}
           {canEscalate ? (
-            <button
+            <Button
               type="button"
-              className="rounded-xl bg-clox-orange px-4 py-2 text-sm font-semibold disabled:opacity-50"
+              variant="cta"
               disabled={decide.isPending}
-              onClick={() => decide.mutate('escalate')}
+              onClick={() => runDecision('escalate')}
             >
-              Escalate (Local only)
-            </button>
+              {t('compliance.escalate')}
+            </Button>
           ) : null}
           {!canDecide && !canEscalate ? (
-            <p className="text-sm text-slate-400">No decision actions for this role.</p>
+            <p className="text-sm text-clox-mute">{t('compliance.noActions')}</p>
           ) : null}
         </div>
       </section>

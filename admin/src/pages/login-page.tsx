@@ -1,11 +1,14 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 import { applyAuthTokensToStore, getErrorDetail, requestOtp, verifyOtp } from '@/lib/api';
-import { fieldClassName, primaryButtonClassName } from '@/components/admin-shell';
+import { BrandLogo } from '@/components/brand-logo';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import { Button, Field, Notice } from '@/components/ui';
 import { AppRole } from '@/shared/types';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -36,8 +39,30 @@ export function LoginPage() {
   const [email, setEmail] = useState(prefillEmail);
   const [debugCode, setDebugCode] = useState<string | null>(null);
 
-  const emailForm = useForm<EmailForm>({ defaultValues: { email: prefillEmail } });
-  const otpForm = useForm<OtpForm>({ defaultValues: { code: '' } });
+  const emailSchema = z.object({
+    email: z
+      .string()
+      .trim()
+      .min(1, t('login.emailRequired'))
+      .email(t('login.emailInvalid')),
+  });
+
+  const otpSchema = z.object({
+    code: z
+      .string()
+      .trim()
+      .min(1, t('login.otpRequired'))
+      .regex(/^\d{4,8}$/, t('login.otpInvalid')),
+  });
+
+  const emailForm = useForm<EmailForm>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: { email: prefillEmail },
+  });
+  const otpForm = useForm<OtpForm>({
+    resolver: zodResolver(otpSchema),
+    defaultValues: { code: '' },
+  });
 
   const requestMutation = useMutation({
     mutationFn: (payload: EmailForm) => requestOtp({ email: payload.email.trim() }),
@@ -54,11 +79,11 @@ export function LoginPage() {
     mutationFn: (payload: OtpForm) => verifyOtp({ email, code: payload.code.trim() }),
     onSuccess: (tokens) => {
       applyAuthTokensToStore(tokens);
-      const role = tokens.principal?.role ?? tokens.admin?.role;
+      const nextRole = tokens.principal?.role ?? tokens.admin?.role;
       navigate(
-        role === 'SENDER'
+        nextRole === 'SENDER'
           ? '/sender/onboarding'
-          : role === 'TRANSPORT_COMPANY'
+          : nextRole === 'TRANSPORT_COMPANY'
             ? '/carrier/onboarding'
             : '/',
         { replace: true },
@@ -88,95 +113,82 @@ export function LoginPage() {
       : null;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
-      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8">
+    <main className="flex min-h-screen items-center justify-center bg-clox-bg px-4 py-10 text-clox-text sm:px-6">
+      <div className="clox-card w-full max-w-md p-6 shadow-clox-2 sm:p-8">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-clox-orange">
-            {t('brand')}
-          </p>
+          <BrandLogo variant="default" className="h-9 w-auto object-contain object-left" />
           <LanguageSwitcher />
         </div>
-        <h1 className="mt-4 text-3xl font-bold">Sign in</h1>
-        <p className="mt-3 text-sm text-slate-300">
-          {step === 'email'
-            ? 'All Phase 1 roles use email OTP (verification UI).'
-            : 'Enter the login code.'}
+        <h1 className="mt-4 font-display text-3xl font-bold text-clox-ink">{t('login.title')}</h1>
+        <p className="mt-3 text-sm text-clox-mute">
+          {step === 'email' ? t('login.emailHint') : t('login.otpHint')}
         </p>
 
-        <div className="mt-4 rounded-xl border border-white/10 bg-slate-900/50 px-3 py-2 text-xs text-slate-400">
-          <p className="font-semibold text-slate-300">QA seed emails</p>
-          <ul className="mt-1 space-y-0.5">
+        <Notice tone="info" className="mt-4" title={t('login.qaSeeds')}>
+          <ul className="mt-1 space-y-0.5 font-mono text-[11.5px]">
             {QA_HINTS.map((hint) => (
-              <li key={hint} className="font-mono">
-                {hint}
-              </li>
+              <li key={hint}>{hint}</li>
             ))}
           </ul>
-        </div>
+        </Notice>
 
         {step === 'email' ? (
           <form
-            className="mt-6 space-y-4"
+            className="mt-6"
             onSubmit={emailForm.handleSubmit((values) => requestMutation.mutate(values))}
             noValidate
           >
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-200">Email</label>
-              <input
-                type="email"
-                autoComplete="email"
-                className={fieldClassName}
-                placeholder="name@yopmail.com"
-                {...emailForm.register('email', { required: true })}
-              />
-            </div>
-            {error ? (
-              <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">{error}</p>
-            ) : null}
-            <button type="submit" disabled={pending} className={`${primaryButtonClassName} w-full`}>
-              {pending ? t('loading') : 'Send code'}
-            </button>
+            <Field
+              type="email"
+              autoComplete="email"
+              label={t('email')}
+              required
+              placeholder="name@yopmail.com"
+              error={emailForm.formState.errors.email?.message}
+              {...emailForm.register('email')}
+            />
+            {error ? <Notice tone="error" className="mb-4">{error}</Notice> : null}
+            <Button type="submit" variant="cta" size="block" disabled={pending}>
+              {pending ? t('loading') : t('login.sendCode')}
+            </Button>
           </form>
         ) : (
           <form
-            className="mt-6 space-y-4"
+            className="mt-6"
             onSubmit={otpForm.handleSubmit((values) => verifyMutation.mutate(values))}
             noValidate
           >
-            <p className="rounded-xl border border-white/10 bg-slate-900/60 px-3 py-2 text-sm text-slate-300">
-              Code sent to <span className="font-medium text-white">{email}</span>
-            </p>
+            <Notice tone="info" className="mb-4">
+              {t('login.codeSentTo')} <span className="font-semibold text-clox-ink">{email}</span>
+            </Notice>
             {debugCode ? (
-              <div className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-3 py-3 text-sm text-amber-100">
-                <p className="text-xs font-semibold uppercase tracking-wide text-amber-300/90">
-                  Dev OTP
-                </p>
-                <p className="mt-1 font-mono text-2xl font-bold tracking-[0.35em] text-white">
+              <Notice tone="warn" className="mb-4" title={t('login.devOtp')}>
+                <p className="font-mono text-2xl font-bold tracking-[0.35em] text-clox-ink">
                   {debugCode}
                 </p>
-              </div>
+              </Notice>
             ) : null}
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-200">Login code</label>
-              <input
-                type="text"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                className={`${fieldClassName} tracking-[0.3em]`}
-                placeholder="••••••"
-                maxLength={8}
-                {...otpForm.register('code', { required: true })}
-              />
-            </div>
-            {error ? (
-              <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">{error}</p>
-            ) : null}
-            <button type="submit" disabled={pending} className={`${primaryButtonClassName} w-full`}>
-              {pending ? t('loading') : 'Verify'}
-            </button>
-            <button
+            <Field
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              label={t('login.loginCode')}
+              required
+              placeholder="••••••"
+              maxLength={8}
+              className="tracking-[0.3em]"
+              error={otpForm.formState.errors.code?.message}
+              {...otpForm.register('code')}
+            />
+            {error ? <Notice tone="error" className="mb-4">{error}</Notice> : null}
+            <Button type="submit" variant="cta" size="block" disabled={pending}>
+              {pending ? t('loading') : t('login.verify')}
+            </Button>
+            <Button
               type="button"
-              className="w-full text-sm text-slate-400 hover:text-white"
+              variant="ghost"
+              size="block"
+              className="mt-2"
               onClick={() => {
                 setStep('email');
                 setDebugCode(null);
@@ -184,20 +196,20 @@ export function LoginPage() {
                 verifyMutation.reset();
               }}
             >
-              Use a different email
-            </button>
+              {t('login.useDifferentEmail')}
+            </Button>
           </form>
         )}
 
-        <p className="mt-6 text-center text-sm text-slate-400">
-          New sender?{' '}
-          <Link to="/register/sender" className="text-clox-orange hover:underline">
-            Register
+        <p className="mt-6 text-center text-sm text-clox-mute">
+          {t('login.newSender')}{' '}
+          <Link to="/register/sender" className="font-semibold text-clox-orange hover:underline">
+            {t('login.register')}
           </Link>
           {' · '}
-          New carrier?{' '}
-          <Link to="/register/carrier" className="text-clox-orange hover:underline">
-            Register
+          {t('login.newCarrier')}{' '}
+          <Link to="/register/carrier" className="font-semibold text-clox-orange hover:underline">
+            {t('login.register')}
           </Link>
         </p>
       </div>

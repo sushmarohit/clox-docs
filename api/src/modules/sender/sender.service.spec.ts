@@ -19,7 +19,7 @@ describe('SenderService booking gate', () => {
       user: {
         findUnique: jest.fn().mockResolvedValue({
           id: 'u1',
-          email: 's@test.com',
+          email: 's@yopmail.com',
           role: 'SENDER',
           company: {
             ...company,
@@ -49,7 +49,7 @@ describe('SenderService booking gate', () => {
 
     const result = await service.getBookingEligibility({
       id: 'u1',
-      email: 's@test.com',
+      email: 's@yopmail.com',
       role: 'SENDER',
       kind: 'user',
       regionCodes: [],

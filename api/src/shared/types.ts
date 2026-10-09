@@ -113,6 +113,30 @@ export const AuditAction = {
   DRIVER_PROFILE_SUBMITTED: 'driver.profile_submitted',
   DRIVER_ACTIVATED: 'driver.activated',
   DRIVER_SUSPENDED: 'driver.suspended',
+  JOB_CREATED: 'job.created',
+  JOB_PUBLISHED: 'job.published',
+  PROPOSAL_SUBMITTED: 'proposal.submitted',
+  PROPOSAL_ACCEPTED: 'proposal.accepted',
+  PROPOSAL_EXPIRED_CONFLICT: 'proposal.expired_conflict',
+  PAYMENT_INTENT_CREATED: 'payment.intent_created',
+  PAYMENT_SUCCEEDED: 'payment.succeeded',
+  PAYMENT_FAILED: 'payment.failed',
+  ASSIGNMENT_LOCKED: 'assignment.locked',
+  REFUND_STUB: 'payment.refund_stub',
+  TRIP_CREATED: 'trip.created',
+  TRIP_SAFETY_PASSED: 'trip.safety_passed',
+  TRIP_SAFETY_FAILED: 'trip.safety_failed',
+  TRIP_MASS_CHECKED: 'trip.mass_checked',
+  TRIP_STARTED: 'trip.started',
+  TRIP_BREAK_TOGGLED: 'trip.break_toggled',
+  TRIP_LOCATION: 'trip.location',
+  TRIP_GEOFENCE_ENTER: 'trip.geofence_enter',
+  TRIP_GEOFENCE_EXIT: 'trip.geofence_exit',
+  TRIP_COMPLETED: 'trip.completed',
+  SURCHARGE_CREATED: 'surcharge.created',
+  SURCHARGE_PAID: 'surcharge.paid',
+  SURCHARGE_WAIVED: 'surcharge.waived',
+  PUSH_STUB: 'notify.push_stub',
 } as const;
 
 export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction];
@@ -198,7 +222,7 @@ export const leadStatusSchema = z.enum([
 
 export const registrySenderSchema = z.object({
   userType: z.literal('sender'),
-  companyLegalName: organizationNameField(2, 200),
+  companyLegalName: organizationNameField(),
   abn: abnField,
   shippingOrigin: z.string().trim().min(2).max(120),
   operationalModels: z.array(z.string().min(1)).min(1),
@@ -239,8 +263,8 @@ export const eoiLeadSchema = z.object({
   role: z.enum(['state_master', 'local_bde']),
   targetState: z.string().trim().min(2).max(80),
   targetTerritory: z.string().trim().min(2).max(120),
-  fullLegalName: personNameField(2, 120),
-  companyName: organizationNameField(2, 200),
+  fullLegalName: personNameField(),
+  companyName: organizationNameField(),
   abn: abnField,
   acn: z.string().trim().max(20).optional(),
   email: emailField,
@@ -615,7 +639,7 @@ export const senderProfileSchema = z
     gstRegistered: z.boolean().default(false),
   })
   .superRefine((value, ctx) => {
-    if (value.accountType === 'BUSINESS' && (!value.abn || value.abn.length === 0)) {
+    if (value.accountType === 'BUSINESS' && !value.abn?.length) {
       ctx.addIssue({
         code: 'custom',
         path: ['abn'],
@@ -672,7 +696,11 @@ export type CarrierSubmitVerificationInput = z.infer<typeof carrierSubmitVerific
 export const carrierVehicleSchema = z.object({
   label: z.string().trim().min(1).max(120),
   registration: z.string().trim().min(2).max(20),
-  vehicleClass: z.string().trim().min(2).max(40),
+  vehicleClass: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^(UTE|VAN|RIGID_1_2T|RIGID_3_4T|SEMI|BDOUBLE)$/),
   tareKg: z.number().int().positive().max(100_000).optional(),
   gvmKg: z.number().int().positive().max(200_000).optional(),
   gcmKg: z.number().int().positive().max(300_000).optional(),
@@ -691,7 +719,7 @@ export type CarrierDriverInviteInput = z.infer<typeof carrierDriverInviteSchema>
 
 export const carrierCapabilitiesSchema = z.object({
   capabilities: z
-    .array(z.enum(['DG', 'REEFER', 'TAIL_LIFT', 'CURTAINSIDER', 'FLATBED', 'OTHER']))
+    .array(z.enum(['DG', 'REEFER', 'OVERSIZE', 'TAIL_LIFT', 'CURTAINSIDER', 'FLATBED', 'OTHER']))
     .default([]),
   serviceRegionCodes: z
     .array(z.string().trim().toUpperCase().regex(/^[A-Z]{2,3}$/))
@@ -734,4 +762,123 @@ export const driverProfileSchema = z.object({
 });
 
 export type DriverProfileInput = z.infer<typeof driverProfileSchema>;
+
+const vehicleClassField = z
+  .string()
+  .trim()
+  .toUpperCase()
+  .regex(/^(UTE|VAN|RIGID_1_2T|RIGID_3_4T|SEMI|BDOUBLE)$/);
+
+const jobStopSchema = z.object({
+  sequence: z.number().int().min(0).max(3),
+  stopType: z.enum(['PICKUP', 'DROPOFF', 'WAYPOINT']),
+  label: z.string().trim().max(120).optional(),
+  addressLine: z.string().trim().min(3).max(200),
+  suburb: z.string().trim().min(2).max(80),
+  state: z.string().trim().toUpperCase().regex(/^[A-Z]{2,3}$/),
+  postcode: z.string().trim().min(4).max(8),
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+  receiverName: z.string().trim().min(2).max(120).optional(),
+  receiverEmail: z.string().trim().email().optional(),
+});
+
+export const jobCreateSchema = z
+  .object({
+    title: z.string().trim().min(2).max(160).optional(),
+    pricingModel: z.enum(['PER_KM', 'HOURLY']),
+    hourlyPattern: z.enum(['A', 'B']).optional(),
+    pickupAt: z.string().datetime({ offset: true }).or(z.string().regex(/^\d{4}-\d{2}-\d{2}T/)),
+    receiverName: z.string().trim().min(2).max(120),
+    receiverEmail: z.string().trim().email(),
+    receiverPhone: z.string().trim().min(8).max(32).optional(),
+    deadWeightKg: z.number().positive().max(50_000),
+    lengthCm: z.number().positive().max(2000),
+    widthCm: z.number().positive().max(500),
+    heightCm: z.number().positive().max(500),
+    loadTypes: z
+      .array(z.enum(['GENERAL', 'DG', 'REEFER', 'OVERSIZE']))
+      .min(1)
+      .max(4)
+      .default(['GENERAL']),
+    /** Optional override; otherwise recommended from chargeable weight */
+    minVehicleClass: vehicleClassField.optional(),
+    siteManeuverability: z.enum(['EASY', 'MODERATE', 'TIGHT']),
+    siteFacility: z.enum(['DOCK', 'GROUND', 'FORKLIFT', 'CRANE', 'OTHER']),
+    siteDisclaimerAccepted: z.literal(true),
+    stops: z.array(jobStopSchema).min(2).max(4),
+  })
+  .superRefine((val, ctx) => {
+    if (val.pricingModel === 'PER_KM' && val.stops.length !== 2) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Per-km jobs require exactly 1 pickup + 1 drop',
+        path: ['stops'],
+      });
+    }
+    if (val.pricingModel === 'HOURLY' && !val.hourlyPattern) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Hourly jobs require Pattern A or B',
+        path: ['hourlyPattern'],
+      });
+    }
+    const pickups = val.stops.filter((s) => s.stopType === 'PICKUP').length;
+    const drops = val.stops.filter((s) => s.stopType === 'DROPOFF').length;
+    if (pickups < 1 || drops < 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'At least one PICKUP and one DROPOFF required',
+        path: ['stops'],
+      });
+    }
+  });
+
+export type JobCreateInput = z.infer<typeof jobCreateSchema>;
+
+export const proposalSubmitSchema = z.object({
+  jobId: z.string().uuid(),
+  vehicleId: z.string().uuid(),
+  driverId: z.string().uuid(),
+  amountIncGstCents: z.number().int().positive().max(50_000_000),
+  etaMinutes: z.number().int().positive().max(10_000),
+});
+
+export type ProposalSubmitInput = z.infer<typeof proposalSubmitSchema>;
+
+export const tripSafetyCheckSchema = z.object({
+  passed: z.boolean(),
+  notes: z.string().trim().max(500).optional(),
+  /** Client must be online — offline start/check rejected */
+  online: z.literal(true),
+});
+
+export type TripSafetyCheckInput = z.infer<typeof tripSafetyCheckSchema>;
+
+export const tripMassCheckSchema = z.object({
+  actualMassKg: z.number().positive().max(100_000),
+  online: z.literal(true),
+});
+
+export type TripMassCheckInput = z.infer<typeof tripMassCheckSchema>;
+
+export const tripStartSchema = z.object({
+  online: z.literal(true),
+});
+
+export type TripStartInput = z.infer<typeof tripStartSchema>;
+
+export const tripBreakSchema = z.object({
+  onBreak: z.boolean(),
+});
+
+export type TripBreakInput = z.infer<typeof tripBreakSchema>;
+
+export const tripLocationSchema = z.object({
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+  recordedAt: z.string().datetime({ offset: true }).optional(),
+});
+
+export type TripLocationInput = z.infer<typeof tripLocationSchema>;
 

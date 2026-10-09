@@ -9,7 +9,7 @@ describe('DriverService assignability', () => {
       user: {
         findUnique: jest.fn().mockResolvedValue({
           id: 'u1',
-          email: 'd@test.com',
+          email: 'd@yopmail.com',
           role: 'DRIVER',
           name: 'D',
           phone: null,
@@ -37,7 +37,7 @@ describe('DriverService assignability', () => {
     );
     const result = await service.getAssignability({
       id: 'u1',
-      email: 'd@test.com',
+      email: 'd@yopmail.com',
       role: 'DRIVER',
       kind: 'user',
       regionCodes: [],
@@ -57,12 +57,39 @@ describe('DriverService assignability', () => {
     await expect(
       service.getOnboarding({
         id: 'u1',
-        email: 'c@test.com',
+        email: 'c@yopmail.com',
         role: 'TRANSPORT_COMPANY',
         kind: 'user',
         regionCodes: [],
         territoryCodes: [],
       }),
     ).rejects.toBeInstanceOf(ForbiddenException);
+  });
+
+  it('suspendExpiredLicences suspends ACTIVE drivers past expiry', async () => {
+    const prisma = {
+      isConnected: () => true,
+      driver: {
+        findMany: jest.fn().mockResolvedValue([
+          { id: 'd1', licenceExpiry: new Date('2020-01-01') },
+        ]),
+        update: jest.fn().mockResolvedValue({}),
+      },
+    };
+    const audit = { recordPlatform: jest.fn() };
+    const service = new DriverService(
+      prisma as never,
+      audit as never,
+      { sendDriverInviteEmail: jest.fn() } as never,
+      {
+        get: (k: string) => (k === 'DRIVER_INVITE_TTL_HOURS' ? 168 : 'http://localhost:5174'),
+      } as never,
+    );
+    const result = await service.suspendExpiredLicences();
+    expect(result.suspended).toBe(1);
+    expect(prisma.driver.update).toHaveBeenCalledWith({
+      where: { id: 'd1' },
+      data: { status: DriverStatus.SUSPENDED },
+    });
   });
 });

@@ -273,7 +273,8 @@ async function seedMarketplaceUsers(vicRegionId: string) {
           companyId: carrierCompany.id,
           status: 'ACTIVE',
           licenceNo: 'VIC-QA-001',
-          licenceClass: 'C',
+          // LR required for seeded RIGID_1_2T vehicle (matching licence gate).
+          licenceClass: 'LR',
           licenceExpiry: new Date('2030-12-31T00:00:00.000Z'),
           nhvrAcknowledgedAt: new Date(),
           inviteAcceptedAt: new Date(),
@@ -283,7 +284,7 @@ async function seedMarketplaceUsers(vicRegionId: string) {
           companyId: carrierCompany.id,
           status: 'ACTIVE',
           licenceNo: 'VIC-QA-001',
-          licenceClass: 'C',
+          licenceClass: 'LR',
           licenceExpiry: new Date('2030-12-31T00:00:00.000Z'),
           nhvrAcknowledgedAt: new Date(),
           inviteAcceptedAt: new Date(),
@@ -293,11 +294,67 @@ async function seedMarketplaceUsers(vicRegionId: string) {
   }
 }
 
+async function seedPolicy() {
+  await prisma.policyVersion.upsert({
+    where: { key_version: { key: 'MIN_BASE_FARE', version: 1 } },
+    update: {
+      payload: { perKmMinCents: 5000, hourlyMinCents: 20000 },
+      publishedAt: new Date(),
+    },
+    create: {
+      key: 'MIN_BASE_FARE',
+      version: 1,
+      payload: { perKmMinCents: 5000, hourlyMinCents: 20000 },
+      publishedAt: new Date(),
+    },
+  });
+  // eslint-disable-next-line no-console
+  console.log('Seeded PolicyVersion MIN_BASE_FARE v1');
+
+  await prisma.policyVersion.upsert({
+    where: { key_version: { key: 'geofence.v1', version: 1 } },
+    update: {
+      payload: {
+        radiusMeters: 200,
+        antiBounceSamples: 2,
+        freeWaitPickupMinutes: 30,
+        freeWaitDropMinutes: 60,
+        waitingCentsPerMinuteIncGst: 100,
+        massBaseCentsIncGst: 5000,
+        massPerKgCentsIncGst: 100,
+        massTolerancePct: 2,
+        /** DEV demo: free wait seconds override (null = use minutes). */
+        freeWaitSecondsOverride: 30,
+      },
+      publishedAt: new Date(),
+    },
+    create: {
+      key: 'geofence.v1',
+      version: 1,
+      payload: {
+        radiusMeters: 200,
+        antiBounceSamples: 2,
+        freeWaitPickupMinutes: 30,
+        freeWaitDropMinutes: 60,
+        waitingCentsPerMinuteIncGst: 100,
+        massBaseCentsIncGst: 5000,
+        massPerKgCentsIncGst: 100,
+        massTolerancePct: 2,
+        freeWaitSecondsOverride: 30,
+      },
+      publishedAt: new Date(),
+    },
+  });
+  // eslint-disable-next-line no-console
+  console.log('Seeded PolicyVersion geofence.v1');
+}
+
 async function main() {
   await seedSuperAdmin();
   const vic = await seedRegions();
   await seedScopedAdmins(vic.id);
   await seedMarketplaceUsers(vic.id);
+  await seedPolicy();
 }
 
 main()

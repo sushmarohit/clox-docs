@@ -1,62 +1,110 @@
 import {
   Body,
   Controller,
-  ForbiddenException,
   Get,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
+import {
+  AppRole,
+  jobCreateSchema,
+  type JobCreateInput,
+} from '../../shared/types';
 import { CurrentPrincipal } from '../../common/decorators/current-admin.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtAuthGuard, type AuthenticatedPrincipal } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { AppRole } from '../../shared/types';
-import { SenderService } from '../sender/sender.service';
-
-const createJobStubSchema = z.object({
-  title: z.string().trim().min(1).max(200).optional(),
-});
-
-type CreateJobStubInput = z.infer<typeof createJobStubSchema>;
+import { JobsService } from './jobs.service';
+import {
+  chargeableWeightKg,
+  recommendVehicleClass,
+  VEHICLE_CLASS_RANK,
+} from './job-pricing.util';
 
 @ApiTags('jobs')
 @Controller('jobs')
 export class JobsController {
-  constructor(private readonly senderService: SenderService) {}
+  constructor(private readonly jobsService: JobsService) {}
 
   @Get('_status')
   @ApiOperation({ summary: 'Jobs module status' })
   status() {
-    return { module: 'jobs', status: 'ready', milestone: 'M3-gate' };
+    return { module: 'jobs', status: 'ready', milestone: 'M6' };
+  }
+
+  @Get('meta/vehicle-classes')
+  @ApiOperation({ summary: 'Vehicle class ranks + chargeable helper (FR-3)' })
+  vehicleMeta() {
+    return {
+      classes: Object.keys(VEHICLE_CLASS_RANK),
+      ranks: VEHICLE_CLASS_RANK,
+      chargeableFormula: 'max(deadKg, L×W×Hcm/4000)',
+    };
+  }
+
+  @Post('meta/recommend')
+  @ApiOperation({ summary: 'Recommend vehicle class from dimensions' })
+  recommend(
+    @Body()
+    body: { deadWeightKg: number; lengthCm: number; widthCm: number; heightCm: number },
+  ) {
+    const chargeable = chargeableWeightKg(body);
+    const recommended = recommendVehicleClass(chargeable);
+    return { chargeableWeightKg: chargeable, recommendedVehicleClass: recommended };
+  }
+
+  @Get()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AppRole.SENDER)
+  @ApiOperation({ summary: 'List sender jobs' })
+  list(@CurrentPrincipal() principal: AuthenticatedPrincipal) {
+    return this.jobsService.listSenderJobs(principal);
+  }
+
+  @Get(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AppRole.SENDER)
+  @ApiOperation({ summary: 'Get job + masked proposals' })
+  get(@CurrentPrincipal() principal: AuthenticatedPrincipal, @Param('id') id: string) {
+    return this.jobsService.getJobForSender(principal, id);
   }
 
   @Post()
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(AppRole.SENDER)
-  @ApiOperation({
-    summary: 'Create job stub — blocked unless sender go/no-go canBook',
-  })
-  async createStub(
+  @ApiOperation({ summary: 'Create draft job (canBook required)' })
+  create(
     @CurrentPrincipal() principal: AuthenticatedPrincipal,
-    @Body(new ZodValidationPipe(createJobStubSchema)) _body: CreateJobStubInput,
+    @Body(new ZodValidationPipe(jobCreateSchema)) body: JobCreateInput,
   ) {
-    const eligibility = await this.senderService.getBookingEligibility(principal);
-    if (!eligibility.canBook) {
-      throw new ForbiddenException({
-        message: 'Sender cannot create jobs until Ops approve + invoice + payment ready',
-        code: 'SENDER_NOT_BOOKING_READY',
-        goNoGo: eligibility.goNoGo,
-      });
-    }
-    return {
-      success: false,
-      message: 'Job create full implementation is M6 — eligibility gate passed',
-      code: 'JOBS_M6_PENDING',
-      eligibility,
-    };
+    return this.jobsService.createJob(principal, body);
+  }
+
+  @Post(':id/publish')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AppRole.SENDER)
+  @ApiOperation({ summary: 'Publish draft → BIDDING' })
+  publish(@CurrentPrincipal() principal: AuthenticatedPrincipal, @Param('id') id: string) {
+    return this.jobsService.publishJob(principal, id);
+  }
+
+  @Post(':id/proposals/:proposalId/accept')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(AppRole.SENDER)
+  @ApiOperation({ summary: 'Accept proposal → PaymentIntent + assignment (M7 Model A)' })
+  accept(
+    @CurrentPrincipal() principal: AuthenticatedPrincipal,
+    @Param('id') id: string,
+    @Param('proposalId') proposalId: string,
+  ) {
+    return this.jobsService.acceptProposal(principal, id, proposalId);
   }
 }

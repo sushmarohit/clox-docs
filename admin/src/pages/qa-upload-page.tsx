@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   confirmDocument,
   createUploadIntent,
@@ -8,7 +9,7 @@ import {
   submitCompliance,
   uploadDocumentContent,
 } from '@/lib/api';
-import { fieldClassName, primaryButtonClassName, secondaryButtonClassName } from '@/components/admin-shell';
+import { Button, Notice, Select } from '@/components/ui';
 import { AppRole } from '@/shared/types';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -18,6 +19,7 @@ const SENDER_COMPANY = '00000000-0000-4000-8000-000000000001';
 const CARRIER_COMPANY = '00000000-0000-4000-8000-000000000002';
 
 export function QaUploadPage() {
+  const { t } = useTranslation('common');
   const role = useAuthStore((s) => s.role);
   const [file, setFile] = useState<File | null>(null);
   const [docType, setDocType] = useState('PUBLIC_LIABILITY');
@@ -37,13 +39,11 @@ export function QaUploadPage() {
   }, [me.data, role]);
 
   const caseType =
-    role === AppRole.SENDER
-      ? ('SENDER_KYB' as const)
-      : ('CARRIER_KYB' as const);
+    role === AppRole.SENDER ? ('SENDER_KYB' as const) : ('CARRIER_KYB' as const);
 
   const uploadMutation = useMutation({
     mutationFn: async () => {
-      if (!file) throw new Error('Choose a file');
+      if (!file) throw new Error(t('qa.errorChooseFile'));
       const mime = (file.type || 'application/pdf') as
         | 'application/pdf'
         | 'image/jpeg'
@@ -66,7 +66,9 @@ export function QaUploadPage() {
     },
     onSuccess: (doc) => {
       setUploaded((prev) => [...prev.filter((d) => d.docType !== doc.docType), doc]);
-      setMessage(`Uploaded ${doc.docType} (${doc.id.slice(0, 8)}…)`);
+      setMessage(
+        t('qa.uploadedMessage', { docType: doc.docType, idPrefix: doc.id.slice(0, 8) }),
+      );
       setFile(null);
     },
   });
@@ -80,7 +82,10 @@ export function QaUploadPage() {
       }),
     onSuccess: (res) => {
       setMessage(
-        `Submitted case ${res.id.slice(0, 8)}… → company ${res.companyStatus}. Open Compliance queue as Super/State.`,
+        t('qa.submittedMessage', {
+          id: res.id.slice(0, 8),
+          companyStatus: res.companyStatus,
+        }),
       );
     },
   });
@@ -92,79 +97,80 @@ export function QaUploadPage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold">QA: upload & submit</h1>
-      <p className="mt-2 text-sm text-slate-400">
-        M2 browser path — carrier needs PUBLIC_LIABILITY + CARGO_INSURANCE; sender needs ABN_EXTRACT
-        (or company ABN).
-      </p>
+      <h1 className="font-display text-2xl font-bold text-clox-ink">{t('qa.title')}</h1>
+      <p className="mt-2 text-sm text-clox-mute">{t('qa.subtitle')}</p>
 
-      <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-400">
-        companyId: <span className="font-mono text-slate-200">{companyId}</span> · caseType:{' '}
-        <span className="font-mono text-slate-200">{caseType}</span>
-      </div>
+      <Notice tone="info" className="mt-4">
+        companyId: <span className="font-mono text-clox-ink">{companyId}</span> · caseType:{' '}
+        <span className="font-mono text-clox-ink">{caseType}</span>
+      </Notice>
 
-      <div className="mt-6 space-y-4">
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">Document type</label>
-          <select
-            className={fieldClassName}
-            value={docType}
-            onChange={(e) => setDocType(e.target.value)}
-          >
-            {docOptions.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">File (PDF/JPEG/PNG/WebP ≤10MB)</label>
+      <div className="mt-6">
+        <Select
+          label={t('qa.docTypeLabel')}
+          value={docType}
+          onChange={(e) => setDocType(e.target.value)}
+        >
+          {docOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </Select>
+        <label className="mb-4 block">
+          <span className="mb-1.5 block text-[12.5px] font-semibold text-clox-ink">
+            {t('qa.fileLabel')}
+          </span>
           <input
             type="file"
             accept=".pdf,image/jpeg,image/png,image/webp"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-            className="block w-full text-sm text-slate-300"
+            className="block w-full text-sm text-clox-mute"
           />
-        </div>
+        </label>
 
-        {(uploadMutation.isError || submitMutation.isError) && (
-          <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">
+        {uploadMutation.isError || submitMutation.isError ? (
+          <Notice tone="error" className="mb-4">
             {getErrorDetail(uploadMutation.error ?? submitMutation.error)}
-          </p>
-        )}
+          </Notice>
+        ) : null}
         {message ? (
-          <p className="rounded-lg bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300">{message}</p>
+          <Notice tone="success" className="mb-4">
+            {message}
+          </Notice>
         ) : null}
 
         <div className="flex flex-wrap gap-2">
-          <button
+          <Button
             type="button"
-            className={primaryButtonClassName}
+            variant="cta"
             disabled={!file || uploadMutation.isPending}
             onClick={() => uploadMutation.mutate()}
           >
-            {uploadMutation.isPending ? 'Uploading…' : 'Upload & confirm'}
-          </button>
-          <button
+            {uploadMutation.isPending ? t('qa.uploading') : t('qa.uploadButton')}
+          </Button>
+          <Button
             type="button"
-            className={secondaryButtonClassName}
+            variant="secondary"
             disabled={uploaded.length === 0 || submitMutation.isPending}
             onClick={() => submitMutation.mutate()}
           >
-            {submitMutation.isPending ? 'Submitting…' : 'Submit compliance case'}
-          </button>
+            {submitMutation.isPending ? t('qa.submitting') : t('qa.submitButton')}
+          </Button>
         </div>
       </div>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold">Ready documents</h2>
+        <h2 className="font-display text-lg font-semibold text-clox-ink">{t('qa.readyDocs')}</h2>
         {uploaded.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-500">None yet.</p>
+          <p className="mt-2 text-sm text-clox-faint">{t('qa.noneYet')}</p>
         ) : (
           <ul className="mt-2 space-y-2 text-sm">
             {uploaded.map((d) => (
-              <li key={d.id} className="rounded-lg border border-white/10 px-3 py-2 font-mono text-xs">
+              <li
+                key={d.id}
+                className="rounded-clox-md border border-clox-border bg-clox-surface px-3 py-2 font-mono text-xs"
+              >
                 {d.docType} · {d.id}
               </li>
             ))}

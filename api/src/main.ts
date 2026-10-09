@@ -8,7 +8,7 @@ import { ProblemDetailsFilter } from './common/filters/problem-details.filter';
 import type { AppEnv } from './config/env.validation';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule, { bufferLogs: true, rawBody: true });
   const config = app.get(ConfigService<AppEnv, true>);
   const logger = app.get(Logger);
 

@@ -10,7 +10,7 @@ describe('validateEnv (M0-3)', () => {
   it('accepts valid minimal config', () => {
     const env = validateEnv(base);
     expect(env.DATABASE_URL).toContain('postgresql');
-    expect(env.EXPOSE_OTP_IN_RESPONSE).toBe(true);
+    expect(env.EXPOSE_OTP_IN_RESPONSE).toBe(false);
   });
 
   it('rejects missing DATABASE_URL', () => {

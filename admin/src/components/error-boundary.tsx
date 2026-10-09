@@ -1,5 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { BrandLogo } from '@/components/brand-logo';
+import { Button } from '@/components/ui';
 
 type Props = {
   children: ReactNode;
@@ -22,25 +24,20 @@ function ErrorFallback({
 }) {
   const { t } = useTranslation('common');
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
-      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-clox-orange">
-          {t('brand')}
-        </p>
-        <h1 className="mt-4 text-2xl font-bold">{title ?? t('errorTitle')}</h1>
-        <p className="mt-3 text-sm text-slate-300">{t('errorBody')}</p>
+    <main className="flex min-h-screen items-center justify-center bg-clox-bg px-6 text-clox-text">
+      <div className="clox-card w-full max-w-md p-8 text-center shadow-clox-2">
+        <div className="flex justify-center">
+          <BrandLogo variant="default" className="h-9 w-auto object-contain" />
+        </div>
+        <h1 className="mt-4 font-display text-2xl font-bold text-clox-ink">
+          {title ?? t('errorTitle')}
+        </h1>
+        <p className="mt-3 text-sm text-clox-mute">{t('errorBody')}</p>
         <div className="mt-6 flex flex-col gap-2">
-          <button
-            type="button"
-            className="rounded-xl bg-clox-orange px-4 py-2.5 text-sm font-semibold text-white"
-            onClick={onRetry}
-          >
+          <Button variant="cta" onClick={onRetry}>
             {t('tryAgain')}
-          </button>
-          <a
-            href={homeHref}
-            className="rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-white"
-          >
+          </Button>
+          <a href={homeHref} className="clox-btn clox-btn-secondary">
             {t('goHome')}
           </a>
         </div>

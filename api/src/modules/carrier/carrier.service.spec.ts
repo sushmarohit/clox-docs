@@ -9,7 +9,7 @@ describe('CarrierService bid gate', () => {
       user: {
         findUnique: jest.fn().mockResolvedValue({
           id: 'u1',
-          email: 'c@test.com',
+          email: 'c@yopmail.com',
           role: 'TRANSPORT_COMPANY',
           company: {
             id: 'c1',
@@ -46,7 +46,7 @@ describe('CarrierService bid gate', () => {
     );
     const result = await service.getBidEligibility({
       id: 'u1',
-      email: 'c@test.com',
+      email: 'c@yopmail.com',
       role: 'TRANSPORT_COMPANY',
       kind: 'user',
       regionCodes: [],

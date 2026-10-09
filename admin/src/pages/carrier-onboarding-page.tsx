@@ -1,6 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { Link, Navigate } from 'react-router-dom';
+import { z } from 'zod';
 import {
   addCarrierVehicle,
   confirmCarrierConnect,
@@ -17,12 +21,9 @@ import {
   uploadDocumentContent,
   type CarrierOnboarding,
 } from '@/lib/api';
-import {
-  fieldClassName,
-  primaryButtonClassName,
-  secondaryButtonClassName,
-} from '@/components/admin-shell';
+import { Button, Field, Notice, Select, StepChips } from '@/components/ui';
 import { LoadingBlock } from '@/components/status-blocks';
+import { abnSchema, VEHICLE_CLASSES } from '@/lib/validation';
 import { AppRole } from '@/shared/types';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -38,27 +39,20 @@ const STEPS = [
   'complete',
 ] as const;
 
-function StepPill({ current, id, label }: { current: string; id: (typeof STEPS)[number]; label: string }) {
-  const active = current === id;
-  const currentIdx = STEPS.indexOf(current as (typeof STEPS)[number]);
-  const idIdx = STEPS.indexOf(id);
-  const done = currentIdx >= 0 && idIdx >= 0 && currentIdx > idIdx;
-  return (
-    <span
-      className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-        active
-          ? 'bg-clox-orange text-white'
-          : done
-            ? 'bg-emerald-500/20 text-emerald-300'
-            : 'bg-white/5 text-slate-500'
-      }`}
-    >
-      {label}
-    </span>
-  );
-}
+const STEP_LABEL_KEYS = {
+  profile: 'carrierOnboarding.stepLegal',
+  documents: 'carrierOnboarding.stepDocs',
+  connect: 'carrierOnboarding.stepConnect',
+  vehicles: 'carrierOnboarding.stepFleet',
+  drivers: 'carrierOnboarding.stepDrivers',
+  capabilities: 'carrierOnboarding.stepCaps',
+  submit: 'carrierOnboarding.stepSubmit',
+  waiting_ops: 'carrierOnboarding.stepOps',
+  complete: 'carrierOnboarding.stepDone',
+} as const satisfies Record<(typeof STEPS)[number], string>;
 
 export function CarrierOnboardingPage() {
+  const { t } = useTranslation();
   const role = useAuthStore((s) => s.role);
   const qc = useQueryClient();
   const query = useQuery({
@@ -70,13 +64,9 @@ export function CarrierOnboardingPage() {
   if (role !== AppRole.TRANSPORT_COMPANY) {
     return <Navigate to="/" replace />;
   }
-  if (query.isLoading) return <LoadingBlock label="Loading carrier onboarding…" />;
+  if (query.isLoading) return <LoadingBlock label={t('carrierOnboarding.loading')} />;
   if (query.isError || !query.data) {
-    return (
-      <p className="rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300">
-        {getErrorDetail(query.error)}
-      </p>
-    );
+    return <Notice tone="error">{getErrorDetail(query.error)}</Notice>;
   }
 
   const data = query.data;
@@ -87,27 +77,24 @@ export function CarrierOnboardingPage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold">Carrier onboarding</h1>
-      <p className="mt-2 text-sm text-slate-400">
-        M4 wizard — Connect + fleet + Ops unlock → bid-eligible.
-      </p>
+      <h1 className="text-2xl font-bold">{t('carrierOnboarding.title')}</h1>
+      <p className="mt-2 text-sm text-clox-mute">{t('carrierOnboarding.subtitle')}</p>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        <StepPill current={step} id="profile" label="1 Legal" />
-        <StepPill current={step} id="documents" label="2 Docs" />
-        <StepPill current={step} id="connect" label="3 Connect" />
-        <StepPill current={step} id="vehicles" label="4 Fleet" />
-        <StepPill current={step} id="drivers" label="5 Drivers" />
-        <StepPill current={step} id="capabilities" label="6 Caps" />
-        <StepPill current={step} id="submit" label="7 Submit" />
-        <StepPill current={step} id="waiting_ops" label="8 Ops" />
-        <StepPill current={step} id="complete" label="Done" />
-      </div>
+      <StepChips
+        className="mt-4"
+        current={step}
+        steps={STEPS.map((id) => ({
+          id,
+          label: t(STEP_LABEL_KEYS[id]),
+        }))}
+      />
 
-      <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-400">
-        company <span className="font-mono text-slate-200">{data.company.status}</span> · canBid=
-        <span className="text-slate-200">{String(data.goNoGo.canBid)}</span>
-        {data.stripeMock ? ' · Stripe MOCK' : ''}
+      <div className="mt-4 rounded-xl border border-clox-border bg-clox-surface p-3 text-xs text-clox-mute">
+        {t('carrierOnboarding.statusStrip', {
+          status: data.company.status,
+          canBid: String(data.goNoGo.canBid),
+        })}
+        {data.stripeMock ? ' · ' + t('carrierOnboarding.stripeMock') : ''}
       </div>
 
       {step === 'profile' && <ProfileStep data={data} onSaved={refresh} />}
@@ -120,80 +107,106 @@ export function CarrierOnboardingPage() {
       {step === 'capabilities' && <CapabilitiesStep data={data} onSaved={refresh} />}
       {step === 'submit' && <SubmitStep data={data} onSubmitted={refresh} />}
       {step === 'waiting_ops' && (
-        <div className="mt-8 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-5">
-          <h2 className="text-lg font-semibold text-amber-100">Waiting for Ops</h2>
-          <p className="mt-2 text-sm text-amber-100/80">
-            Case {data.latestCase?.status ?? 'OPEN'} — Super/State must Approve → BID_ELIGIBLE.
-          </p>
-          <button type="button" className={`${secondaryButtonClassName} mt-4`} onClick={() => void query.refetch()}>
-            Refresh status
-          </button>
-        </div>
+        <Notice tone="warn" className="mt-8" title={t('waitingForOps')}>
+          <p>{t('carrierOnboarding.waitingOpsBody', { status: data.latestCase?.status ?? 'OPEN' })}</p>
+          <Button variant="secondary" className="mt-4" onClick={() => void query.refetch()}>
+            {t('refreshStatus')}
+          </Button>
+        </Notice>
       )}
       {step === 'rejected' && (
-        <div className="mt-8 rounded-2xl border border-red-500/40 bg-red-500/10 p-5 text-sm text-red-200">
-          Application rejected. {data.latestCase?.decisionNote}
-        </div>
+        <Notice tone="error" className="mt-8">
+          {t('applicationRejected')} {data.latestCase?.decisionNote}
+        </Notice>
       )}
       {step === 'complete' && (
-        <div className="mt-8 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-5">
-          <h2 className="text-lg font-semibold text-emerald-200">Bid eligible</h2>
-          <p className="mt-2 text-sm text-emerald-100/80">{data.goNoGo.netPayoutHint}</p>
-          <ul className="mt-3 space-y-1 text-xs text-emerald-100/70">
-            <li>Ops: {String(data.goNoGo.opsApproved)}</li>
-            <li>Connect: {String(data.goNoGo.connectReady)}</li>
-            <li>Fleet: {String(data.goNoGo.fleetReady)}</li>
-            <li>canBid: {String(data.goNoGo.canBid)}</li>
+        <Notice tone="success" className="mt-8" title={t('carrierOnboarding.bidEligibleTitle')}>
+          <p>{data.goNoGo.netPayoutHint}</p>
+          <ul className="mt-3 space-y-1 text-xs">
+            <li>{t('carrierOnboarding.goNoGoOps', { value: String(data.goNoGo.opsApproved) })}</li>
+            <li>{t('carrierOnboarding.goNoGoConnect', { value: String(data.goNoGo.connectReady) })}</li>
+            <li>{t('carrierOnboarding.goNoGoFleet', { value: String(data.goNoGo.fleetReady) })}</li>
+            <li>{t('carrierOnboarding.goNoGoCanBid', { value: String(data.goNoGo.canBid) })}</li>
           </ul>
-        </div>
+        </Notice>
       )}
 
-      <p className="mt-8 text-sm text-slate-500">
+      <p className="mt-8 text-sm text-clox-faint">
         <Link to="/" className="text-clox-orange hover:underline">
-          Home
+          {t('nav.home')}
         </Link>
       </p>
     </div>
   );
 }
 
+type CarrierProfileForm = { legalName: string; abn: string };
+
 function ProfileStep({ data, onSaved }: { data: CarrierOnboarding; onSaved: () => Promise<void> }) {
-  const [legalName, setLegalName] = useState(data.company.legalName || '');
-  const [abn, setAbn] = useState(data.company.abn || '');
+  const { t } = useTranslation();
+  const schema = z.object({
+    legalName: z.string().trim().min(1, t('validation.legalNameRequired')),
+    abn: abnSchema(t('validation.abnRequired'), t('validation.abnInvalid')),
+  });
+  const form = useForm<CarrierProfileForm>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      legalName: data.company.legalName || '',
+      abn: data.company.abn || '',
+    },
+  });
   const mutation = useMutation({
-    mutationFn: () =>
+    mutationFn: (values: CarrierProfileForm) =>
       updateCarrierProfile({
-        legalName,
-        abn,
+        legalName: values.legalName,
+        abn: values.abn,
         homeRegionCode: 'VIC',
       }),
     onSuccess: () => onSaved(),
   });
   return (
     <form
-      className="mt-8 space-y-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-        mutation.mutate();
-      }}
+      className="mt-8"
+      onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+      noValidate
     >
-      <h2 className="text-lg font-semibold">Legal entity</h2>
-      <input className={fieldClassName} placeholder="Legal name" value={legalName} onChange={(e) => setLegalName(e.target.value)} required />
-      <input className={fieldClassName} placeholder="ABN (11 digits)" value={abn} onChange={(e) => setAbn(e.target.value)} required />
-      {mutation.isError ? <p className="text-sm text-red-300">{getErrorDetail(mutation.error)}</p> : null}
-      <button type="submit" className={primaryButtonClassName} disabled={mutation.isPending}>
-        {mutation.isPending ? 'Saving…' : 'Save & continue'}
-      </button>
+      <h2 className="mb-4 font-display text-lg font-semibold">{t('carrierOnboarding.profileTitle')}</h2>
+      <Field
+        label={t('legalName')}
+        required
+        error={form.formState.errors.legalName?.message}
+        {...form.register('legalName')}
+      />
+      <Field
+        label={t('abn')}
+        required
+        inputMode="numeric"
+        error={form.formState.errors.abn?.message}
+        {...form.register('abn')}
+      />
+      {mutation.isError ? (
+        <Notice tone="error" className="mb-4">
+          {getErrorDetail(mutation.error)}
+        </Notice>
+      ) : null}
+      <Button type="submit" variant="cta" disabled={mutation.isPending}>
+        {mutation.isPending ? t('saving') : t('saveAndContinue')}
+      </Button>
     </form>
   );
 }
 
 function DocumentsStep({ companyId, onSubmitted }: { companyId: string; onSubmitted: () => Promise<void> }) {
+  const { t } = useTranslation();
   const [plId, setPlId] = useState<string | null>(null);
   const [cargoId, setCargoId] = useState<string | null>(null);
+  const [rwcId, setRwcId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  async function upload(docType: 'PUBLIC_LIABILITY' | 'CARGO_INSURANCE', file: File) {
+  async function upload(
+    docType: 'PUBLIC_LIABILITY' | 'CARGO_INSURANCE' | 'RWC',
+    file: File,
+  ) {
     const mime = (file.type || 'application/pdf') as
       | 'application/pdf'
       | 'image/jpeg'
@@ -215,60 +228,94 @@ function DocumentsStep({ companyId, onSubmitted }: { companyId: string; onSubmit
     mutationFn: async (file: File) => upload('PUBLIC_LIABILITY', file),
     onSuccess: (id) => {
       setPlId(id);
-      setMessage('Public liability uploaded');
+      setMessage(t('carrierOnboarding.publicLiabilityUploaded'));
     },
   });
   const uploadCargo = useMutation({
     mutationFn: async (file: File) => upload('CARGO_INSURANCE', file),
     onSuccess: (id) => {
       setCargoId(id);
-      setMessage('Cargo insurance uploaded');
+      setMessage(t('carrierOnboarding.cargoInsuranceUploaded'));
+    },
+  });
+  const uploadRwc = useMutation({
+    mutationFn: async (file: File) => upload('RWC', file),
+    onSuccess: (id) => {
+      setRwcId(id);
+      setMessage(t('carrierOnboarding.rwcUploaded'));
     },
   });
 
   return (
     <div className="mt-8 space-y-4">
-      <h2 className="text-lg font-semibold">Compliance documents</h2>
-      <p className="text-sm text-slate-400">Required: PUBLIC_LIABILITY + CARGO_INSURANCE (manual Ops review)</p>
+      <h2 className="text-lg font-semibold">{t('carrierOnboarding.docsTitle')}</h2>
+      <p className="text-sm text-clox-mute">
+        {t('carrierOnboarding.docsRequired', {
+          docType: 'PUBLIC_LIABILITY + CARGO_INSURANCE + RWC',
+        })}
+      </p>
       <div>
-        <p className="mb-1 text-xs text-slate-500">Public liability</p>
-        <input type="file" accept=".pdf,image/jpeg,image/png,image/webp" onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) uploadPl.mutate(f);
-        }} />
+        <p className="mb-1 text-xs text-clox-faint">{t('carrierOnboarding.publicLiability')}</p>
+        <input
+          type="file"
+          accept=".pdf,image/jpeg,image/png,image/webp"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) uploadPl.mutate(f);
+          }}
+        />
       </div>
       <div>
-        <p className="mb-1 text-xs text-slate-500">Cargo insurance</p>
-        <input type="file" accept=".pdf,image/jpeg,image/png,image/webp" onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) uploadCargo.mutate(f);
-        }} />
+        <p className="mb-1 text-xs text-clox-faint">{t('carrierOnboarding.cargoInsurance')}</p>
+        <input
+          type="file"
+          accept=".pdf,image/jpeg,image/png,image/webp"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) uploadCargo.mutate(f);
+          }}
+        />
       </div>
-      {message ? <p className="text-sm text-emerald-300">{message}</p> : null}
-      {(uploadPl.isError || uploadCargo.isError) && (
-        <p className="text-sm text-red-300">{getErrorDetail(uploadPl.error ?? uploadCargo.error)}</p>
+      <div>
+        <p className="mb-1 text-xs text-clox-faint">{t('carrierOnboarding.rwc')}</p>
+        <input
+          type="file"
+          accept=".pdf,image/jpeg,image/png,image/webp"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) uploadRwc.mutate(f);
+          }}
+        />
+      </div>
+      {message ? <Notice tone="success">{message}</Notice> : null}
+      {(uploadPl.isError || uploadCargo.isError || uploadRwc.isError) && (
+        <Notice tone="error">
+          {getErrorDetail(uploadPl.error ?? uploadCargo.error ?? uploadRwc.error)}
+        </Notice>
       )}
-      <button
-        type="button"
-        className={primaryButtonClassName}
-        disabled={!plId || !cargoId}
+      <Button
+        variant="cta"
+        disabled={!plId || !cargoId || !rwcId}
         onClick={() => void onSubmitted()}
       >
-        Continue (docs saved — submit later)
-      </button>
-      <p className="text-xs text-slate-500">
-        After Connect + fleet, use Submit step to open the Ops case with these uploads.
-      </p>
+        {t('carrierOnboarding.continueDocsSaved')}
+      </Button>
+      <p className="text-xs text-clox-faint">{t('carrierOnboarding.docsSavedHint')}</p>
     </div>
   );
 }
 
 function ConnectStep({ mock, onDone }: { mock: boolean; onDone: () => Promise<void> }) {
+  const { t } = useTranslation();
   const [info, setInfo] = useState<string | null>(null);
   const setup = useMutation({
     mutationFn: () => setupCarrierConnect(),
     onSuccess: (data) => {
-      setInfo(data.mock ? `Mock Connect ${data.accountId}` : `Open onboarding: ${data.url}`);
+      setInfo(
+        data.mock
+          ? t('carrierOnboarding.mockConnect', { accountId: data.accountId })
+          : t('carrierOnboarding.openOnboarding', { url: data.url }),
+      );
       if (!data.mock && data.url) window.open(data.url, '_blank');
     },
   });
@@ -278,81 +325,194 @@ function ConnectStep({ mock, onDone }: { mock: boolean; onDone: () => Promise<vo
   });
   return (
     <div className="mt-8 space-y-4">
-      <h2 className="text-lg font-semibold">Stripe Connect</h2>
-      <p className="text-sm text-slate-400">
+      <h2 className="text-lg font-semibold">{t('carrierOnboarding.connectTitle')}</h2>
+      <p className="text-sm text-clox-mute">
         {mock
-          ? 'Mock mode — create account then confirm payouts (no real Connect).'
-          : 'Create Express account, complete Stripe Account Link, then confirm.'}
+          ? t('carrierOnboarding.connectMockHint')
+          : t('carrierOnboarding.connectLiveHint')}
       </p>
       {(setup.isError || confirm.isError) && (
-        <p className="text-sm text-red-300">{getErrorDetail(setup.error ?? confirm.error)}</p>
+        <Notice tone="error">{getErrorDetail(setup.error ?? confirm.error)}</Notice>
       )}
-      {info ? <p className="text-sm text-emerald-300">{info}</p> : null}
+      {info ? <Notice tone="success">{info}</Notice> : null}
       <div className="flex flex-wrap gap-2">
-        <button type="button" className={secondaryButtonClassName} disabled={setup.isPending} onClick={() => setup.mutate()}>
-          Create Connect account
-        </button>
-        <button type="button" className={primaryButtonClassName} disabled={confirm.isPending} onClick={() => confirm.mutate()}>
-          Confirm payouts ready
-        </button>
+        <Button variant="secondary" disabled={setup.isPending} onClick={() => setup.mutate()}>
+          {t('carrierOnboarding.createConnectAccount')}
+        </Button>
+        <Button variant="cta" disabled={confirm.isPending} onClick={() => confirm.mutate()}>
+          {t('carrierOnboarding.confirmPayoutsReady')}
+        </Button>
       </div>
     </div>
   );
 }
 
+type VehicleForm = {
+  label: string;
+  registration: string;
+  vehicleClass: (typeof VEHICLE_CLASSES)[number];
+};
+
 function VehiclesStep({ data, onSaved }: { data: CarrierOnboarding; onSaved: () => Promise<void> }) {
-  const [label, setLabel] = useState('Primary truck');
-  const [registration, setRegistration] = useState('');
-  const [vehicleClass, setVehicleClass] = useState('RIGID_1_2T');
+  const { t } = useTranslation();
+  const [rwcMsg, setRwcMsg] = useState<string | null>(null);
+  const schema = z.object({
+    label: z.string().trim().min(1, t('validation.vehicleLabelRequired')),
+    registration: z.string().trim().min(1, t('validation.registrationRequired')),
+    vehicleClass: z.enum(VEHICLE_CLASSES, {
+      message: t('validation.vehicleClassRequired'),
+    }),
+  });
+  const form = useForm<VehicleForm>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      label: 'Primary truck',
+      registration: '',
+      vehicleClass: 'RIGID_1_2T',
+    },
+  });
   const mutation = useMutation({
-    mutationFn: () =>
+    mutationFn: (values: VehicleForm) =>
       addCarrierVehicle({
-        label,
-        registration,
-        vehicleClass,
+        label: values.label,
+        registration: values.registration,
+        vehicleClass: values.vehicleClass,
         tareKg: 3500,
         gvmKg: 8000,
       }),
-    onSuccess: () => onSaved(),
+    onSuccess: async () => {
+      form.reset({
+        label: 'Primary truck',
+        registration: '',
+        vehicleClass: 'RIGID_1_2T',
+      });
+      await onSaved();
+    },
   });
+
+  async function uploadRwcForVehicle(vehicleId: string, file: File) {
+    const mime = (file.type || 'application/pdf') as
+      | 'application/pdf'
+      | 'image/jpeg'
+      | 'image/png'
+      | 'image/webp';
+    const intent = await createUploadIntent({
+      companyId: data.company.id,
+      docType: 'RWC',
+      originalFilename: file.name,
+      mimeType: mime,
+      sizeBytes: file.size,
+      vehicleId,
+    });
+    const up = await uploadDocumentContent(intent.id, file);
+    await confirmDocument(intent.id, up.contentHash);
+    setRwcMsg(t('carrierOnboarding.rwcUploaded'));
+    await onSaved();
+  }
+
   return (
     <div className="mt-8 space-y-4">
-      <h2 className="text-lg font-semibold">Fleet (≥1 vehicle)</h2>
+      <h2 className="text-lg font-semibold">{t('carrierOnboarding.fleetTitle')}</h2>
       {data.vehicles.length > 0 ? (
-        <ul className="text-sm text-slate-300">
+        <ul className="space-y-2 text-sm text-clox-mute">
           {data.vehicles.map((v) => (
-            <li key={v.id} className="font-mono text-xs">
-              {v.registration} · {v.vehicleClass} · {v.label}
+            <li key={v.id} className="rounded-xl border border-clox-border p-3">
+              <p className="font-mono text-xs">
+                {v.registration} · {v.vehicleClass} · {v.label}
+              </p>
+              <label className="mt-2 block text-xs text-clox-faint">
+                {t('carrierOnboarding.rwc')} (vehicle)
+                <input
+                  type="file"
+                  accept=".pdf,image/jpeg,image/png,image/webp"
+                  className="mt-1 block"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) void uploadRwcForVehicle(v.id, f);
+                  }}
+                />
+              </label>
             </li>
           ))}
         </ul>
       ) : null}
-      <input className={fieldClassName} placeholder="Label" value={label} onChange={(e) => setLabel(e.target.value)} />
-      <input className={fieldClassName} placeholder="Registration" value={registration} onChange={(e) => setRegistration(e.target.value)} />
-      <input className={fieldClassName} placeholder="Class e.g. RIGID_1_2T" value={vehicleClass} onChange={(e) => setVehicleClass(e.target.value)} />
-      {mutation.isError ? <p className="text-sm text-red-300">{getErrorDetail(mutation.error)}</p> : null}
-      <button type="button" className={primaryButtonClassName} disabled={mutation.isPending} onClick={() => mutation.mutate()}>
-        Add vehicle
-      </button>
-      {data.vehicles.length >= 1 ? (
-        <button type="button" className={secondaryButtonClassName} onClick={() => void onSaved()}>
-          Continue
-        </button>
+      {rwcMsg ? (
+        <Notice tone="success">{rwcMsg}</Notice>
       ) : null}
+      <form
+        className="space-y-0"
+        onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+        noValidate
+      >
+        <Field
+          label={t('carrierOnboarding.placeholderLabel')}
+          required
+          error={form.formState.errors.label?.message}
+          {...form.register('label')}
+        />
+        <Field
+          label={t('carrierOnboarding.placeholderRegistration')}
+          required
+          error={form.formState.errors.registration?.message}
+          {...form.register('registration')}
+        />
+        <Select
+          label={t('validation.vehicleClassLabel')}
+          required
+          error={form.formState.errors.vehicleClass?.message}
+          value={form.watch('vehicleClass')}
+          {...form.register('vehicleClass')}
+        >
+          {VEHICLE_CLASSES.map((vehicleClass) => (
+            <option key={vehicleClass} value={vehicleClass}>
+              {vehicleClass}
+            </option>
+          ))}
+        </Select>
+        {mutation.isError ? (
+          <Notice tone="error" className="mb-4">
+            {getErrorDetail(mutation.error)}
+          </Notice>
+        ) : null}
+        <div className="flex flex-wrap gap-2">
+          <Button type="submit" variant="cta" disabled={mutation.isPending}>
+            {mutation.isPending ? t('saving') : t('carrierOnboarding.addVehicle')}
+          </Button>
+          {data.vehicles.length >= 1 ? (
+            <Button type="button" variant="secondary" onClick={() => void onSaved()}>
+              {t('continue')}
+            </Button>
+          ) : null}
+        </div>
+      </form>
     </div>
   );
 }
 
+type DriverInviteForm = { name: string; email: string };
+
 function DriversStep({ data, onSaved }: { data: CarrierOnboarding; onSaved: () => Promise<void> }) {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const { t } = useTranslation();
   const [lastInvite, setLastInvite] = useState<{
     inviteUrl: string;
     debugToken?: string;
     mailSkipped: boolean;
   } | null>(null);
+  const schema = z.object({
+    name: z.string().trim().min(1, t('validation.driverNameRequired')),
+    email: z
+      .string()
+      .trim()
+      .min(1, t('validation.driverEmailRequired'))
+      .email(t('validation.emailInvalid')),
+  });
+  const form = useForm<DriverInviteForm>({
+    resolver: zodResolver(schema),
+    defaultValues: { name: '', email: '' },
+  });
   const mutation = useMutation({
-    mutationFn: () => inviteCarrierDriver({ email, name }),
+    mutationFn: (values: DriverInviteForm) =>
+      inviteCarrierDriver({ email: values.email, name: values.name }),
     onSuccess: async (res) => {
       if (res.invite) {
         setLastInvite({
@@ -361,6 +521,7 @@ function DriversStep({ data, onSaved }: { data: CarrierOnboarding; onSaved: () =
           mailSkipped: res.invite.mailSkipped,
         });
       }
+      form.reset({ name: '', email: '' });
       await onSaved();
     },
   });
@@ -376,61 +537,89 @@ function DriversStep({ data, onSaved }: { data: CarrierOnboarding; onSaved: () =
   });
   return (
     <div className="mt-8 space-y-4">
-      <h2 className="text-lg font-semibold">Drivers (≥1 invite)</h2>
-      <p className="text-sm text-slate-400">
-        Sends invite link (M5). Driver accepts → OTP login → licence + NHVR.
-      </p>
+      <h2 className="font-display text-lg font-semibold">{t('carrierOnboarding.driversTitle')}</h2>
+      <p className="text-sm text-clox-mute">{t('carrierOnboarding.driversHint')}</p>
       {data.drivers.length > 0 ? (
-        <ul className="space-y-2 text-sm text-slate-300">
+        <ul className="space-y-2 text-sm text-clox-mute">
           {data.drivers.map((d) => (
             <li key={d.id} className="flex flex-wrap items-center gap-2 font-mono text-xs">
               <span>
                 {d.email} · {d.status}
               </span>
               {d.status === 'INVITED' ? (
-                <button
+                <Button
                   type="button"
-                  className={secondaryButtonClassName}
+                  variant="secondary"
+                  size="sm"
                   disabled={resend.isPending}
                   onClick={() => resend.mutate(d.id)}
                 >
-                  Resend
-                </button>
+                  {t('carrierOnboarding.resend')}
+                </Button>
               ) : null}
             </li>
           ))}
         </ul>
       ) : null}
-      <input className={fieldClassName} placeholder="Driver name" value={name} onChange={(e) => setName(e.target.value)} />
-      <input className={fieldClassName} type="email" placeholder="Driver email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      {mutation.isError ? <p className="text-sm text-red-300">{getErrorDetail(mutation.error)}</p> : null}
-      {resend.isError ? <p className="text-sm text-red-300">{getErrorDetail(resend.error)}</p> : null}
-      {lastInvite ? (
-        <div className="rounded-xl border border-white/10 bg-slate-900/60 p-3 text-xs text-slate-300">
-          <p>Invite URL:</p>
-          <a className="break-all text-clox-orange underline" href={lastInvite.inviteUrl}>
-            {lastInvite.inviteUrl}
-          </a>
-          {lastInvite.mailSkipped && lastInvite.debugToken ? (
-            <p className="mt-2 text-amber-200">SMTP skipped — debug token: {lastInvite.debugToken}</p>
+      <form
+        onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+        noValidate
+      >
+        <Field
+          label={t('carrierOnboarding.placeholderDriverName')}
+          required
+          error={form.formState.errors.name?.message}
+          {...form.register('name')}
+        />
+        <Field
+          type="email"
+          label={t('carrierOnboarding.placeholderDriverEmail')}
+          required
+          error={form.formState.errors.email?.message}
+          {...form.register('email')}
+        />
+        {mutation.isError ? (
+          <Notice tone="error" className="mb-4">
+            {getErrorDetail(mutation.error)}
+          </Notice>
+        ) : null}
+        {resend.isError ? (
+          <Notice tone="error" className="mb-4">
+            {getErrorDetail(resend.error)}
+          </Notice>
+        ) : null}
+        {lastInvite ? (
+          <Notice tone="info" className="mb-4" title={t('carrierOnboarding.inviteUrlLabel')}>
+            <a className="break-all text-clox-orange underline" href={lastInvite.inviteUrl}>
+              {lastInvite.inviteUrl}
+            </a>
+            {lastInvite.mailSkipped && lastInvite.debugToken ? (
+              <p className="mt-2">
+                {t('carrierOnboarding.smtpSkippedDebugToken', { token: lastInvite.debugToken })}
+              </p>
+            ) : null}
+          </Notice>
+        ) : null}
+        <div className="flex flex-wrap gap-2">
+          <Button type="submit" variant="cta" disabled={mutation.isPending}>
+            {mutation.isPending ? t('submitting') : t('carrierOnboarding.inviteDriver')}
+          </Button>
+          {data.drivers.length >= 1 ? (
+            <Button type="button" variant="secondary" onClick={() => void onSaved()}>
+              {t('continue')}
+            </Button>
           ) : null}
         </div>
-      ) : null}
-      <button type="button" className={primaryButtonClassName} disabled={mutation.isPending} onClick={() => mutation.mutate()}>
-        Invite driver
-      </button>
-      {data.drivers.length >= 1 ? (
-        <button type="button" className={secondaryButtonClassName} onClick={() => void onSaved()}>
-          Continue
-        </button>
-      ) : null}
+      </form>
     </div>
   );
 }
 
 function CapabilitiesStep({ data, onSaved }: { data: CarrierOnboarding; onSaved: () => Promise<void> }) {
+  const { t } = useTranslation();
   const [dg, setDg] = useState(data.company.capabilities.includes('DG'));
   const [reefer, setReefer] = useState(data.company.capabilities.includes('REEFER'));
+  const [oversize, setOversize] = useState(data.company.capabilities.includes('OVERSIZE'));
   const [tailLift, setTailLift] = useState(
     data.company.capabilities.length === 0 || data.company.capabilities.includes('TAIL_LIFT'),
   );
@@ -439,6 +628,7 @@ function CapabilitiesStep({ data, onSaved }: { data: CarrierOnboarding; onSaved:
       const capabilities = [
         ...(dg ? (['DG'] as const) : []),
         ...(reefer ? (['REEFER'] as const) : []),
+        ...(oversize ? (['OVERSIZE'] as const) : []),
         ...(tailLift ? (['TAIL_LIFT'] as const) : []),
       ];
       return updateCarrierCapabilities({
@@ -456,21 +646,30 @@ function CapabilitiesStep({ data, onSaved }: { data: CarrierOnboarding; onSaved:
         mutation.mutate();
       }}
     >
-      <h2 className="text-lg font-semibold">Capabilities & regions</h2>
+      <h2 className="text-lg font-semibold">{t('carrierOnboarding.capabilitiesTitle')}</h2>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={tailLift} onChange={(e) => setTailLift(e.target.checked)} /> Tail lift
+        <input type="checkbox" checked={tailLift} onChange={(e) => setTailLift(e.target.checked)} />
+        {t('carrierOnboarding.capTailLift')}
       </label>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={reefer} onChange={(e) => setReefer(e.target.checked)} /> Reefer
+        <input type="checkbox" checked={reefer} onChange={(e) => setReefer(e.target.checked)} />
+        {t('carrierOnboarding.capReefer')}
       </label>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={dg} onChange={(e) => setDg(e.target.checked)} /> Dangerous goods
+        <input type="checkbox" checked={dg} onChange={(e) => setDg(e.target.checked)} />
+        {t('carrierOnboarding.capDangerousGoods')}
       </label>
-      <p className="text-xs text-slate-500">Service region: VIC (Gate 0)</p>
-      {mutation.isError ? <p className="text-sm text-red-300">{getErrorDetail(mutation.error)}</p> : null}
-      <button type="submit" className={primaryButtonClassName} disabled={mutation.isPending}>
-        Save & continue
-      </button>
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" checked={oversize} onChange={(e) => setOversize(e.target.checked)} />
+        {t('carrierOnboarding.capOversize')}
+      </label>
+      <p className="text-xs text-clox-faint">{t('carrierOnboarding.serviceRegionVic')}</p>
+      {mutation.isError ? (
+        <Notice tone="error">{getErrorDetail(mutation.error)}</Notice>
+      ) : null}
+      <Button type="submit" variant="cta" disabled={mutation.isPending}>
+        {mutation.isPending ? t('saving') : t('saveAndContinue')}
+      </Button>
     </form>
   );
 }
@@ -482,16 +681,22 @@ function SubmitStep({
   data: CarrierOnboarding;
   onSubmitted: () => Promise<void>;
 }) {
+  const { t } = useTranslation();
   const existing = data.uploadedDocs ?? [];
   const pl = existing.find((d) => d.docType === 'PUBLIC_LIABILITY');
   const cargo = existing.find((d) => d.docType === 'CARGO_INSURANCE');
+  const rwc = existing.find((d) => d.docType === 'RWC');
   const [plId, setPlId] = useState<string | null>(pl?.id ?? null);
   const [cargoId, setCargoId] = useState<string | null>(cargo?.id ?? null);
+  const [rwcId, setRwcId] = useState<string | null>(rwc?.id ?? null);
   const [msg, setMsg] = useState<string | null>(
-    pl && cargo ? 'Using previously uploaded PL + cargo' : null,
+    pl && cargo && rwc ? t('carrierOnboarding.usingPreviousUploads') : null,
   );
 
-  async function upload(docType: 'PUBLIC_LIABILITY' | 'CARGO_INSURANCE', file: File) {
+  async function upload(
+    docType: 'PUBLIC_LIABILITY' | 'CARGO_INSURANCE' | 'RWC',
+    file: File,
+  ) {
     const mime = (file.type || 'application/pdf') as
       | 'application/pdf'
       | 'image/jpeg'
@@ -511,56 +716,80 @@ function SubmitStep({
 
   const submit = useMutation({
     mutationFn: () => {
-      if (!plId || !cargoId) throw new Error('Upload PL + cargo first');
-      return submitCarrierVerification([plId, cargoId]);
+      if (!plId || !cargoId || !rwcId) {
+        throw new Error(t('carrierOnboarding.errorUploadPlCargoRwc'));
+      }
+      return submitCarrierVerification([plId, cargoId, rwcId]);
     },
     onSuccess: () => onSubmitted(),
   });
 
   return (
     <div className="mt-8 space-y-4">
-      <h2 className="text-lg font-semibold">Submit to Ops</h2>
-      <p className="text-sm text-slate-400">
-        PL + cargo required. Re-upload only if missing.
-      </p>
-      <input
-        type="file"
-        accept=".pdf,image/*"
-        onChange={async (e) => {
-          const f = e.target.files?.[0];
-          if (!f) return;
-          try {
-            setPlId(await upload('PUBLIC_LIABILITY', f));
-            setMsg('PL uploaded');
-          } catch (err) {
-            setMsg(getErrorDetail(err));
-          }
-        }}
-      />
-      <input
-        type="file"
-        accept=".pdf,image/*"
-        onChange={async (e) => {
-          const f = e.target.files?.[0];
-          if (!f) return;
-          try {
-            setCargoId(await upload('CARGO_INSURANCE', f));
-            setMsg('Cargo uploaded');
-          } catch (err) {
-            setMsg(getErrorDetail(err));
-          }
-        }}
-      />
-      {msg ? <p className="text-sm text-emerald-300">{msg}</p> : null}
-      {submit.isError ? <p className="text-sm text-red-300">{getErrorDetail(submit.error)}</p> : null}
-      <button
-        type="button"
-        className={primaryButtonClassName}
-        disabled={!plId || !cargoId || submit.isPending}
+      <h2 className="text-lg font-semibold">{t('carrierOnboarding.submitTitle')}</h2>
+      <p className="text-sm text-clox-mute">{t('carrierOnboarding.submitHint')}</p>
+      <div>
+        <p className="mb-1 text-xs text-clox-faint">{t('carrierOnboarding.publicLiability')}</p>
+        <input
+          type="file"
+          accept=".pdf,image/*"
+          onChange={async (e) => {
+            const f = e.target.files?.[0];
+            if (!f) return;
+            try {
+              setPlId(await upload('PUBLIC_LIABILITY', f));
+              setMsg(t('carrierOnboarding.plUploaded'));
+            } catch (err) {
+              setMsg(getErrorDetail(err));
+            }
+          }}
+        />
+      </div>
+      <div>
+        <p className="mb-1 text-xs text-clox-faint">{t('carrierOnboarding.cargoInsurance')}</p>
+        <input
+          type="file"
+          accept=".pdf,image/*"
+          onChange={async (e) => {
+            const f = e.target.files?.[0];
+            if (!f) return;
+            try {
+              setCargoId(await upload('CARGO_INSURANCE', f));
+              setMsg(t('carrierOnboarding.cargoUploaded'));
+            } catch (err) {
+              setMsg(getErrorDetail(err));
+            }
+          }}
+        />
+      </div>
+      <div>
+        <p className="mb-1 text-xs text-clox-faint">{t('carrierOnboarding.rwc')}</p>
+        <input
+          type="file"
+          accept=".pdf,image/*"
+          onChange={async (e) => {
+            const f = e.target.files?.[0];
+            if (!f) return;
+            try {
+              setRwcId(await upload('RWC', f));
+              setMsg(t('carrierOnboarding.rwcUploaded'));
+            } catch (err) {
+              setMsg(getErrorDetail(err));
+            }
+          }}
+        />
+      </div>
+      {msg ? <Notice tone="success">{msg}</Notice> : null}
+      {submit.isError ? (
+        <Notice tone="error">{getErrorDetail(submit.error)}</Notice>
+      ) : null}
+      <Button
+        variant="cta"
+        disabled={!plId || !cargoId || !rwcId || submit.isPending}
         onClick={() => submit.mutate()}
       >
-        Submit compliance case
-      </button>
+        {submit.isPending ? t('submitting') : t('carrierOnboarding.submitComplianceCase')}
+      </Button>
     </div>
   );
 }

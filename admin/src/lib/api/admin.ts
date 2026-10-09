@@ -8,6 +8,22 @@ import type {
 import { http } from '@/lib/http';
 import type { AdminRef, LeadDetail, LeadListItem } from '@/lib/leads';
 
+export type DashboardActivityItem = {
+  id: string;
+  leadId: string | null;
+  actorId: string | null;
+  action: string;
+  metadata: unknown;
+  createdAt: string;
+  actor: AdminRef | null;
+  lead: {
+    id: string;
+    type: string;
+    email: string;
+    companyName: string | null;
+  } | null;
+};
+
 export type DashboardStats = {
   totals: {
     all: number;
@@ -21,7 +37,7 @@ export type DashboardStats = {
   };
   byStatus: Record<string, number>;
   recentLeads: LeadListItem[];
-  recentActivity: unknown[];
+  recentActivity: DashboardActivityItem[];
 };
 
 export type Paginated<T> = {

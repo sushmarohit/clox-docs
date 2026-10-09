@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import {
   AppRole,
-  carrierBidStubSchema,
+  proposalSubmitSchema,
   carrierCapabilitiesSchema,
   carrierDriverInviteSchema,
   carrierDriverResendSchema,
@@ -11,7 +11,7 @@ import {
   carrierRegisterSchema,
   carrierSubmitVerificationSchema,
   carrierVehicleSchema,
-  type CarrierBidStubInput,
+  type ProposalSubmitInput,
   type CarrierCapabilitiesInput,
   type CarrierDriverInviteInput,
   type CarrierDriverResendInput,
@@ -25,12 +25,16 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtAuthGuard, type AuthenticatedPrincipal } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
+import { MatchingService } from '../matching/matching.service';
 import { CarrierService } from './carrier.service';
 
 @ApiTags('carrier')
 @Controller('carrier')
 export class CarrierController {
-  constructor(private readonly carrierService: CarrierService) {}
+  constructor(
+    private readonly carrierService: CarrierService,
+    private readonly matchingService: MatchingService,
+  ) {}
 
   @Post('register')
   @UseGuards(ThrottlerGuard)
@@ -153,11 +157,11 @@ export class CarrierController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(AppRole.TRANSPORT_COMPANY)
-  @ApiOperation({ summary: 'Bid stub — blocked unless carrier canBid' })
+  @ApiOperation({ summary: 'Submit bid (delegates to matching)' })
   bid(
     @CurrentPrincipal() principal: AuthenticatedPrincipal,
-    @Body(new ZodValidationPipe(carrierBidStubSchema)) body: CarrierBidStubInput,
+    @Body(new ZodValidationPipe(proposalSubmitSchema)) body: ProposalSubmitInput,
   ) {
-    return this.carrierService.createBidStub(principal, body);
+    return this.matchingService.submitProposal(principal, body);
   }
 }

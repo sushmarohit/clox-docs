@@ -1,10 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { getErrorDetail, getIdentityMe, listSessions, revokeSession } from '@/lib/api';
 import { LoadingBlock } from '@/components/status-blocks';
-import { secondaryButtonClassName } from '@/components/admin-shell';
+import { Button, DataCard, Notice, RoleBadge, useToast } from '@/components/ui';
+import { useAuthStore } from '@/stores/auth-store';
 
 export function AccountPage() {
+  const { t } = useTranslation('common');
+  const role = useAuthStore((s) => s.role);
   const qc = useQueryClient();
+  const toast = useToast();
 
   const me = useQuery({
     queryKey: ['identity', 'me'],
@@ -19,60 +24,72 @@ export function AccountPage() {
   const revoke = useMutation({
     mutationFn: (id: string) => revokeSession(id),
     onSuccess: async () => {
+      toast.success(t('account.revokeSuccess'));
       await qc.invalidateQueries({ queryKey: ['auth', 'sessions'] });
     },
+    onError: (err) => toast.error(getErrorDetail(err)),
   });
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Account & sessions</h1>
-      <p className="mt-2 text-sm text-slate-400">M1 verification — profile + device sessions.</p>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="font-display text-2xl font-bold text-clox-ink">{t('account.title')}</h1>
+        <RoleBadge role={role} />
+      </div>
+      <p className="mt-2 text-sm text-clox-mute">{t('account.subtitle')}</p>
 
       {me.isLoading || sessions.isLoading ? (
         <div className="mt-8">
-          <LoadingBlock label="Loading…" />
+          <LoadingBlock label={t('account.loading')} />
         </div>
       ) : null}
 
       {me.isError ? (
-        <p className="mt-4 text-sm text-red-300">{getErrorDetail(me.error)}</p>
+        <Notice tone="error" className="mt-4">
+          {getErrorDetail(me.error)}
+        </Notice>
       ) : null}
 
       {me.data ? (
-        <pre className="mt-6 overflow-x-auto rounded-2xl border border-white/10 bg-slate-900/80 p-4 text-xs text-slate-300">
+        <pre className="clox-card mt-6 overflow-x-auto p-4 text-xs text-clox-mute">
           {JSON.stringify(me.data, null, 2)}
         </pre>
       ) : null}
 
-      <h2 className="mt-10 text-lg font-semibold">Active sessions</h2>
+      <h2 className="mt-10 font-display text-lg font-semibold text-clox-ink">
+        {t('account.activeSessions')}
+      </h2>
       {sessions.isError ? (
-        <p className="mt-2 text-sm text-red-300">{getErrorDetail(sessions.error)}</p>
+        <Notice tone="error" className="mt-2">
+          {getErrorDetail(sessions.error)}
+        </Notice>
       ) : null}
 
       <ul className="mt-3 space-y-2">
         {(sessions.data?.data ?? []).map((s) => (
-          <li
-            key={s.id}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 px-4 py-3 text-sm"
-          >
-            <div>
-              <p className="font-medium text-white">
-                {s.deviceLabel || 'Session'} {s.isCurrent ? '(current)' : ''}
-              </p>
-              <p className="text-xs text-slate-500">
-                last used {new Date(s.lastUsedAt).toLocaleString()}
-              </p>
-            </div>
-            {!s.isCurrent ? (
-              <button
-                type="button"
-                className={secondaryButtonClassName}
-                disabled={revoke.isPending}
-                onClick={() => revoke.mutate(s.id)}
-              >
-                Revoke
-              </button>
-            ) : null}
+          <li key={s.id}>
+            <DataCard className="flex flex-wrap items-center justify-between gap-3 py-3">
+              <div>
+                <p className="font-medium text-clox-ink">
+                  {s.deviceLabel || t('account.session')}{' '}
+                  {s.isCurrent ? t('account.current') : ''}
+                </p>
+                <p className="text-xs text-clox-faint">
+                  {t('account.lastUsed', { date: new Date(s.lastUsedAt).toLocaleString() })}
+                </p>
+              </div>
+              {!s.isCurrent ? (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  disabled={revoke.isPending}
+                  onClick={() => revoke.mutate(s.id)}
+                >
+                  {t('account.revoke')}
+                </Button>
+              ) : null}
+            </DataCard>
           </li>
         ))}
       </ul>

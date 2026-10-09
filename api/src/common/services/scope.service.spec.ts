@@ -8,7 +8,7 @@ describe('ScopeService', () => {
 
   const stateVic: AuthenticatedPrincipal = {
     id: 's1',
-    email: 'state@test.com',
+    email: 'state@yopmail.com',
     role: AppRole.STATE_MASTER,
     kind: 'admin',
     regionCodes: ['VIC'],
@@ -17,7 +17,7 @@ describe('ScopeService', () => {
 
   const localMel: AuthenticatedPrincipal = {
     id: 'l1',
-    email: 'local@test.com',
+    email: 'local@yopmail.com',
     role: AppRole.LOCAL_BDE,
     kind: 'admin',
     regionCodes: ['VIC'],
@@ -43,7 +43,7 @@ describe('ScopeService', () => {
   it('Super is unrestricted', () => {
     const superAdmin: AuthenticatedPrincipal = {
       id: 'su',
-      email: 'super@test.com',
+      email: 'super@yopmail.com',
       role: AppRole.SUPER_ADMIN,
       kind: 'admin',
       regionCodes: [],

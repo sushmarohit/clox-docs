@@ -1,6 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { Link, Navigate } from 'react-router-dom';
+import { z } from 'zod';
 import {
   confirmDocument,
   confirmSenderPayment,
@@ -13,38 +17,14 @@ import {
   uploadDocumentContent,
   type SenderOnboarding,
 } from '@/lib/api';
-import {
-  fieldClassName,
-  primaryButtonClassName,
-  secondaryButtonClassName,
-} from '@/components/admin-shell';
+import { Button, Field, Notice, RadioCardGroup, StepChips } from '@/components/ui';
 import { LoadingBlock } from '@/components/status-blocks';
+import { abnSchema, AU_STATES } from '@/lib/validation';
 import { AppRole } from '@/shared/types';
 import { useAuthStore } from '@/stores/auth-store';
 
-const STEPS = ['account_type', 'invoice', 'documents', 'waiting_ops', 'payment', 'complete'] as const;
-
-function StepPill({ current, id, label }: { current: string; id: (typeof STEPS)[number]; label: string }) {
-  const active = current === id;
-  const currentIdx = STEPS.indexOf(current as (typeof STEPS)[number]);
-  const idIdx = STEPS.indexOf(id);
-  const done = currentIdx >= 0 && idIdx >= 0 && currentIdx > idIdx;
-  return (
-    <span
-      className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-        active
-          ? 'bg-clox-orange text-white'
-          : done
-            ? 'bg-emerald-500/20 text-emerald-300'
-            : 'bg-white/5 text-slate-500'
-      }`}
-    >
-      {label}
-    </span>
-  );
-}
-
 export function SenderOnboardingPage() {
+  const { t } = useTranslation();
   const role = useAuthStore((s) => s.role);
   const qc = useQueryClient();
 
@@ -59,15 +39,11 @@ export function SenderOnboardingPage() {
   }
 
   if (query.isLoading) {
-    return <LoadingBlock label="Loading onboarding…" />;
+    return <LoadingBlock label={t('senderOnboarding.loading')} />;
   }
 
   if (query.isError || !query.data) {
-    return (
-      <p className="rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300">
-        {getErrorDetail(query.error)}
-      </p>
-    );
+    return <Notice tone="error">{getErrorDetail(query.error)}</Notice>;
   }
 
   const data = query.data;
@@ -75,24 +51,28 @@ export function SenderOnboardingPage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold">Sender onboarding</h1>
-      <p className="mt-2 text-sm text-slate-400">
-        M3 wizard — Ops approve required before payment / active.
-      </p>
+      <h1 className="text-2xl font-bold">{t('senderOnboarding.title')}</h1>
+      <p className="mt-2 text-sm text-clox-mute">{t('senderOnboarding.subtitle')}</p>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        <StepPill current={step} id="account_type" label="1 Account" />
-        <StepPill current={step} id="invoice" label="2 Invoice" />
-        <StepPill current={step} id="documents" label="3 Docs" />
-        <StepPill current={step} id="waiting_ops" label="4 Ops" />
-        <StepPill current={step} id="payment" label="5 Pay" />
-        <StepPill current={step} id="complete" label="Done" />
-      </div>
+      <StepChips
+        className="mt-4"
+        current={step}
+        steps={[
+          { id: 'account_type', label: t('senderOnboarding.stepAccount') },
+          { id: 'invoice', label: t('senderOnboarding.stepInvoice') },
+          { id: 'documents', label: t('senderOnboarding.stepDocs') },
+          { id: 'waiting_ops', label: t('senderOnboarding.stepOps') },
+          { id: 'payment', label: t('senderOnboarding.stepPay') },
+          { id: 'complete', label: t('senderOnboarding.stepDone') },
+        ]}
+      />
 
-      <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-400">
-        company <span className="font-mono text-slate-200">{data.company.status}</span> · canBook=
-        <span className="text-slate-200">{String(data.goNoGo.canBook)}</span>
-        {data.stripeMock ? ' · Stripe MOCK' : ''}
+      <div className="mt-4 rounded-xl border border-clox-border bg-clox-surface p-3 text-xs text-clox-mute">
+        {t('senderOnboarding.statusStrip', {
+          status: data.company.status,
+          canBook: String(data.goNoGo.canBook),
+        })}
+        {data.stripeMock ? ' · ' + t('senderOnboarding.stripeMock') : ''}
       </div>
 
       {(step === 'account_type' || step === 'invoice') && (
@@ -115,37 +95,32 @@ export function SenderOnboardingPage() {
       )}
 
       {step === 'waiting_ops' && (
-        <div className="mt-8 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-5">
-          <h2 className="text-lg font-semibold text-amber-100">Waiting for Ops</h2>
-          <p className="mt-2 text-sm text-amber-100/80">
-            Case {data.latestCase?.status ?? 'OPEN'} — Super/State must Approve in Compliance queue.
+        <Notice tone="warn" className="mt-8" title={t('waitingForOps')}>
+          <p>
+            {t('senderOnboarding.waitingOpsBody', { status: data.latestCase?.status ?? 'OPEN' })}
             {data.latestCase?.decisionNote
-              ? ` Note: ${data.latestCase.decisionNote}`
+              ? ' ' + t('senderOnboarding.notePrefix', { note: data.latestCase.decisionNote })
               : ''}
           </p>
-          <button
-            type="button"
-            className={`${secondaryButtonClassName} mt-4`}
-            onClick={() => void query.refetch()}
-          >
-            Refresh status
-          </button>
-        </div>
+          <Button variant="secondary" className="mt-4" onClick={() => void query.refetch()}>
+            {t('refreshStatus')}
+          </Button>
+        </Notice>
       )}
 
       {data.company.status === 'INFO_REQUESTED' &&
       (step === 'account_type' || step === 'invoice' || step === 'documents') ? (
-        <p className="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-sm text-amber-100">
-          Ops requested more info
-          {data.latestCase?.decisionNote ? `: ${data.latestCase.decisionNote}` : ''}. Update
-          profile/docs and resubmit.
-        </p>
+        <Notice tone="warn" className="mt-4">
+          {t('senderOnboarding.opsRequestedInfo', {
+            note: data.latestCase?.decisionNote ? `: ${data.latestCase.decisionNote}` : '',
+          })}
+        </Notice>
       ) : null}
 
       {step === 'rejected' && (
-        <div className="mt-8 rounded-2xl border border-red-500/40 bg-red-500/10 p-5 text-sm text-red-200">
-          Application rejected. {data.latestCase?.decisionNote}
-        </div>
+        <Notice tone="error" className="mt-8">
+          {t('applicationRejected')} {data.latestCase?.decisionNote}
+        </Notice>
       )}
 
       {step === 'payment' && (
@@ -158,28 +133,37 @@ export function SenderOnboardingPage() {
       )}
 
       {step === 'complete' && (
-        <div className="mt-8 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-5">
-          <h2 className="text-lg font-semibold text-emerald-200">Sender active</h2>
-          <p className="mt-2 text-sm text-emerald-100/80">
-            Go/no-go passed — booking enabled (job create full flow is M6).
-          </p>
-          <ul className="mt-3 space-y-1 text-xs text-emerald-100/70">
-            <li>Ops approved: {String(data.goNoGo.opsApproved)}</li>
-            <li>Invoice: {String(data.goNoGo.invoiceComplete)}</li>
-            <li>Payment: {String(data.goNoGo.paymentReady)}</li>
-            <li>canBook: {String(data.goNoGo.canBook)}</li>
+        <Notice tone="success" className="mt-8" title={t('senderOnboarding.activeTitle')}>
+          <p>{t('senderOnboarding.activeBody')}</p>
+          <ul className="mt-3 space-y-1 text-xs">
+            <li>{t('senderOnboarding.goNoGoOpsApproved', { value: String(data.goNoGo.opsApproved) })}</li>
+            <li>{t('senderOnboarding.goNoGoInvoice', { value: String(data.goNoGo.invoiceComplete) })}</li>
+            <li>{t('senderOnboarding.goNoGoPayment', { value: String(data.goNoGo.paymentReady) })}</li>
+            <li>{t('senderOnboarding.goNoGoCanBook', { value: String(data.goNoGo.canBook) })}</li>
           </ul>
-        </div>
+        </Notice>
       )}
 
-      <p className="mt-8 text-sm text-slate-500">
+      <p className="mt-8 text-sm text-clox-faint">
         <Link to="/" className="text-clox-orange hover:underline">
-          Home
+          {t('nav.home')}
         </Link>
       </p>
     </div>
   );
 }
+
+type SenderProfileForm = {
+  accountType: 'BUSINESS' | 'INDIVIDUAL';
+  legalName: string;
+  abn: string;
+  invoiceLegalName: string;
+  invoiceAddressLine1: string;
+  invoiceSuburb: string;
+  invoiceState: string;
+  invoicePostcode: string;
+  gstRegistered: boolean;
+};
 
 function ProfileStep({
   data,
@@ -188,127 +172,161 @@ function ProfileStep({
   data: SenderOnboarding;
   onSaved: () => Promise<void>;
 }) {
-  const [accountType, setAccountType] = useState<'BUSINESS' | 'INDIVIDUAL'>(
-    data.company.senderAccountType ?? 'BUSINESS',
-  );
-  const [legalName, setLegalName] = useState(data.company.legalName || '');
-  const [abn, setAbn] = useState(data.company.abn || '');
-  const [invoiceLegalName, setInvoiceLegalName] = useState(
-    data.company.invoiceLegalName || data.company.legalName || '',
-  );
-  const [line1, setLine1] = useState(data.company.invoiceAddressLine1 || '');
-  const [suburb, setSuburb] = useState(data.company.invoiceSuburb || '');
-  const [state, setState] = useState(data.company.invoiceState || 'VIC');
-  const [postcode, setPostcode] = useState(data.company.invoicePostcode || '');
-  const [gst, setGst] = useState(data.company.gstRegistered);
+  const { t } = useTranslation();
+
+  const schema = z
+    .object({
+      accountType: z.enum(['BUSINESS', 'INDIVIDUAL']),
+      legalName: z.string().trim().min(1, t('validation.legalNameRequired')),
+      abn: z.string().trim(),
+      invoiceLegalName: z.string().trim().min(1, t('validation.invoiceLegalNameRequired')),
+      invoiceAddressLine1: z.string().trim().min(1, t('validation.addressRequired')),
+      invoiceSuburb: z.string().trim().min(1, t('validation.suburbRequired')),
+      invoiceState: z
+        .string()
+        .trim()
+        .toUpperCase()
+        .refine((value) => (AU_STATES as readonly string[]).includes(value), {
+          message: t('validation.stateInvalid'),
+        }),
+      invoicePostcode: z.string().trim().regex(/^\d{4}$/, t('validation.postcodeInvalid')),
+      gstRegistered: z.boolean(),
+    })
+    .superRefine((values, ctx) => {
+      if (values.accountType === 'BUSINESS') {
+        const abn = abnSchema(t('validation.abnRequired'), t('validation.abnInvalid')).safeParse(
+          values.abn,
+        );
+        if (!abn.success) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['abn'],
+            message: abn.error.issues[0]?.message ?? t('validation.abnInvalid'),
+          });
+        }
+      }
+    });
+
+  const form = useForm<SenderProfileForm>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      accountType: data.company.senderAccountType ?? 'BUSINESS',
+      legalName: data.company.legalName || '',
+      abn: data.company.abn || '',
+      invoiceLegalName: data.company.invoiceLegalName || data.company.legalName || '',
+      invoiceAddressLine1: data.company.invoiceAddressLine1 || '',
+      invoiceSuburb: data.company.invoiceSuburb || '',
+      invoiceState: data.company.invoiceState || 'VIC',
+      invoicePostcode: data.company.invoicePostcode || '',
+      gstRegistered: data.company.gstRegistered,
+    },
+  });
+
+  const accountType = form.watch('accountType');
 
   const mutation = useMutation({
-    mutationFn: () =>
+    mutationFn: (values: SenderProfileForm) =>
       updateSenderProfile({
-        accountType,
-        legalName,
-        abn: accountType === 'BUSINESS' ? abn : undefined,
+        accountType: values.accountType,
+        legalName: values.legalName,
+        abn: values.accountType === 'BUSINESS' ? values.abn : undefined,
         homeRegionCode: 'VIC',
-        invoiceLegalName,
-        invoiceAddressLine1: line1,
-        invoiceSuburb: suburb,
-        invoiceState: state,
-        invoicePostcode: postcode,
-        gstRegistered: gst,
+        invoiceLegalName: values.invoiceLegalName,
+        invoiceAddressLine1: values.invoiceAddressLine1,
+        invoiceSuburb: values.invoiceSuburb,
+        invoiceState: values.invoiceState,
+        invoicePostcode: values.invoicePostcode,
+        gstRegistered: values.gstRegistered,
       }),
     onSuccess: () => onSaved(),
   });
 
   return (
     <form
-      className="mt-8 space-y-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-        mutation.mutate();
-      }}
+      className="mt-8"
+      onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+      noValidate
     >
-      <h2 className="text-lg font-semibold">Account & invoice</h2>
-      <div className="flex gap-3">
-        <button
-          type="button"
-          className={accountType === 'BUSINESS' ? primaryButtonClassName : secondaryButtonClassName}
-          onClick={() => setAccountType('BUSINESS')}
-        >
-          Business
-        </button>
-        <button
-          type="button"
-          className={
-            accountType === 'INDIVIDUAL' ? primaryButtonClassName : secondaryButtonClassName
-          }
-          onClick={() => setAccountType('INDIVIDUAL')}
-        >
-          Individual
-        </button>
-      </div>
-      <input
-        className={fieldClassName}
-        placeholder="Legal name"
-        value={legalName}
-        onChange={(e) => setLegalName(e.target.value)}
+      <h2 className="mb-4 font-display text-lg font-semibold">{t('senderOnboarding.profileTitle')}</h2>
+      <RadioCardGroup
+        name="accountType"
+        value={accountType}
+        onChange={(next) => form.setValue('accountType', next, { shouldValidate: true })}
+        options={[
+          {
+            value: 'BUSINESS',
+            title: t('senderOnboarding.accountBusiness'),
+            description: t('senderOnboarding.accountBusinessHint'),
+          },
+          {
+            value: 'INDIVIDUAL',
+            title: t('senderOnboarding.accountIndividual'),
+            description: t('senderOnboarding.accountIndividualHint'),
+          },
+        ]}
+      />
+      <Field
+        label={t('legalName')}
         required
+        error={form.formState.errors.legalName?.message}
+        {...form.register('legalName')}
       />
       {accountType === 'BUSINESS' ? (
-        <input
-          className={fieldClassName}
-          placeholder="ABN (11 digits)"
-          value={abn}
-          onChange={(e) => setAbn(e.target.value)}
+        <Field
+          label={t('abn')}
           required
+          inputMode="numeric"
+          error={form.formState.errors.abn?.message}
+          {...form.register('abn')}
         />
       ) : null}
-      <input
-        className={fieldClassName}
-        placeholder="Invoice legal name"
-        value={invoiceLegalName}
-        onChange={(e) => setInvoiceLegalName(e.target.value)}
+      <Field
+        label={t('senderOnboarding.placeholderInvoiceLegalName')}
         required
+        error={form.formState.errors.invoiceLegalName?.message}
+        {...form.register('invoiceLegalName')}
       />
-      <input
-        className={fieldClassName}
-        placeholder="Address line 1"
-        value={line1}
-        onChange={(e) => setLine1(e.target.value)}
+      <Field
+        label={t('senderOnboarding.placeholderAddressLine1')}
         required
+        error={form.formState.errors.invoiceAddressLine1?.message}
+        {...form.register('invoiceAddressLine1')}
       />
-      <div className="grid grid-cols-3 gap-2">
-        <input
-          className={fieldClassName}
-          placeholder="Suburb"
-          value={suburb}
-          onChange={(e) => setSuburb(e.target.value)}
+      <div className="grid grid-cols-1 gap-0 sm:grid-cols-3 sm:gap-2">
+        <Field
+          label={t('senderOnboarding.placeholderSuburb')}
           required
+          error={form.formState.errors.invoiceSuburb?.message}
+          {...form.register('invoiceSuburb')}
         />
-        <input
-          className={fieldClassName}
-          placeholder="State"
-          value={state}
-          onChange={(e) => setState(e.target.value.toUpperCase())}
+        <Field
+          label={t('senderOnboarding.placeholderState')}
           required
+          error={form.formState.errors.invoiceState?.message}
+          {...form.register('invoiceState', {
+            setValueAs: (value: string) => value.toUpperCase(),
+          })}
         />
-        <input
-          className={fieldClassName}
-          placeholder="Postcode"
-          value={postcode}
-          onChange={(e) => setPostcode(e.target.value)}
+        <Field
+          label={t('senderOnboarding.placeholderPostcode')}
           required
+          inputMode="numeric"
+          error={form.formState.errors.invoicePostcode?.message}
+          {...form.register('invoicePostcode')}
         />
       </div>
-      <label className="flex items-center gap-2 text-sm text-slate-300">
-        <input type="checkbox" checked={gst} onChange={(e) => setGst(e.target.checked)} />
-        GST registered
+      <label className="mb-4 flex items-center gap-2 text-sm text-clox-mute">
+        <input type="checkbox" className="accent-clox-accent" {...form.register('gstRegistered')} />
+        {t('senderOnboarding.gstRegistered')}
       </label>
       {mutation.isError ? (
-        <p className="text-sm text-red-300">{getErrorDetail(mutation.error)}</p>
+        <Notice tone="error" className="mb-4">
+          {getErrorDetail(mutation.error)}
+        </Notice>
       ) : null}
-      <button type="submit" className={primaryButtonClassName} disabled={mutation.isPending}>
-        {mutation.isPending ? 'Saving…' : 'Save & continue'}
-      </button>
+      <Button type="submit" variant="cta" disabled={mutation.isPending}>
+        {mutation.isPending ? t('saving') : t('saveAndContinue')}
+      </Button>
     </form>
   );
 }
@@ -322,6 +340,7 @@ function DocumentsStep({
   accountType: 'BUSINESS' | 'INDIVIDUAL' | null;
   onSubmitted: () => Promise<void>;
 }) {
+  const { t } = useTranslation();
   const docType = accountType === 'INDIVIDUAL' ? 'GOVERNMENT_ID' : 'ABN_EXTRACT';
   const [file, setFile] = useState<File | null>(null);
   const [docId, setDocId] = useState<string | null>(null);
@@ -329,7 +348,7 @@ function DocumentsStep({
 
   const upload = useMutation({
     mutationFn: async () => {
-      if (!file) throw new Error('Choose a file');
+      if (!file) throw new Error(t('senderOnboarding.errorChooseFile'));
       const mime = (file.type || 'application/pdf') as
         | 'application/pdf'
         | 'image/jpeg'
@@ -348,13 +367,13 @@ function DocumentsStep({
     },
     onSuccess: (id) => {
       setDocId(id);
-      setMessage('Document uploaded');
+      setMessage(t('senderOnboarding.documentUploaded'));
     },
   });
 
   const submit = useMutation({
     mutationFn: () => {
-      if (!docId) throw new Error('Upload a document first');
+      if (!docId) throw new Error(t('senderOnboarding.errorUploadFirst'));
       return submitSenderVerification([docId]);
     },
     onSuccess: () => onSubmitted(),
@@ -362,10 +381,9 @@ function DocumentsStep({
 
   return (
     <div className="mt-8 space-y-4">
-      <h2 className="text-lg font-semibold">Verification documents</h2>
-      <p className="text-sm text-slate-400">
-        Required: <span className="font-mono text-clox-orange">{docType}</span> (manual Ops review —
-        no easyAML)
+      <h2 className="text-lg font-semibold">{t('senderOnboarding.docsTitle')}</h2>
+      <p className="text-sm text-clox-mute">
+        {t('senderOnboarding.docsRequired', { docType })}
       </p>
       <input
         type="file"
@@ -373,34 +391,31 @@ function DocumentsStep({
         onChange={(e) => setFile(e.target.files?.[0] ?? null)}
       />
       {(upload.isError || submit.isError) && (
-        <p className="text-sm text-red-300">
-          {getErrorDetail(upload.error ?? submit.error)}
-        </p>
+        <Notice tone="error">{getErrorDetail(upload.error ?? submit.error)}</Notice>
       )}
-      {message ? <p className="text-sm text-emerald-300">{message}</p> : null}
+      {message ? <Notice tone="success">{message}</Notice> : null}
       <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          className={secondaryButtonClassName}
+        <Button
+          variant="secondary"
           disabled={!file || upload.isPending}
           onClick={() => upload.mutate()}
         >
-          Upload
-        </button>
-        <button
-          type="button"
-          className={primaryButtonClassName}
+          {upload.isPending ? t('uploading') : t('upload')}
+        </Button>
+        <Button
+          variant="cta"
           disabled={!docId || submit.isPending}
           onClick={() => submit.mutate()}
         >
-          Submit to Ops
-        </button>
+          {submit.isPending ? t('submitting') : t('senderOnboarding.submitToOps')}
+        </Button>
       </div>
     </div>
   );
 }
 
 function PaymentStep({ mock, onDone }: { mock: boolean; onDone: () => Promise<void> }) {
+  const { t } = useTranslation();
   const [setupInfo, setSetupInfo] = useState<string | null>(null);
 
   const setup = useMutation({
@@ -408,8 +423,8 @@ function PaymentStep({ mock, onDone }: { mock: boolean; onDone: () => Promise<vo
     onSuccess: (data) => {
       setSetupInfo(
         data.mock
-          ? `Mock SetupIntent ${data.setupIntentId} — click Confirm to activate`
-          : `SetupIntent ready (use Stripe.js with client secret in production)`,
+          ? t('senderOnboarding.setupIntentMock', { id: data.setupIntentId })
+          : t('senderOnboarding.setupIntentReady'),
       );
     },
   });
@@ -421,33 +436,23 @@ function PaymentStep({ mock, onDone }: { mock: boolean; onDone: () => Promise<vo
 
   return (
     <div className="mt-8 space-y-4">
-      <h2 className="text-lg font-semibold">Payment method</h2>
-      <p className="text-sm text-slate-400">
+      <h2 className="text-lg font-semibold">{t('senderOnboarding.paymentTitle')}</h2>
+      <p className="text-sm text-clox-mute">
         {mock
-          ? 'Stripe mock mode (no card PAN stored). Confirm to reach sender_active.'
-          : 'Create SetupIntent, collect card via Stripe Payment Element, then confirm.'}
+          ? t('senderOnboarding.paymentMockHint')
+          : t('senderOnboarding.paymentLiveHint')}
       </p>
       {(setup.isError || confirm.isError) && (
-        <p className="text-sm text-red-300">{getErrorDetail(setup.error ?? confirm.error)}</p>
+        <Notice tone="error">{getErrorDetail(setup.error ?? confirm.error)}</Notice>
       )}
-      {setupInfo ? <p className="text-sm text-emerald-300">{setupInfo}</p> : null}
+      {setupInfo ? <Notice tone="success">{setupInfo}</Notice> : null}
       <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          className={secondaryButtonClassName}
-          disabled={setup.isPending}
-          onClick={() => setup.mutate()}
-        >
-          Create SetupIntent
-        </button>
-        <button
-          type="button"
-          className={primaryButtonClassName}
-          disabled={confirm.isPending}
-          onClick={() => confirm.mutate()}
-        >
-          Confirm payment ready
-        </button>
+        <Button variant="secondary" disabled={setup.isPending} onClick={() => setup.mutate()}>
+          {t('senderOnboarding.createSetupIntent')}
+        </Button>
+        <Button variant="cta" disabled={confirm.isPending} onClick={() => confirm.mutate()}>
+          {t('senderOnboarding.confirmPaymentReady')}
+        </Button>
       </div>
     </div>
   );

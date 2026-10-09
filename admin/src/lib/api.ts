@@ -66,3 +66,37 @@ export {
   type DriverOnboarding,
   type DriverInvitePeek,
 } from '@/lib/api/driver';
+export {
+  listSenderJobs,
+  getSenderJob,
+  createJob,
+  publishJob,
+  acceptProposal,
+  recommendVehicle,
+  getMarketBoard,
+  submitBid,
+  getCarrierAssignments,
+  type JobSummary,
+  type MarketBoard,
+  type AcceptProposalResult,
+  type CarrierAssignment,
+} from '@/lib/api/jobs';
+export {
+  listDriverTrips,
+  getDriverTrip,
+  tripSafetyCheck,
+  tripMassCheck,
+  tripStart,
+  tripBreak,
+  tripLocation,
+  getSenderTrack,
+  type TripSummary,
+  type SenderTrack,
+} from '@/lib/api/trips';
+export {
+  listSenderSurcharges,
+  paySurcharge,
+  waiveSurcharge,
+  listCarrierExceptions,
+  type SurchargeRow,
+} from '@/lib/api/surcharges';

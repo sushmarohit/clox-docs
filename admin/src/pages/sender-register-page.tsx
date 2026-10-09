@@ -1,8 +1,12 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 import { getErrorDetail, registerSender } from '@/lib/api';
-import { fieldClassName, primaryButtonClassName } from '@/components/admin-shell';
+import { BrandLogo } from '@/components/brand-logo';
+import { Button, Field, Notice } from '@/components/ui';
 
 type Form = {
   name: string;
@@ -12,8 +16,24 @@ type Form = {
 };
 
 export function SenderRegisterPage() {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
+
+  const schema = z.object({
+    name: z.string().trim().min(1, t('validation.nameRequired')),
+    email: z
+      .string()
+      .trim()
+      .min(1, t('validation.emailRequired'))
+      .email(t('validation.emailInvalid')),
+    phone: z.string(),
+    acceptedTerms: z.boolean().refine((value) => value === true, {
+      message: t('validation.termsRequired'),
+    }),
+  });
+
   const form = useForm<Form>({
+    resolver: zodResolver(schema),
     defaultValues: { name: '', email: '', phone: '', acceptedTerms: false },
   });
 
@@ -31,57 +51,67 @@ export function SenderRegisterPage() {
   });
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
-      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-clox-orange">CLOX</p>
-        <h1 className="mt-4 text-3xl font-bold">Sender register</h1>
-        <p className="mt-2 text-sm text-slate-400">M3 — create account, then OTP login to continue.</p>
+    <main
+      className="flex min-h-screen items-center justify-center bg-clox-bg px-4 py-10 text-clox-text sm:px-6"
+      data-role="sender"
+    >
+      <div className="clox-card w-full max-w-md p-6 shadow-clox-2 sm:p-8">
+        <BrandLogo variant="default" className="h-9 w-auto object-contain object-left" />
+        <h1 className="mt-4 font-display text-3xl font-bold text-clox-ink">
+          {t('senderRegister.title')}
+        </h1>
+        <p className="mt-2 text-sm text-clox-mute">{t('senderRegister.subtitle')}</p>
 
         <form
-          className="mt-6 space-y-4"
+          className="mt-6"
           onSubmit={form.handleSubmit((v) => mutation.mutate(v))}
           noValidate
         >
-          <div>
-            <label className="mb-1.5 block text-sm">Name</label>
-            <input className={fieldClassName} {...form.register('name', { required: true })} />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm">Email</label>
-            <input
-              type="email"
-              className={fieldClassName}
-              {...form.register('email', { required: true })}
-            />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm">Phone (optional)</label>
-            <input className={fieldClassName} {...form.register('phone')} />
-          </div>
-          <label className="flex items-start gap-2 text-sm text-slate-300">
-            <input type="checkbox" className="mt-1" {...form.register('acceptedTerms')} />
-            I accept Terms & Privacy
+          <Field
+            label={t('name')}
+            required
+            error={form.formState.errors.name?.message}
+            {...form.register('name')}
+          />
+          <Field
+            type="email"
+            label={t('email')}
+            required
+            error={form.formState.errors.email?.message}
+            {...form.register('email')}
+          />
+          <Field
+            label={t('phoneOptional')}
+            error={form.formState.errors.phone?.message}
+            {...form.register('phone')}
+          />
+          <label className="mb-4 flex items-start gap-2 text-sm text-clox-mute">
+            <input type="checkbox" className="mt-1 accent-clox-accent" {...form.register('acceptedTerms')} />
+            <span>
+              {t('acceptTerms')}
+              {form.formState.errors.acceptedTerms?.message ? (
+                <span className="mt-1 block text-[12px] font-medium text-[var(--status-danger)]" role="alert">
+                  {form.formState.errors.acceptedTerms.message}
+                </span>
+              ) : null}
+            </span>
           </label>
 
           {mutation.isError ? (
-            <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">
+            <Notice tone="error" className="mb-4">
               {getErrorDetail(mutation.error)}
-            </p>
+            </Notice>
           ) : null}
 
-          <button
-            type="submit"
-            disabled={mutation.isPending || !form.watch('acceptedTerms')}
-            className={`${primaryButtonClassName} w-full`}
-          >
-            {mutation.isPending ? 'Creating…' : 'Create sender account'}
-          </button>
+          <Button type="submit" variant="cta" size="block" disabled={mutation.isPending}>
+            {mutation.isPending ? t('creating') : t('senderRegister.createAccount')}
+          </Button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-slate-400">
-          Already registered?{' '}
-          <Link to="/login" className="text-clox-orange hover:underline">
-            Sign in
+        <p className="mt-4 text-center text-sm text-clox-mute">
+          {t('alreadyRegistered')}{' '}
+          <Link to="/login" className="font-semibold text-clox-orange hover:underline">
+            {t('signIn')}
           </Link>
         </p>
       </div>

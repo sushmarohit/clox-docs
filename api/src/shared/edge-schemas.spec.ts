@@ -15,15 +15,15 @@ describe('Zod schemas — M1/M2/M3 edge validation', () => {
     });
 
     it('accepts email-only request', () => {
-      expect(otpRequestSchema.safeParse({ email: 'a@b.com' }).success).toBe(true);
+      expect(otpRequestSchema.safeParse({ email: 'clox.mail@yopmail.com' }).success).toBe(true);
     });
 
     it('rejects non-digit OTP code', () => {
-      expect(otpVerifySchema.safeParse({ email: 'a@b.com', code: 'abc' }).success).toBe(false);
+      expect(otpVerifySchema.safeParse({ email: 'clox.mail@yopmail.com', code: 'abc' }).success).toBe(false);
     });
 
     it('accepts 6-digit code', () => {
-      expect(otpVerifySchema.safeParse({ email: 'a@b.com', code: '123456' }).success).toBe(true);
+      expect(otpVerifySchema.safeParse({ email: 'clox.mail@yopmail.com', code: '123456' }).success).toBe(true);
     });
   });
 

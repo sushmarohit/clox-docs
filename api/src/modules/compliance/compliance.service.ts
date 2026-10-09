@@ -31,6 +31,7 @@ import { AbrService } from './abr.service';
 const CARRIER_REQUIRED: ComplianceDocType[] = [
   ComplianceDocType.PUBLIC_LIABILITY,
   ComplianceDocType.CARGO_INSURANCE,
+  ComplianceDocType.RWC,
 ];
 
 @Injectable()
@@ -57,6 +58,13 @@ export class ComplianceService {
       throw new NotFoundException('Company not found');
     }
     if (principal.kind === 'admin') {
+      const regionCode = company.homeRegion?.code;
+      if (regionCode) {
+        this.scope.assertRegionAccess(principal, regionCode);
+      } else if (principal.role !== AdminRole.SUPER_ADMIN) {
+        throw new ForbiddenException('Company has no region — Super only');
+      }
+      await this.assertAdminTerritoryForCompany(principal, company);
       return company;
     }
     const user = await this.prisma.user.findUnique({ where: { id: principal.id } });
@@ -64,6 +72,49 @@ export class ComplianceService {
       throw new ForbiddenException('Not a member of this company');
     }
     return company;
+  }
+
+  /** Local BDE: job origin territory or home-region territory intersection. */
+  private async assertAdminTerritoryForCompany(
+    principal: AuthenticatedPrincipal,
+    company: { id: string; homeRegionId: string | null },
+  ) {
+    if (principal.role !== AdminRole.LOCAL_BDE) return;
+    const allowed = this.scope.allowedTerritoryCodes(principal);
+    if (allowed === null) return;
+    if (allowed.length < 1) {
+      throw new ForbiddenException('Local BDE has no territory scope');
+    }
+
+    const linkedJob = await this.prisma.job.findFirst({
+      where: {
+        OR: [
+          { senderCompanyId: company.id },
+          { assignment: { carrierCompanyId: company.id } },
+        ],
+        originTerritory: { code: { in: allowed } },
+      },
+      include: { originTerritory: true },
+    });
+    if (linkedJob?.originTerritory?.code) {
+      this.scope.assertTerritoryAccess(principal, linkedJob.originTerritory.code);
+      return;
+    }
+
+    if (!company.homeRegionId) {
+      throw new ForbiddenException('Company has no territory assignment — Super/State only');
+    }
+    const territory = await this.prisma.localTerritory.findFirst({
+      where: {
+        regionId: company.homeRegionId,
+        code: { in: allowed },
+        enabled: true,
+      },
+    });
+    if (!territory) {
+      throw new ForbiddenException('Outside admin scope (territory)');
+    }
+    this.scope.assertTerritoryAccess(principal, territory.code);
   }
 
   private assertCanDecide(principal: AuthenticatedPrincipal) {
@@ -99,12 +150,31 @@ export class ComplianceService {
     } else if (principal.role !== AdminRole.SUPER_ADMIN) {
       throw new ForbiddenException('Case has no region — Super only');
     }
+    await this.assertAdminTerritoryForCompany(principal, complianceCase.company);
 
     return complianceCase;
   }
 
   async submit(principal: AuthenticatedPrincipal, input: SubmitComplianceInput) {
     this.ensureDatabase();
+    if (principal.kind === 'user' && principal.role === 'DRIVER') {
+      throw new ForbiddenException('Drivers cannot submit company KYB/KYC');
+    }
+    if (
+      principal.kind === 'user' &&
+      input.caseType === ComplianceCaseType.CARRIER_KYB &&
+      principal.role !== 'TRANSPORT_COMPANY'
+    ) {
+      throw new ForbiddenException('Carrier ops role required for CARRIER_KYB');
+    }
+    if (
+      principal.kind === 'user' &&
+      (input.caseType === ComplianceCaseType.SENDER_KYB ||
+        input.caseType === ComplianceCaseType.SENDER_KYC) &&
+      principal.role !== 'SENDER'
+    ) {
+      throw new ForbiddenException('Sender role required for sender compliance submit');
+    }
     const company = await this.assertCompanyMember(principal, input.companyId);
 
     if (company.type === CompanyType.SENDER && input.caseType === ComplianceCaseType.CARRIER_KYB) {
@@ -226,6 +296,48 @@ export class ComplianceService {
       where.region = { code: { in: allowedRegions } };
     }
 
+    // Local BDE: only cases whose company is linked to their territory
+    // (job originTerritory or home-region territory membership).
+    const allowedTerritories = this.scope.allowedTerritoryCodes(principal);
+    if (allowedTerritories !== null) {
+      if (allowedTerritories.length < 1) {
+        return {
+          success: true,
+          data: [],
+          meta: { page: query.page, limit: query.pageSize, total: 0, totalPages: 1 },
+        };
+      }
+      where.AND = [
+        {
+          OR: [
+            {
+              company: {
+                jobsAsSender: {
+                  some: { originTerritory: { code: { in: allowedTerritories } } },
+                },
+              },
+            },
+            {
+              company: {
+                proposals: {
+                  some: {
+                    job: { originTerritory: { code: { in: allowedTerritories } } },
+                  },
+                },
+              },
+            },
+            {
+              company: {
+                homeRegion: {
+                  territories: { some: { code: { in: allowedTerritories }, enabled: true } },
+                },
+              },
+            },
+          ],
+        },
+      ];
+    }
+
     const skip = (query.page - 1) * query.pageSize;
     const [total, rows] = await this.prisma.$transaction([
       this.prisma.complianceCase.count({ where }),
@@ -266,6 +378,16 @@ export class ComplianceService {
     return { ...complianceCase, abrAssist };
   }
 
+  private assertCaseActionable(status: ComplianceCaseStatus) {
+    if (
+      status !== ComplianceCaseStatus.OPEN &&
+      status !== ComplianceCaseStatus.ESCALATED &&
+      status !== ComplianceCaseStatus.INFO_REQUESTED
+    ) {
+      throw new BadRequestException('Case is not actionable');
+    }
+  }
+
   async approve(
     principal: AuthenticatedPrincipal,
     caseId: string,
@@ -274,13 +396,7 @@ export class ComplianceService {
     this.ensureDatabase();
     this.assertCanDecide(principal);
     const complianceCase = await this.loadCaseForAdmin(principal, caseId);
-    if (
-      complianceCase.status !== ComplianceCaseStatus.OPEN &&
-      complianceCase.status !== ComplianceCaseStatus.ESCALATED &&
-      complianceCase.status !== ComplianceCaseStatus.INFO_REQUESTED
-    ) {
-      throw new BadRequestException('Case is not actionable');
-    }
+    this.assertCaseActionable(complianceCase.status);
 
     const nextCompanyStatus =
       complianceCase.company.type === CompanyType.SENDER
@@ -330,6 +446,7 @@ export class ComplianceService {
     this.ensureDatabase();
     this.assertCanDecide(principal);
     const complianceCase = await this.loadCaseForAdmin(principal, caseId);
+    this.assertCaseActionable(complianceCase.status);
 
     await this.prisma.$transaction(async (tx) => {
       await tx.complianceCase.update({
@@ -374,6 +491,7 @@ export class ComplianceService {
     this.ensureDatabase();
     this.assertCanDecide(principal);
     const complianceCase = await this.loadCaseForAdmin(principal, caseId);
+    this.assertCaseActionable(complianceCase.status);
 
     await this.prisma.$transaction(async (tx) => {
       await tx.complianceCase.update({
@@ -410,7 +528,8 @@ export class ComplianceService {
     if (principal.role !== AdminRole.LOCAL_BDE) {
       throw new ForbiddenException('Only Local BDE uses escalate (G0-4)');
     }
-    await this.loadCaseForAdmin(principal, caseId);
+    const complianceCase = await this.loadCaseForAdmin(principal, caseId);
+    this.assertCaseActionable(complianceCase.status);
 
     await this.prisma.complianceCase.update({
       where: { id: caseId },
@@ -468,6 +587,13 @@ export class ComplianceService {
           data: { status: VehicleStatus.SUSPENDED },
         });
         suspendedVehicles += 1;
+      } else if (doc.companyId && doc.docType === ComplianceDocType.RWC) {
+        // Company-level RWC (no vehicleId) — suspend entire ACTIVE fleet.
+        const result = await this.prisma.vehicle.updateMany({
+          where: { companyId: doc.companyId, status: VehicleStatus.ACTIVE },
+          data: { status: VehicleStatus.SUSPENDED },
+        });
+        suspendedVehicles += result.count;
       }
 
       if (

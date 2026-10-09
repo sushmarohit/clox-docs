@@ -12,6 +12,9 @@ export class NotificationsService {
   constructor(private readonly config: ConfigService<AppEnv, true>) {}
 
   private getTransporter(): Transporter | null {
+    if (this.transporter) {
+      return this.transporter;
+    }
     const user = this.config.get('SMTP_USER', { infer: true });
     const pass = this.config.get('SMTP_PASS', { infer: true });
 
@@ -19,14 +22,12 @@ export class NotificationsService {
       return null;
     }
 
-    if (!this.transporter) {
-      this.transporter = nodemailer.createTransport({
-        host: this.config.get('SMTP_HOST', { infer: true }),
-        port: this.config.get('SMTP_PORT', { infer: true }),
-        secure: this.config.get('SMTP_SECURE', { infer: true }),
-        auth: { user, pass },
-      });
-    }
+    this.transporter = nodemailer.createTransport({
+      host: this.config.get('SMTP_HOST', { infer: true }),
+      port: this.config.get('SMTP_PORT', { infer: true }),
+      secure: this.config.get('SMTP_SECURE', { infer: true }),
+      auth: { user, pass },
+    });
 
     return this.transporter;
   }

@@ -42,13 +42,28 @@ export class ProblemDetailsFilter implements ExceptionFilter {
             ? exception.message
             : 'Unexpected error';
 
-    response.status(status).type('application/problem+json').json({
+    const body: Record<string, unknown> = {
       type: 'about:blank',
       title,
       status,
       detail,
       instance: request.url,
       timestamp: new Date().toISOString(),
-    });
+    };
+
+    if (
+      typeof exceptionResponse === 'object' &&
+      exceptionResponse !== null &&
+      !Array.isArray(exceptionResponse)
+    ) {
+      const extra = exceptionResponse as Record<string, unknown>;
+      for (const key of ['code', 'jobId', 'proposalId', 'amountIncGstCents', 'nextMilestone', 'goNoGo', 'minBaseCents', 'recommended']) {
+        if (key in extra && extra[key] !== undefined) {
+          body[key] = extra[key];
+        }
+      }
+    }
+
+    response.status(status).type('application/problem+json').json(body);
   }
 }

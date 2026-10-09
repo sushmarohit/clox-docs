@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { setAppLocale } from '@/lib/i18n';
+import { cn } from '@/lib/cn';
 import type { AppLocale } from '@/locales';
 
 const options: { locale: AppLocale; label: string }[] = [
@@ -36,10 +37,10 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
   }, []);
 
   return (
-    <div ref={rootRef} className={`relative ${className}`}>
+    <div ref={rootRef} className={cn('relative', className)}>
       <button
         type="button"
-        className="inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-white transition hover:text-clox-orange"
+        className="inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-clox-mute transition hover:bg-clox-surface-alt hover:text-clox-ink"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={t('language')}
@@ -78,7 +79,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
         <div
           role="listbox"
           aria-label={t('language')}
-          className="absolute right-0 top-full z-[1001] mt-1 min-w-[10.5rem] overflow-hidden rounded-lg bg-white shadow-[0_10px_30px_rgba(0,0,0,0.15)]"
+          className="absolute right-0 top-full z-[1001] mt-1 min-w-[10.5rem] overflow-hidden rounded-clox-md border border-clox-border bg-clox-surface shadow-clox-2"
         >
           {options.map((option) => {
             const active = option.locale === current;
@@ -88,11 +89,12 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
                 type="button"
                 role="option"
                 aria-selected={active}
-                className={`flex w-full px-4 py-3 text-left text-[0.95rem] transition ${
+                className={cn(
+                  'flex w-full px-4 py-3 text-left text-[0.95rem] transition',
                   active
-                    ? 'bg-slate-100 font-bold text-clox-navy'
-                    : 'text-slate-800 hover:bg-clox-surface hover:text-clox-orange'
-                }`}
+                    ? 'bg-clox-surface-alt font-bold text-clox-navy'
+                    : 'text-clox-text hover:bg-clox-orange-tint hover:text-clox-orange-deep',
+                )}
                 onMouseDown={(event) => {
                   event.preventDefault();
                   switchTo(option.locale);

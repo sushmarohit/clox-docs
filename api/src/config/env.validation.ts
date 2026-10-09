@@ -35,7 +35,7 @@ export const envSchema = z.object({
   INVEST_NOTIFY_EMAIL: z.string().email().optional(),
   ENABLE_OPENAPI: booleanFromString.default(false),
   /** TEMP testing: include OTP in API response and show on admin login. Turn off for real use. */
-  EXPOSE_OTP_IN_RESPONSE: booleanFromString.default(true),
+  EXPOSE_OTP_IN_RESPONSE: booleanFromString.default(false),
   SEED_SUPER_ADMIN_EMAIL: z.string().email().default('cloxadmin@yopmail.com'),
   SEED_SUPER_ADMIN_NAME: z.string().default('CLOX Super Admin'),
   THROTTLE_TTL_MS: z.coerce.number().int().positive().default(60_000),
@@ -51,6 +51,12 @@ export const envSchema = z.object({
   /** Force mock Stripe even if key present (local QA). */
   STRIPE_MOCK: booleanFromString.default(false),
   STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+  /** Webhook signing secret (whsec_…) — required for live/test webhook verify when not mock. */
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
+  /** M9 geofence radius meters (default 200). */
+  GEOFENCE_RADIUS_METERS: z.coerce.number().positive().default(200),
+  /** M9 DEV: override free-wait to N seconds for demo (0 = use policy minutes). */
+  GEOFENCE_FREE_WAIT_SECONDS: z.coerce.number().int().nonnegative().default(30),
 });
 
 export type AppEnv = z.infer<typeof envSchema>;

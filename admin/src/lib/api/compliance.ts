@@ -83,6 +83,8 @@ export function createUploadIntent(payload: {
   mimeType: 'application/pdf' | 'image/jpeg' | 'image/png' | 'image/webp';
   sizeBytes: number;
   expiresAt?: string;
+  vehicleId?: string;
+  driverId?: string;
 }) {
   return http.post<{
     id: string;

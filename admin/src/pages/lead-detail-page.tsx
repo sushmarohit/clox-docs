@@ -2,12 +2,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  fieldClassName,
-  primaryButtonClassName,
-  secondaryButtonClassName,
-} from '@/components/admin-shell';
+import { LoadingBlock } from '@/components/status-blocks';
+import { Button, Notice, Select, TextArea, Timeline, useToast } from '@/components/ui';
 import { addLeadNote, getErrorDetail, getLead, updateLead } from '@/lib/api';
+import { formatAuditAction } from '@/lib/audit-format';
 import {
   LEAD_STATUS_KEYS,
   formatDateTime,
@@ -20,6 +18,7 @@ export function LeadDetailPage() {
   const { t } = useTranslation('common');
   const { id = '' } = useParams();
   const queryClient = useQueryClient();
+  const toast = useToast();
 
   const [status, setStatus] = useState<LeadStatus | ''>('');
   const [priority, setPriority] = useState(false);
@@ -47,18 +46,22 @@ export function LeadDetailPage() {
         priority,
       }),
     onSuccess: () => {
+      toast.success(t('saved'));
       void queryClient.invalidateQueries({ queryKey: ['admin', 'lead', id] });
       void queryClient.invalidateQueries({ queryKey: ['admin', 'leads'] });
       void queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
+    onError: (err) => toast.error(getErrorDetail(err)),
   });
 
   const noteMutation = useMutation({
     mutationFn: () => addLeadNote(id, { body: note.trim() }),
     onSuccess: () => {
       setNote('');
+      toast.success(t('saved'));
       void queryClient.invalidateQueries({ queryKey: ['admin', 'lead', id] });
     },
+    onError: (err) => toast.error(getErrorDetail(err)),
   });
 
   return (
@@ -68,67 +71,73 @@ export function LeadDetailPage() {
       </Link>
 
       {leadQuery.isLoading ? (
-        <p className="mt-6 text-slate-400">{t('loading')}</p>
+        <div className="mt-6">
+          <LoadingBlock label={t('loading')} />
+        </div>
       ) : null}
 
       {leadQuery.isError ? (
-        <p className="mt-6 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <Notice tone="error" className="mt-6">
           {getErrorDetail(leadQuery.error)}
-        </p>
+        </Notice>
       ) : null}
 
       {lead ? (
         <div className="mt-4 grid gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <section className="clox-card p-5">
               <p className="text-xs font-semibold uppercase tracking-wide text-clox-orange">
                 {formatLeadType(lead.type)}
               </p>
-              <h1 className="mt-2 break-words text-2xl font-bold sm:text-3xl">
+              <h1 className="mt-2 break-words font-display text-2xl font-bold text-clox-ink sm:text-3xl">
                 {lead.companyName || lead.email}
               </h1>
-              <p className="mt-1 break-all text-slate-400">{lead.email}</p>
-              <dl className="mt-5 grid gap-3 sm:grid-cols-2 text-sm">
+              <p className="mt-1 break-all text-clox-mute">{lead.email}</p>
+              <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
                 <div>
-                  <dt className="text-slate-500">{t('admin.phone')}</dt>
-                  <dd className="text-white">{lead.phone || t('dash')}</dd>
+                  <dt className="text-clox-faint">{t('admin.phone')}</dt>
+                  <dd className="text-clox-ink">{lead.phone || t('dash')}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">{t('admin.abnAcn')}</dt>
-                  <dd className="text-white">
+                  <dt className="text-clox-faint">{t('admin.abnAcn')}</dt>
+                  <dd className="text-clox-ink">
                     {[lead.abn, lead.acn].filter(Boolean).join(' / ') || t('dash')}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">{t('admin.location')}</dt>
-                  <dd className="text-white">
+                  <dt className="text-clox-faint">{t('admin.location')}</dt>
+                  <dd className="text-clox-ink">
                     {[lead.state, lead.territory].filter(Boolean).join(' · ') || t('dash')}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">{t('admin.source')}</dt>
-                  <dd className="text-white">{lead.source || t('dash')}</dd>
+                  <dt className="text-clox-faint">{t('admin.source')}</dt>
+                  <dd className="text-clox-ink">{lead.source || t('dash')}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">{t('admin.created')}</dt>
-                  <dd className="text-white">{formatDateTime(lead.createdAt)}</dd>
+                  <dt className="text-clox-faint">{t('admin.created')}</dt>
+                  <dd className="text-clox-ink">{formatDateTime(lead.createdAt)}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">{t('admin.updated')}</dt>
-                  <dd className="text-white">{formatDateTime(lead.updatedAt)}</dd>
+                  <dt className="text-clox-faint">{t('admin.updated')}</dt>
+                  <dd className="text-clox-ink">{formatDateTime(lead.updatedAt)}</dd>
                 </div>
               </dl>
             </section>
 
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-semibold">{t('admin.payload')}</h2>
-              <pre className="mt-3 max-h-96 overflow-x-auto overflow-y-auto rounded-xl bg-slate-950/80 p-3 text-xs text-slate-300 whitespace-pre-wrap break-words sm:whitespace-pre">
+            <section className="clox-card p-5">
+              <h2 className="font-display text-lg font-semibold text-clox-ink">
+                {t('admin.payload')}
+              </h2>
+              <pre className="mt-3 max-h-96 overflow-x-auto overflow-y-auto rounded-xl bg-clox-surface-alt p-3 text-xs whitespace-pre-wrap break-words text-clox-mute sm:whitespace-pre">
                 {JSON.stringify(lead.payload ?? {}, null, 2)}
               </pre>
             </section>
 
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-semibold">{t('admin.notes')}</h2>
+            <section className="clox-card p-5">
+              <h2 className="font-display text-lg font-semibold text-clox-ink">
+                {t('admin.notes')}
+              </h2>
               <form
                 className="mt-3 space-y-3"
                 onSubmit={(event) => {
@@ -136,40 +145,36 @@ export function LeadDetailPage() {
                   if (note.trim()) noteMutation.mutate();
                 }}
               >
-                <textarea
-                  className={fieldClassName}
+                <TextArea
                   rows={3}
                   placeholder={t('admin.notePlaceholder')}
                   value={note}
                   onChange={(event) => setNote(event.target.value)}
                 />
-                {noteMutation.isError ? (
-                  <p className="text-sm text-red-300">{getErrorDetail(noteMutation.error)}</p>
-                ) : null}
-                <button
+                <Button
                   type="submit"
+                  variant="cta"
                   disabled={noteMutation.isPending || !note.trim()}
-                  className={primaryButtonClassName}
                 >
                   {noteMutation.isPending ? t('loading') : t('admin.addNote')}
-                </button>
+                </Button>
               </form>
               <ul className="mt-5 space-y-3">
                 {(lead.notes ?? []).length === 0 ? (
-                  <li className="text-sm text-slate-500">{t('admin.noNotes')}</li>
+                  <li className="text-sm text-clox-faint">{t('admin.noNotes')}</li>
                 ) : (
                   lead.notes.map((item) => (
                     <li
                       key={item.id}
-                      className="rounded-xl border border-white/10 bg-slate-950/50 p-3 text-sm"
+                      className="rounded-xl border border-clox-border bg-clox-surface-alt p-3 text-sm"
                     >
-                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-clox-faint">
                         <span>
                           {item.author?.name || item.author?.email || t('admin.adminFallback')}
                         </span>
                         <span>{formatDateTime(item.createdAt)}</span>
                       </div>
-                      <p className="mt-2 whitespace-pre-wrap text-slate-200">{item.body}</p>
+                      <p className="mt-2 whitespace-pre-wrap text-clox-text">{item.body}</p>
                     </li>
                   ))
                 )}
@@ -178,24 +183,23 @@ export function LeadDetailPage() {
           </div>
 
           <div className="space-y-6">
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-semibold">{t('admin.review')}</h2>
+            <section className="clox-card p-5">
+              <h2 className="font-display text-lg font-semibold text-clox-ink">
+                {t('admin.review')}
+              </h2>
               <div className="mt-4 space-y-3">
-                <div>
-                  <label className="mb-1.5 block text-sm text-slate-400">{t('admin.status')}</label>
-                  <select
-                    className={fieldClassName}
-                    value={status}
-                    onChange={(event) => setStatus(event.target.value as LeadStatus)}
-                  >
-                    {LEAD_STATUS_KEYS.map((value) => (
-                      <option key={value} value={value}>
-                        {t(`leadStatuses.${value}`)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <label className="flex items-center gap-2 text-sm text-slate-300">
+                <Select
+                  label={t('admin.status')}
+                  value={status}
+                  onChange={(event) => setStatus(event.target.value as LeadStatus)}
+                >
+                  {LEAD_STATUS_KEYS.map((value) => (
+                    <option key={value} value={value}>
+                      {t(`leadStatuses.${value}`)}
+                    </option>
+                  ))}
+                </Select>
+                <label className="flex items-center gap-2 text-sm text-clox-mute">
                   <input
                     type="checkbox"
                     checked={priority}
@@ -203,45 +207,37 @@ export function LeadDetailPage() {
                   />
                   {t('admin.priority')}
                 </label>
-                {updateMutation.isError ? (
-                  <p className="text-sm text-red-300">{getErrorDetail(updateMutation.error)}</p>
-                ) : null}
-                {updateMutation.isSuccess ? (
-                  <p className="text-sm text-emerald-300">{t('saved')}</p>
-                ) : null}
-                <button
-                  type="button"
-                  className={`${primaryButtonClassName} w-full`}
+                <Button
+                  variant="cta"
+                  size="block"
                   disabled={updateMutation.isPending}
                   onClick={() => updateMutation.mutate()}
                 >
                   {updateMutation.isPending ? t('loading') : t('admin.saveStatus')}
-                </button>
-                <p className="text-xs text-slate-500">
+                </Button>
+                <p className="text-xs text-clox-faint">
                   {t('admin.currentStatus', { status: formatLeadStatus(lead.status) })}
                 </p>
               </div>
             </section>
 
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-semibold">{t('admin.activity')}</h2>
-              <ul className="mt-3 space-y-3">
-                {(lead.events ?? []).length === 0 ? (
-                  <li className="text-sm text-slate-500">{t('admin.noEvents')}</li>
-                ) : (
-                  lead.events.map((event) => (
-                    <li key={event.id} className="border-b border-white/10 pb-3 last:border-0">
-                      <p className="text-sm font-medium text-white">{event.action}</p>
-                      <p className="mt-1 text-xs text-slate-500">
-                        {event.actor?.email || t('system')} · {formatDateTime(event.createdAt)}
-                      </p>
-                    </li>
-                  ))
-                )}
-              </ul>
+            <section className="clox-card p-5">
+              <h2 className="font-display text-lg font-semibold text-clox-ink">
+                {t('admin.activity')}
+              </h2>
+              <Timeline
+                className="mt-4"
+                items={(lead.events ?? []).map((event, index) => ({
+                  id: event.id,
+                  title: formatAuditAction(event.action, t),
+                  subtitle: `${event.actor?.email || t('system')} · ${formatDateTime(event.createdAt)}`,
+                  tone: index === 0 ? 'now' : 'done',
+                }))}
+                empty={<p className="text-sm text-clox-faint">{t('admin.noEvents')}</p>}
+              />
             </section>
 
-            <Link to="/leads" className={`${secondaryButtonClassName} w-full`}>
+            <Link to="/leads" className="clox-btn clox-btn-secondary inline-flex w-full justify-center">
               {t('admin.backToQueue')}
             </Link>
           </div>

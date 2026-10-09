@@ -1,6 +1,9 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { Link, Navigate } from 'react-router-dom';
+import { z } from 'zod';
 import {
   getDriverAssignability,
   getDriverOnboarding,
@@ -8,18 +11,14 @@ import {
   submitDriverProfile,
   type DriverOnboarding,
 } from '@/lib/api';
-import {
-  fieldClassName,
-  primaryButtonClassName,
-  secondaryButtonClassName,
-} from '@/components/admin-shell';
+import { Button, Field, Notice, Select } from '@/components/ui';
 import { LoadingBlock } from '@/components/status-blocks';
+import { futureDateSchema, LICENCE_CLASSES } from '@/lib/validation';
 import { AppRole } from '@/shared/types';
 import { useAuthStore } from '@/stores/auth-store';
 
-const LICENCE_CLASSES = ['C', 'LR', 'MR', 'HR', 'HC', 'MC'] as const;
-
 export function DriverOnboardingPage() {
+  const { t } = useTranslation();
   const role = useAuthStore((s) => s.role);
   const queryClient = useQueryClient();
 
@@ -39,9 +38,9 @@ export function DriverOnboardingPage() {
     return <Navigate to="/" replace />;
   }
 
-  if (onboarding.isLoading) return <LoadingBlock label="Loading driver onboarding…" />;
+  if (onboarding.isLoading) return <LoadingBlock label={t('driverOnboarding.loading')} />;
   if (onboarding.isError) {
-    return <p className="text-red-300">{getErrorDetail(onboarding.error)}</p>;
+    return <Notice tone="error">{getErrorDetail(onboarding.error)}</Notice>;
   }
 
   const data = onboarding.data!;
@@ -53,26 +52,25 @@ export function DriverOnboardingPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold sm:text-3xl">Driver onboarding</h1>
-      <p className="mt-2 text-sm text-slate-400">
+      <h1 className="text-2xl font-bold sm:text-3xl">{t('driverOnboarding.title')}</h1>
+      <p className="mt-2 text-sm text-clox-mute">
         {data.company ? (
           <>
-            Company <span className="text-slate-200">{data.company.legalName}</span> · status{' '}
-            <span className="font-mono text-slate-200">{data.driver.status}</span>
+            {t('driverOnboarding.companyLine', {
+              legalName: data.company.legalName,
+              status: data.driver.status,
+            })}
           </>
         ) : (
-          <span className="text-amber-300">No company linked (orphan)</span>
+          <span className="text-[var(--status-warn)]">{t('driverOnboarding.noCompanyLinked')}</span>
         )}
       </p>
 
       {step === 'accept' ? (
         <div className="mt-8 space-y-3">
-          <p className="text-sm text-amber-200">
-            Invite not accepted yet. Open the invite link from your email, or ask the carrier to
-            resend.
-          </p>
-          <Link to="/login" className={secondaryButtonClassName}>
-            Back to login
+          <Notice tone="warn">{t('driverOnboarding.inviteNotAccepted')}</Notice>
+          <Link to="/login" className="clox-btn clox-btn-secondary inline-flex">
+            {t('backToLogin')}
           </Link>
         </div>
       ) : null}
@@ -81,109 +79,143 @@ export function DriverOnboardingPage() {
 
       {step === 'complete' ? (
         <div className="mt-8 space-y-4">
-          <h2 className="text-lg font-semibold text-emerald-300">Driver active</h2>
-          <ul className="text-sm text-slate-400">
+          <h2 className="font-display text-lg font-semibold text-[var(--status-ok)]">
+            {t('driverOnboarding.activeTitle')}
+          </h2>
+          <ul className="text-sm text-clox-mute">
             <li>
-              Licence: {data.driver.licenceClass} · {data.driver.licenceNo} · exp{' '}
-              {data.driver.licenceExpiry?.slice(0, 10)}
+              {t('driverOnboarding.licenceLine', {
+                licenceClass: data.driver.licenceClass,
+                licenceNo: data.driver.licenceNo,
+                expiry: data.driver.licenceExpiry?.slice(0, 10),
+              })}
             </li>
-            <li>NHVR acknowledged: {data.driver.nhvrAcknowledgedAt ? 'yes' : 'no'}</li>
-            <li>canBeAssigned: {String(data.goNoGo.canBeAssigned)}</li>
+            <li>
+              {t('driverOnboarding.nhvrAcknowledged', {
+                value: data.driver.nhvrAcknowledgedAt ? t('yes') : t('no'),
+              })}
+            </li>
+            <li>{t('driverOnboarding.canBeAssigned', { value: String(data.goNoGo.canBeAssigned) })}</li>
             {assignability.data ? (
-              <li>assignability reason: {assignability.data.reason ?? 'ok'}</li>
+              <li>
+                {t('driverOnboarding.assignabilityReason', {
+                  reason: assignability.data.reason ?? t('driverOnboarding.assignabilityOk'),
+                })}
+              </li>
             ) : null}
-            <li className="text-slate-500">{data.goNoGo.tripApisNote}</li>
+            <li className="text-clox-faint">{data.goNoGo.tripApisNote}</li>
           </ul>
         </div>
       ) : null}
 
       {step === 'suspended' ? (
-        <p className="mt-8 text-sm text-red-300">
-          Licence suspended (likely expired). Contact your carrier / Ops.
-        </p>
+        <Notice tone="error" className="mt-8">
+          {t('driverOnboarding.suspended')}
+        </Notice>
       ) : null}
     </div>
   );
 }
 
+type LicenceForm = {
+  licenceNo: string;
+  licenceClass: (typeof LICENCE_CLASSES)[number];
+  licenceExpiry: string;
+  nhvrAcknowledged: boolean;
+};
+
 function LicenceStep({ onSaved }: { onSaved: () => Promise<void> }) {
-  const [licenceNo, setLicenceNo] = useState('');
-  const [licenceClass, setLicenceClass] = useState<(typeof LICENCE_CLASSES)[number]>('C');
-  const [licenceExpiry, setLicenceExpiry] = useState('2030-12-31');
-  const [nhvr, setNhvr] = useState(false);
+  const { t } = useTranslation();
+
+  const schema = z.object({
+    licenceNo: z.string().trim().min(1, t('validation.licenceNoRequired')),
+    licenceClass: z.enum(LICENCE_CLASSES, {
+      message: t('validation.licenceClassRequired'),
+    }),
+    licenceExpiry: futureDateSchema(
+      t('validation.licenceExpiryRequired'),
+      t('validation.licenceExpiryFuture'),
+    ),
+    nhvrAcknowledged: z.boolean().refine((value) => value === true, {
+      message: t('validation.nhvrRequired'),
+    }),
+  });
+
+  const form = useForm<LicenceForm>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      licenceNo: '',
+      licenceClass: 'C',
+      licenceExpiry: '2030-12-31',
+      nhvrAcknowledged: false,
+    },
+  });
 
   const mutation = useMutation({
-    mutationFn: () => {
-      if (!nhvr) throw new Error('NHVR acknowledgement required');
-      return submitDriverProfile({
-        licenceNo: licenceNo.trim(),
-        licenceClass,
-        licenceExpiry,
+    mutationFn: (values: LicenceForm) =>
+      submitDriverProfile({
+        licenceNo: values.licenceNo.trim(),
+        licenceClass: values.licenceClass,
+        licenceExpiry: values.licenceExpiry,
         nhvrAcknowledged: true,
-      });
-    },
+      }),
     onSuccess: () => onSaved(),
   });
 
   return (
     <form
-      className="mt-8 max-w-lg space-y-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-        mutation.mutate();
-      }}
+      className="mt-8 max-w-lg"
+      onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+      noValidate
     >
-      <h2 className="text-lg font-semibold">Licence + NHVR (DRV-WEB-03/04)</h2>
-      <p className="text-sm text-slate-400">
-        Phase 1 auto-activates after submit (no Ops queue). Optional licence photo can use QA upload.
-      </p>
-      <input
-        className={fieldClassName}
-        placeholder="Licence number"
-        value={licenceNo}
-        onChange={(e) => setLicenceNo(e.target.value)}
+      <h2 className="font-display text-lg font-semibold">{t('driverOnboarding.licenceTitle')}</h2>
+      <p className="mb-4 mt-1 text-sm text-clox-mute">{t('driverOnboarding.licenceHint')}</p>
+      <Field
+        label={t('driverOnboarding.placeholderLicenceNumber')}
         required
+        placeholder={t('driverOnboarding.placeholderLicenceNumber')}
+        error={form.formState.errors.licenceNo?.message}
+        {...form.register('licenceNo')}
       />
-      <select
-        className={fieldClassName}
-        value={licenceClass}
-        onChange={(e) => setLicenceClass(e.target.value as (typeof LICENCE_CLASSES)[number])}
+      <Select
+        label={t('validation.licenceClassLabel')}
+        required
+        error={form.formState.errors.licenceClass?.message}
+        value={form.watch('licenceClass')}
+        {...form.register('licenceClass')}
       >
         {LICENCE_CLASSES.map((c) => (
           <option key={c} value={c}>
             {c}
           </option>
         ))}
-      </select>
-      <input
-        className={fieldClassName}
+      </Select>
+      <Field
         type="date"
-        value={licenceExpiry}
-        onChange={(e) => setLicenceExpiry(e.target.value)}
+        label={t('validation.licenceExpiryLabel')}
         required
+        error={form.formState.errors.licenceExpiry?.message}
+        {...form.register('licenceExpiry')}
       />
-      <label className="flex items-start gap-2 text-sm text-slate-300">
-        <input
-          type="checkbox"
-          className="mt-1"
-          checked={nhvr}
-          onChange={(e) => setNhvr(e.target.checked)}
-        />
+      <label className="mb-4 flex items-start gap-2 text-sm text-clox-mute">
+        <input type="checkbox" className="mt-1 accent-clox-accent" {...form.register('nhvrAcknowledged')} />
         <span>
-          I acknowledge NHVR / fatigue / safety obligations applicable to my work as a CLOX driver
-          (Phase 1 policy stub).
+          {t('driverOnboarding.nhvrCheckbox')}
+          {form.formState.errors.nhvrAcknowledged?.message ? (
+            <span className="mt-1 block text-[12px] font-medium text-[var(--status-danger)]" role="alert">
+              {form.formState.errors.nhvrAcknowledged.message}
+            </span>
+          ) : null}
         </span>
       </label>
       {mutation.isError ? (
-        <p className="text-sm text-red-300">{getErrorDetail(mutation.error)}</p>
+        <Notice tone="error" className="mb-4">
+          {getErrorDetail(mutation.error)}
+        </Notice>
       ) : null}
-      <button
-        type="submit"
-        className={primaryButtonClassName}
-        disabled={!nhvr || mutation.isPending}
-      >
-        Submit &amp; activate
-      </button>
+      <Button type="submit" variant="cta" disabled={mutation.isPending}>
+        {mutation.isPending ? t('submitting') : t('driverOnboarding.submitAndActivate')}
+      </Button>
     </form>
   );
 }

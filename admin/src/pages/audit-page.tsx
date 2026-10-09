@@ -2,11 +2,16 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  fieldClassName,
-  secondaryButtonClassName,
-} from '@/components/admin-shell';
 import { EmptyBlock, LoadingBlock } from '@/components/status-blocks';
+import {
+  Button,
+  DataCardList,
+  DataTable,
+  Notice,
+  ResponsiveDataView,
+  Select,
+  dataCardClassName,
+} from '@/components/ui';
 import { formatAuditAction, formatAuditMetadata } from '@/lib/audit-format';
 import { getErrorDetail, listAudit } from '@/lib/api';
 import type { AuditListItem } from '@/lib/api/admin';
@@ -24,14 +29,14 @@ function AuditDetailsInline({
   const { t } = useTranslation('common');
   const details = formatAuditMetadata(item.metadata, t);
   if (details.length === 0) {
-    return <span className="text-slate-500">{t('dash')}</span>;
+    return <span className="text-clox-faint">{t('dash')}</span>;
   }
   return (
     <div className="space-y-0.5">
       {details.map((row) => (
-        <p key={`${item.id}-${row.label}`} className="text-sm leading-snug text-slate-300">
-          <span className="text-slate-500">{row.label}: </span>
-          <span className="break-words text-slate-200">{row.value}</span>
+        <p key={`${item.id}-${row.label}`} className="text-sm leading-snug text-clox-mute">
+          <span className="text-clox-faint">{row.label}: </span>
+          <span className="break-words text-clox-text">{row.value}</span>
         </p>
       ))}
     </div>
@@ -45,11 +50,11 @@ function AuditLeadCell({ item }: { item: AuditListItem }) {
       <div className="min-w-0">
         <Link
           to={`/leads/${item.lead.id}`}
-          className="block truncate font-medium text-white hover:text-clox-orange"
+          className="block truncate font-medium text-clox-ink hover:text-clox-orange"
         >
           {item.lead.companyName || item.lead.email}
         </Link>
-        <p className="truncate text-xs text-slate-500">
+        <p className="truncate text-xs text-clox-faint">
           {formatLeadType(item.lead.type)}
           {item.lead.companyName ? ` · ${item.lead.email}` : null}
         </p>
@@ -63,7 +68,7 @@ function AuditLeadCell({ item }: { item: AuditListItem }) {
       </Link>
     );
   }
-  return <span className="text-slate-500">{t('dash')}</span>;
+  return <span className="text-clox-faint">{t('dash')}</span>;
 }
 
 export function AuditPage() {
@@ -105,15 +110,18 @@ export function AuditPage() {
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold sm:text-3xl">{t('admin.auditTitle')}</h1>
-        <p className="mt-1 text-sm text-slate-400 sm:mt-2">
+        <h1 className="font-display text-2xl font-bold text-clox-ink sm:text-3xl">
+          {t('admin.auditTitle')}
+        </h1>
+        <p className="mt-1 text-sm text-clox-mute sm:mt-2">
           {t('admin.auditSubtitle', { count: total })}
         </p>
       </div>
 
-      <div className="mt-4 grid gap-2 sm:mt-6 sm:grid-cols-[1fr_1fr_auto] sm:gap-3">
-        <select
-          className={fieldClassName}
+      <div className="mt-4 grid gap-2 sm:mt-6 sm:grid-cols-[1fr_1fr_auto] sm:items-end sm:gap-3">
+        <Select
+          className="mb-0"
+          label={t('admin.colAction')}
           value={action}
           onChange={(event) => updateFilter('action', event.target.value)}
         >
@@ -123,32 +131,37 @@ export function AuditPage() {
               {formatAuditAction(value, t)}
             </option>
           ))}
-        </select>
-        <div className="flex gap-2">
-          <input
-            className={fieldClassName}
-            placeholder={t('admin.leadIdPlaceholder')}
-            value={leadIdDraft}
-            onChange={(event) => setLeadIdDraft(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') updateFilter('leadId', leadIdDraft.trim());
-            }}
-          />
-          <button
-            type="button"
-            className={`${secondaryButtonClassName} shrink-0 px-3 sm:hidden`}
-            onClick={() => updateFilter('leadId', leadIdDraft.trim())}
-          >
-            {t('filter')}
-          </button>
-        </div>
-        <button
-          type="button"
-          className={`${secondaryButtonClassName} hidden sm:inline-flex`}
+        </Select>
+        <label className="mb-0 block">
+          <span className="mb-1.5 block text-[12.5px] font-semibold text-clox-ink">
+            {t('admin.colLead')}
+          </span>
+          <div className="flex gap-2">
+            <input
+              className="clox-field-control"
+              placeholder={t('admin.leadIdPlaceholder')}
+              value={leadIdDraft}
+              onChange={(event) => setLeadIdDraft(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') updateFilter('leadId', leadIdDraft.trim());
+              }}
+            />
+            <Button
+              variant="secondary"
+              className="shrink-0 px-3 sm:hidden"
+              onClick={() => updateFilter('leadId', leadIdDraft.trim())}
+            >
+              {t('filter')}
+            </Button>
+          </div>
+        </label>
+        <Button
+          variant="secondary"
+          className="hidden sm:inline-flex"
           onClick={() => updateFilter('leadId', leadIdDraft.trim())}
         >
           {t('filter')}
-        </button>
+        </Button>
       </div>
 
       {auditQuery.isLoading ? (
@@ -158,9 +171,9 @@ export function AuditPage() {
       ) : null}
 
       {auditQuery.isError ? (
-        <p className="mt-6 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <Notice tone="error" className="mt-6">
           {getErrorDetail(auditQuery.error)}
-        </p>
+        </Notice>
       ) : null}
 
       {!auditQuery.isLoading && !auditQuery.isError && items.length === 0 ? (
@@ -170,114 +183,112 @@ export function AuditPage() {
       ) : null}
 
       {!auditQuery.isLoading && !auditQuery.isError && items.length > 0 ? (
-        <>
-          {/* Mobile: compact cards */}
-          <div className="mt-4 space-y-2 md:hidden">
-            {items.map((item) => {
-              const details = formatAuditMetadata(item.metadata, t);
-              const actorLabel = item.actor?.name || item.actor?.email || t('system');
-              const hasLead = Boolean(item.lead || item.leadId);
+        <ResponsiveDataView
+          className="mt-4"
+          cards={
+            <DataCardList
+              items={items}
+              getKey={(item) => item.id}
+              renderItem={(item) => {
+                const details = formatAuditMetadata(item.metadata, t);
+                const actorLabel = item.actor?.name || item.actor?.email || t('system');
+                const hasLead = Boolean(item.lead || item.leadId);
 
-              return (
-                <article
-                  key={item.id}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] p-3"
-                >
-                  <h2 className="text-sm font-semibold leading-snug text-white">
-                    {formatAuditAction(item.action, t)}
-                  </h2>
-                  <p className="mt-1 text-xs text-slate-400">
-                    {formatDateTime(item.createdAt)}
-                    <span className="text-slate-600"> · </span>
-                    <span className="text-slate-300">{actorLabel}</span>
-                  </p>
-
-                  {hasLead || details.length > 0 ? (
-                    <div className="mt-2 space-y-2 border-t border-white/10 pt-2">
-                      {hasLead ? (
-                        <div className="text-sm">
-                          <AuditLeadCell item={item} />
-                        </div>
-                      ) : null}
-                      {details.length > 0 ? <AuditDetailsInline item={item} /> : null}
-                    </div>
-                  ) : null}
-                </article>
-              );
-            })}
-          </div>
-
-          {/* Desktop: dense table */}
-          <div className="mt-6 hidden overflow-x-auto rounded-2xl border border-white/10 md:block">
-            <table className="w-full min-w-[56rem] text-left text-sm">
-              <thead className="bg-white/5 text-slate-400">
-                <tr>
-                  <th className="whitespace-nowrap px-3 py-2.5 font-medium">
-                    {t('admin.colWhen')}
-                  </th>
-                  <th className="px-3 py-2.5 font-medium">{t('admin.colAction')}</th>
-                  <th className="px-3 py-2.5 font-medium">{t('admin.colActor')}</th>
-                  <th className="px-3 py-2.5 font-medium">{t('admin.colLead')}</th>
-                  <th className="px-3 py-2.5 font-medium">{t('admin.colDetails')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => (
-                  <tr key={item.id} className="border-t border-white/10 align-top hover:bg-white/5">
-                    <td className="whitespace-nowrap px-3 py-3 text-slate-400">
+                return (
+                  <article className={dataCardClassName}>
+                    <h2 className="text-sm font-semibold leading-snug text-clox-ink">
+                      {formatAuditAction(item.action, t)}
+                    </h2>
+                    <p className="mt-1 text-xs text-clox-mute">
                       {formatDateTime(item.createdAt)}
-                    </td>
-                    <td className="px-3 py-3">
-                      <p className="font-medium text-white">
-                        {formatAuditAction(item.action, t)}
-                      </p>
-                      <p className="mt-0.5 font-mono text-[0.65rem] text-slate-600">
-                        {item.action}
-                      </p>
-                    </td>
-                    <td className="px-3 py-3 text-slate-300">
-                      <p className="truncate">
-                        {item.actor?.name || item.actor?.email || t('system')}
-                      </p>
-                      {item.actor?.name && item.actor?.email ? (
-                        <p className="truncate text-xs text-slate-500">{item.actor.email}</p>
-                      ) : null}
-                    </td>
-                    <td className="max-w-[14rem] px-3 py-3">
-                      <AuditLeadCell item={item} />
-                    </td>
-                    <td className="max-w-[22rem] px-3 py-3">
-                      <AuditDetailsInline item={item} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
+                      <span className="text-clox-faint"> · </span>
+                      <span>{actorLabel}</span>
+                    </p>
+
+                    {hasLead || details.length > 0 ? (
+                      <div className="mt-2 space-y-2 border-t border-clox-border pt-2">
+                        {hasLead ? (
+                          <div className="text-sm">
+                            <AuditLeadCell item={item} />
+                          </div>
+                        ) : null}
+                        {details.length > 0 ? <AuditDetailsInline item={item} /> : null}
+                      </div>
+                    ) : null}
+                  </article>
+                );
+              }}
+            />
+          }
+          table={
+            <DataTable
+              minWidthClassName="min-w-[56rem]"
+              headers={[
+                t('admin.colWhen'),
+                t('admin.colAction'),
+                t('admin.colActor'),
+                t('admin.colLead'),
+                t('admin.colDetails'),
+              ]}
+            >
+              {items.map((item) => (
+                <tr
+                  key={item.id}
+                  className="border-t border-clox-border-soft align-top hover:bg-clox-surface-alt/60"
+                >
+                  <td className="whitespace-nowrap px-3 py-3 text-clox-mute">
+                    {formatDateTime(item.createdAt)}
+                  </td>
+                  <td className="px-3 py-3">
+                    <p className="font-medium text-clox-ink">
+                      {formatAuditAction(item.action, t)}
+                    </p>
+                    <p className="mt-0.5 font-mono text-[0.65rem] text-clox-faint">
+                      {item.action}
+                    </p>
+                  </td>
+                  <td className="px-3 py-3 text-clox-mute">
+                    <p className="truncate">
+                      {item.actor?.name || item.actor?.email || t('system')}
+                    </p>
+                    {item.actor?.name && item.actor?.email ? (
+                      <p className="truncate text-xs text-clox-faint">{item.actor.email}</p>
+                    ) : null}
+                  </td>
+                  <td className="max-w-[14rem] px-3 py-3">
+                    <AuditLeadCell item={item} />
+                  </td>
+                  <td className="max-w-[22rem] px-3 py-3">
+                    <AuditDetailsInline item={item} />
+                  </td>
+                </tr>
+              ))}
+            </DataTable>
+          }
+        />
       ) : null}
 
       {totalPages > 1 ? (
-        <div className="mt-4 flex items-center justify-between gap-2 text-sm text-slate-400">
-          <button
-            type="button"
-            className={`${secondaryButtonClassName} px-3 py-2`}
+        <div className="mt-4 flex items-center justify-between gap-2 text-sm text-clox-mute">
+          <Button
+            variant="secondary"
+            className="px-3 py-2"
             disabled={page <= 1}
             onClick={() => updateFilter('page', String(page - 1))}
           >
             {t('previous')}
-          </button>
+          </Button>
           <span className="shrink-0 text-center text-xs sm:text-sm">
             {t('pageOf', { page, totalPages })}
           </span>
-          <button
-            type="button"
-            className={`${secondaryButtonClassName} px-3 py-2`}
+          <Button
+            variant="secondary"
+            className="px-3 py-2"
             disabled={page >= totalPages}
             onClick={() => updateFilter('page', String(page + 1))}
           >
             {t('next')}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>

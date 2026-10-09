@@ -7,7 +7,7 @@ function makeService(company: Record<string, unknown>) {
     user: {
       findUnique: jest.fn().mockResolvedValue({
         id: 'u1',
-        email: 's@test.com',
+        email: 's@yopmail.com',
         name: 'S',
         phone: null,
         role: 'SENDER',
@@ -39,7 +39,7 @@ function makeService(company: Record<string, unknown>) {
 
 const principal = {
   id: 'u1',
-  email: 's@test.com',
+  email: 's@yopmail.com',
   role: 'SENDER' as const,
   kind: 'user' as const,
   regionCodes: [],

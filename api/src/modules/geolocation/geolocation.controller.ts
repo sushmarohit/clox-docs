@@ -5,8 +5,14 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 @Controller('geolocation')
 export class GeolocationController {
   @Get('_status')
-  @ApiOperation({ summary: 'Geolocation module scaffold (M0) — Valhalla + PostGIS' })
+  @ApiOperation({ summary: 'Geolocation module scaffold — Valhalla + PostGIS (M10+)' })
   status() {
-    return { module: 'geolocation', status: 'ready', milestone: 'M0' };
+    return {
+      module: 'geolocation',
+      status: 'scaffold',
+      milestone: 'M10',
+      implemented: false,
+      note: 'Trip geofence uses in-process policy; Valhalla client not wired',
+    };
   }
 }

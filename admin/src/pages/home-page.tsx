@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { DashboardPage } from '@/pages/dashboard-page';
+import { Notice, RoleBadge, dataCardClassName } from '@/components/ui';
 import { getErrorDetail, getIdentityMe } from '@/lib/api';
+import { cn } from '@/lib/cn';
 import { AdminRole, AppRole } from '@/shared/types';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -15,7 +18,25 @@ export function HomePage() {
   return <RoleHomePage />;
 }
 
+function HomeLink({
+  to,
+  title,
+  hint,
+}: {
+  to: string;
+  title: string;
+  hint: string;
+}) {
+  return (
+    <Link to={to} className={cn('block h-full', dataCardClassName)}>
+      <p className="font-display text-lg font-semibold text-clox-ink">{title}</p>
+      <p className="mt-1 text-sm text-clox-mute">{hint}</p>
+    </Link>
+  );
+}
+
 function RoleHomePage() {
+  const { t } = useTranslation('common');
   const role = useAuthStore((s) => s.role);
   const email = useAuthStore((s) => s.email);
   const kind = useAuthStore((s) => s.kind);
@@ -25,8 +46,7 @@ function RoleHomePage() {
     queryFn: () => getIdentityMe(),
   });
 
-  const isOps =
-    role === AdminRole.STATE_MASTER || role === AdminRole.LOCAL_BDE;
+  const isOps = role === AdminRole.STATE_MASTER || role === AdminRole.LOCAL_BDE;
   const isMarketplace =
     role === AppRole.SENDER ||
     role === AppRole.TRANSPORT_COMPANY ||
@@ -34,80 +54,89 @@ function RoleHomePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold sm:text-3xl">Verification home</h1>
-      <p className="mt-2 text-sm text-slate-400">
-        Signed in as <span className="text-white">{email}</span> ({kind}/{role})
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="font-display text-2xl font-bold text-clox-ink sm:text-3xl">
+          {t('home.title')}
+        </h1>
+        <RoleBadge role={role} />
+      </div>
+      <p className="mt-2 text-sm text-clox-mute">
+        {t('home.signedInAs')} <span className="font-medium text-clox-ink">{email}</span> ({kind}
+        /{role})
       </p>
 
       {me.isError ? (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <Notice tone="error" className="mt-4">
           {getErrorDetail(me.error)}
-        </p>
+        </Notice>
       ) : null}
 
       {me.data ? (
-        <pre className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-slate-900/80 p-4 text-xs text-slate-300">
+        <pre className="clox-card mt-4 overflow-x-auto p-4 text-xs text-clox-mute">
           {JSON.stringify(me.data, null, 2)}
         </pre>
       ) : null}
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
         {isOps ? (
-          <Link
+          <HomeLink
             to="/compliance"
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
-          >
-            <p className="text-lg font-semibold">Compliance queue</p>
-            <p className="mt-1 text-sm text-slate-400">
-              List / decide cases (Local = escalate only)
-            </p>
-          </Link>
+            title={t('home.complianceTitle')}
+            hint={t('home.complianceHint')}
+          />
         ) : null}
         {isMarketplace ? (
-          <Link
-            to="/qa/upload"
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
-          >
-            <p className="text-lg font-semibold">QA: upload & submit</p>
-            <p className="mt-1 text-sm text-slate-400">
-              Document upload → compliance submit (M2 demo)
-            </p>
-          </Link>
+          <HomeLink to="/qa/upload" title={t('home.qaTitle')} hint={t('home.qaHint')} />
         ) : null}
         {role === AppRole.SENDER ? (
-          <Link
+          <HomeLink
             to="/sender/onboarding"
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
-          >
-            <p className="text-lg font-semibold">Sender onboarding</p>
-            <p className="mt-1 text-sm text-slate-400">M3 wizard → Ops → payment → active</p>
-          </Link>
+            title={t('home.senderOnboardingTitle')}
+            hint={t('home.senderOnboardingHint')}
+          />
+        ) : null}
+        {role === AppRole.SENDER ? (
+          <HomeLink to="/jobs" title={t('home.jobsTitle')} hint={t('home.jobsHint')} />
+        ) : null}
+        {role === AppRole.SENDER ? (
+          <HomeLink
+            to="/surcharges"
+            title={t('home.surchargesTitle')}
+            hint={t('home.surchargesHint')}
+          />
         ) : null}
         {role === AppRole.TRANSPORT_COMPANY ? (
-          <Link
+          <HomeLink
             to="/carrier/onboarding"
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
-          >
-            <p className="text-lg font-semibold">Carrier onboarding</p>
-            <p className="mt-1 text-sm text-slate-400">M4 wizard → Connect → fleet → Ops → bid-eligible</p>
-          </Link>
+            title={t('home.carrierOnboardingTitle')}
+            hint={t('home.carrierOnboardingHint')}
+          />
+        ) : null}
+        {role === AppRole.TRANSPORT_COMPANY ? (
+          <HomeLink
+            to="/market"
+            title={t('home.jobBoardTitle')}
+            hint={t('home.jobBoardHint')}
+          />
+        ) : null}
+        {role === AppRole.TRANSPORT_COMPANY ? (
+          <HomeLink
+            to="/assignments"
+            title={t('home.assignmentsTitle')}
+            hint={t('home.assignmentsHint')}
+          />
         ) : null}
         {role === AppRole.DRIVER ? (
-          <Link
+          <HomeLink
             to="/driver/onboarding"
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
-          >
-            <p className="text-lg font-semibold">Driver onboarding</p>
-            <p className="mt-1 text-sm text-slate-400">M5 invite → OTP → licence + NHVR → active</p>
-          </Link>
+            title={t('home.driverOnboardingTitle')}
+            hint={t('home.driverOnboardingHint')}
+          />
         ) : null}
-        <Link
-          to="/account"
-          className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:border-clox-orange/40"
-        >
-          <p className="text-lg font-semibold">Account & sessions</p>
-          <p className="mt-1 text-sm text-slate-400">Sessions list / revoke (M1)</p>
-        </Link>
+        {role === AppRole.DRIVER ? (
+          <HomeLink to="/trips" title={t('home.tripsTitle')} hint={t('home.tripsHint')} />
+        ) : null}
+        <HomeLink to="/account" title={t('home.accountTitle')} hint={t('home.accountHint')} />
       </div>
     </div>
   );

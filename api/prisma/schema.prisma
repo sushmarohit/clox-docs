@@ -310,7 +310,7 @@ model Company {
   stripeConnectAccountId String?
   /// Carrier Stripe Connect Express — payouts ready (M4)
   stripeConnectPayoutsEnabled Boolean @default(false)
-  /// Carrier capability flags e.g. DG, REEFER, TAIL_LIFT
+  /// Carrier capability flags e.g. DG, REEFER, OVERSIZE, TAIL_LIFT
   capabilities          String[]      @default([])
   /// AU region codes carrier serves (in addition to homeRegion)
   serviceRegionCodes    String[]      @default([])
@@ -403,6 +403,7 @@ model Vehicle {
   updatedAt    DateTime      @updatedAt
 
   assignments Assignment[]
+  proposals   Proposal[]
   complianceDocuments ComplianceDocument[]
 
   @@index([companyId, status])
@@ -428,6 +429,7 @@ model Driver {
   updatedAt DateTime     @updatedAt
 
   assignments Assignment[]
+  proposals   Proposal[]
   complianceDocuments ComplianceDocument[]
 
   @@index([companyId, status])
@@ -541,6 +543,7 @@ model Job {
   senderCompany        Company         @relation("JobSenderCompany", fields: [senderCompanyId], references: [id], onDelete: Restrict)
   status               JobStatus       @default(DRAFT)
   pricingModel         JobPricingModel
+  title                String?
   /// Origin attribution for commissions (G0 / origin-based)
   originRegionId       String?
   originRegion         Region?         @relation("JobOriginRegion", fields: [originRegionId], references: [id], onDelete: SetNull)
@@ -553,6 +556,31 @@ model Job {
   receiverName         String?
   receiverEmail        String?
   receiverPhone        String?
+  /// Scheduled pickup window start
+  pickupAt             DateTime?
+  deadWeightKg         Float?
+  lengthCm             Float?
+  widthCm              Float?
+  heightCm             Float?
+  chargeableWeightKg   Float?
+  /// e.g. GENERAL, DG, REEFER, OVERSIZE
+  loadTypes            String[]        @default([])
+  requiresDg           Boolean         @default(false)
+  requiresReefer       Boolean         @default(false)
+  requiresOversize     Boolean         @default(false)
+  minVehicleClass      String?
+  recommendedVehicleClass String?
+  siteManeuverability  String?
+  siteFacility         String?
+  siteDisclaimerAcceptedAt DateTime?
+  /// Hourly Pattern A | B (null for PER_KM)
+  hourlyPattern        String?
+  routeDistanceKm      Float?
+  routeDurationMinutes Float?
+  /// 0 or 15 when planned duration > 5.25h
+  routeFatigueBreakMinutes Int           @default(0)
+  /// Hourly billable hours (floor 4.0)
+  billableHours        Float?
   publishedAt          DateTime?
   createdAt            DateTime        @default(now())
   updatedAt            DateTime        @updatedAt
@@ -563,6 +591,7 @@ model Job {
   trip        Trip?
   paymentEvents PaymentEvent[]
   settlementLines SettlementLine[]
+  surcharges    Surcharge[]
 
   @@index([senderCompanyId, status])
   @@index([originRegionId])
@@ -583,8 +612,13 @@ model JobStop {
   postcode  String?
   lat       Decimal? @db.Decimal(10, 7)
   lng       Decimal? @db.Decimal(10, 7)
+  /// Drop-level receiver (multi-drop); job-level used when null
+  receiverName  String?
+  receiverEmail String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  stopProgress TripStopProgress[]
 
   @@unique([jobId, sequence])
   @@index([jobId])
@@ -597,6 +631,11 @@ model Proposal {
   carrierCompanyId   String
   carrierCompany     Company        @relation(fields: [carrierCompanyId], references: [id], onDelete: Restrict)
   status             ProposalStatus @default(SUBMITTED)
+  vehicleId          String?
+  vehicle            Vehicle?       @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  driverId           String?
+  driver             Driver?        @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  etaMinutes         Int?
   /// Bid / quoted total in cents AUD (inc-GST gross when accepted)
   amountExGstCents   Int
   amountGstCents     Int
@@ -608,6 +647,8 @@ model Proposal {
 
   @@index([jobId, status])
   @@index([carrierCompanyId, status])
+  @@index([vehicleId])
+  @@index([driverId])
 }
 
 model Assignment {
@@ -641,6 +682,19 @@ model Trip {
   assignmentId String     @unique
   assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
   status       TripStatus @default(PENDING_GATES)
+  /// Pre-trip NHVR / walk-around
+  safetyPassedAt   DateTime?
+  safetyFailedAt   DateTime?
+  safetyNotes      String?
+  /// Mass gate (kg) — declared from job; actual from driver
+  declaredMassKg   Float?
+  actualMassKg     Float?
+  massCheckOk      Boolean  @default(false)
+  massCheckedAt    DateTime?
+  massOverDeclared Boolean  @default(false)
+  /// Break pauses sender ETA/telemetry visibility
+  onBreak          Boolean  @default(false)
+  breakStartedAt   DateTime?
   startedAt    DateTime?
   completedAt  DateTime?
   /// SOG POD metadata refs (blob keys) — evidence validation in M9/M10
@@ -649,6 +703,88 @@ model Trip {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
+  locations     TripLocationSample[]
+  stopProgress  TripStopProgress[]
+  surcharges    Surcharge[]
+
+  @@index([status])
+}
+
+model TripLocationSample {
+  id        String   @id @default(uuid())
+  tripId    String
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  lat       Decimal  @db.Decimal(10, 7)
+  lng       Decimal  @db.Decimal(10, 7)
+  recordedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@index([tripId, recordedAt])
+}
+
+/// M9 — per-stop geofence / dwell progress (run-sheet prep for M10)
+model TripStopProgress {
+  id               String    @id @default(uuid())
+  tripId           String
+  trip             Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  jobStopId        String
+  jobStop          JobStop   @relation(fields: [jobStopId], references: [id], onDelete: Cascade)
+  /// Consecutive inside-radius samples (anti-bounce)
+  insideCount      Int       @default(0)
+  currentlyInside  Boolean   @default(false)
+  enteredAt        DateTime?
+  exitedAt         DateTime?
+  waitStartedAt    DateTime?
+  freeWaitEndsAt   DateTime?
+  waitOverageMinutes Int     @default(0)
+  arrivalRecorded  Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  surcharges Surcharge[]
+
+  @@unique([tripId, jobStopId])
+  @@index([tripId])
+  @@index([jobStopId])
+}
+
+enum SurchargeKind {
+  WAITING
+  MASS
+}
+
+enum SurchargeStatus {
+  PENDING_PAYMENT
+  PAID
+  WAIVED
+}
+
+model Surcharge {
+  id                String          @id @default(uuid())
+  jobId             String
+  job               Job             @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  tripId            String
+  trip              Trip            @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  kind              SurchargeKind
+  status            SurchargeStatus @default(PENDING_PAYMENT)
+  amountExGstCents  Int
+  amountGstCents    Int
+  amountIncGstCents Int
+  currency          String          @default("AUD")
+  paymentEventId    String?         @unique
+  paymentEvent      PaymentEvent?   @relation(fields: [paymentEventId], references: [id], onDelete: SetNull)
+  stopProgressId    String?
+  stopProgress      TripStopProgress? @relation(fields: [stopProgressId], references: [id], onDelete: SetNull)
+  idempotencyKey    String          @unique
+  metadata          Json?
+  paidAt            DateTime?
+  waivedAt          DateTime?
+  waivedByAdminId   String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([jobId, status])
+  @@index([tripId, kind, status])
   @@index([status])
 }
 
@@ -660,6 +796,7 @@ enum PaymentEventType {
   TRANSFER
   TRANSFER_REVERSAL
   ADJUSTMENT
+  SURCHARGE
 }
 
 enum PaymentEventStatus {
@@ -703,6 +840,8 @@ model PaymentEvent {
   metadata            Json?
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
+
+  surcharge Surcharge?
 
   @@index([jobId, type, status])
   @@index([stripePaymentIntentId])
@@ -760,4 +899,13 @@ model AuditEvent {
   @@index([action, createdAt])
   @@index([entityType, entityId])
   @@index([actorAdminId, createdAt])
+}
+
+/// Stripe webhook idempotency (M7)
+model StripeWebhookEvent {
+  id            String   @id @default(uuid())
+  stripeEventId String   @unique
+  type          String
+  processedAt   DateTime @default(now())
+  payload       Json?
 }

@@ -405,7 +405,8 @@ export class SenderService {
     if (!customerId) {
       const customer = await this.stripe.createCustomer({
         email: user.email,
-        name: company.invoiceLegalName || company.legalName,
+        // invoiceComplete() already requires invoiceLegalName
+        name: company.invoiceLegalName!,
         metadata: { companyId: company.id, userId: user.id },
       });
       customerId = customer.id;

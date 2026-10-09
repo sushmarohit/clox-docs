@@ -15,8 +15,14 @@ import { CarrierRegisterPage } from '@/pages/carrier-register-page';
 import { CarrierOnboardingPage } from '@/pages/carrier-onboarding-page';
 import { DriverInvitePage } from '@/pages/driver-invite-page';
 import { DriverOnboardingPage } from '@/pages/driver-onboarding-page';
+import { JobCreatePage, JobDetailPage, JobsListPage } from '@/pages/jobs-pages';
+import { MarketBoardPage } from '@/pages/market-board-page';
+import { CarrierAssignmentsPage } from '@/pages/carrier-assignments-page';
+import { DriverTripsPage, DriverTripDetailPage } from '@/pages/driver-trips-page';
+import { SenderTrackPage } from '@/pages/sender-track-page';
 import { SenderRegisterPage } from '@/pages/sender-register-page';
 import { SenderOnboardingPage } from '@/pages/sender-onboarding-page';
+import { SurchargesPage } from '@/pages/surcharges-page';
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -112,6 +118,15 @@ export function AppRouter() {
         <Route path="/sender/onboarding" element={<SenderOnboardingPage />} />
         <Route path="/carrier/onboarding" element={<CarrierOnboardingPage />} />
         <Route path="/driver/onboarding" element={<DriverOnboardingPage />} />
+        <Route path="/jobs" element={<JobsListPage />} />
+        <Route path="/jobs/new" element={<JobCreatePage />} />
+        <Route path="/jobs/:id" element={<JobDetailPage />} />
+        <Route path="/market" element={<MarketBoardPage />} />
+        <Route path="/assignments" element={<CarrierAssignmentsPage />} />
+        <Route path="/trips" element={<DriverTripsPage />} />
+        <Route path="/trips/:tripId" element={<DriverTripDetailPage />} />
+        <Route path="/jobs/:jobId/track" element={<SenderTrackPage />} />
+        <Route path="/surcharges" element={<SurchargesPage />} />
         <Route path="/qa/upload" element={<QaUploadPage />} />
         <Route path="/account" element={<AccountPage />} />
       </Route>
