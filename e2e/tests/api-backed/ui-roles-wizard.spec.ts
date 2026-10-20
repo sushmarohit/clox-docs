@@ -37,22 +37,22 @@ async function injectAuth(page: import('@playwright/test').Page, tokens: Awaited
 }
 
 test.describe('API-backed — admin UI roles & sender wizard', () => {
-  test('Super sees Leads + Audit + Compliance; marketplace QA hidden', async ({ page }) => {
+  test('Super sees Leads + Audit + Compliance; marketplace upload hidden', async ({ page }) => {
     const tokens = await loginAs(SEED.super);
     await injectAuth(page, tokens);
     await page.goto('/');
     await expect(page.getByRole('navigation').getByRole('link', { name: 'Leads', exact: true })).toBeVisible();
     await expect(page.getByRole('navigation').getByRole('link', { name: 'Audit', exact: true })).toBeVisible();
     await expect(page.getByRole('navigation').getByRole('link', { name: 'Compliance queue', exact: true })).toBeVisible();
-    await expect(page.getByRole('navigation').getByRole('link', { name: 'QA: upload & submit', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('navigation').getByRole('link', { name: 'Upload & submit', exact: true })).toHaveCount(0);
   });
 
-  test('Sender sees onboarding + QA upload; not Leads', async ({ page }) => {
+  test('Sender sees onboarding + document upload; not Leads', async ({ page }) => {
     const tokens = await loginAs(SEED.sender);
     await injectAuth(page, tokens);
     await page.goto('/');
     await expect(page.getByRole('navigation').getByRole('link', { name: 'Sender onboarding', exact: true })).toBeVisible();
-    await expect(page.getByRole('navigation').getByRole('link', { name: 'QA: upload & submit', exact: true })).toBeVisible();
+    await expect(page.getByRole('navigation').getByRole('link', { name: 'Upload & submit', exact: true })).toBeVisible();
     await expect(page.getByRole('navigation').getByRole('link', { name: 'Leads', exact: true })).toHaveCount(0);
     await page.goto('/sender/onboarding');
     await expect(page.getByRole('heading', { name: 'Sender onboarding' })).toBeVisible();
