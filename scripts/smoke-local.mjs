@@ -36,6 +36,9 @@ async function main() {
   }
 
   console.log('Smoke OK — check API logs / email for OTP code, then sign in at http://localhost:5174/login');
+  console.log(
+    'Admin partner path: Super → /ops/partners (invite) → partner /admin/invite/:token → /partner/onboarding → Super compliance ADMIN_PARTNER_KYB approve',
+  );
 }
 
 main().catch((error) => {
