@@ -499,7 +499,7 @@ export class SettlementCyclesService {
       hqHoldingCents: c.hqHoldingCents,
       lineCount: c.lineCount,
       notes: c.notes,
-      createdAt: c.createdAt.toISOString(),
+      createdAt: c.createdAt ? c.createdAt.toISOString() : new Date().toISOString(),
     };
   }
 }
