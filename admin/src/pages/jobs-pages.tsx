@@ -1000,7 +1000,6 @@ function JobDraftForm({
   const role = useAuthStore((s) => s.role);
   const navigate = useNavigate();
   const toast = useToast();
-  const qc = useQueryClient();
   const isEdit = mode === 'edit';
   const [step, setStep] = useState<DraftWizardStep>('pricing');
   const cancelTo = isEdit && jobId ? `/jobs/${jobId}` : '/jobs';
