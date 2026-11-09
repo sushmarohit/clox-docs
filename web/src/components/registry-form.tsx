@@ -61,8 +61,8 @@ const INFRA = [
   { value: 'Monoova NPP PayTo', labelKey: 'registry.infra.monoova' },
 ] as const;
 
-const cities = ['Melbourne', 'Sydney', 'Brisbane', 'Perth', 'Adelaide'] as const;
-const states = ['VIC', 'NSW', 'QLD', 'WA', 'SA', 'TAS'] as const;
+const cities = ['Melbourne', 'Sydney', 'Brisbane', 'Perth', 'Adelaide', 'Hobart', 'Canberra', 'Darwin'] as const;
+const states = ['VIC', 'NSW', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT'] as const;
 
 type FormValues = {
   companyLegalName: string;
