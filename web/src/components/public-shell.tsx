@@ -50,6 +50,10 @@ export function PublicShell({ children }: { children: ReactNode }) {
               {t('shell.howItWorksShort')}
             </Link>
             <span aria-hidden>·</span>
+            <Link href={`/${locale}/fair-pricing`} className="relative z-10 underline-offset-2 hover:underline">
+              {t('shell.fairPricingShort')}
+            </Link>
+            <span aria-hidden>·</span>
             <Link href={`/${locale}/faq`} className="relative z-10 underline-offset-2 hover:underline">
               {t('shell.faqShort')}
             </Link>

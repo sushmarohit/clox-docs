@@ -61,6 +61,11 @@ const routeMeta: Record<
     descriptionKey: 'howItWorksPage.subtitle',
     path: '/how-it-works',
   },
+  fairPricing: {
+    titleKey: 'fairPricingPage.title',
+    descriptionKey: 'fairPricingPage.subtitle',
+    path: '/fair-pricing',
+  },
 };
 
 const ogLocaleMap: Record<AppLocale, string> = {

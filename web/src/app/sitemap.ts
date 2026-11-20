@@ -3,13 +3,22 @@ import { getSiteUrl } from '@/lib/env';
 import { supportedLocales } from '@/locales';
 
 /** Public indexable paths — Partner EOI / investors are noindex / robots-disallowed. */
-const paths = ['', '/registry', '/faq', '/how-it-works', '/privacy', '/terms'] as const;
+const paths = [
+  '',
+  '/registry',
+  '/faq',
+  '/how-it-works',
+  '/fair-pricing',
+  '/privacy',
+  '/terms',
+] as const;
 
 const pathPriority: Record<(typeof paths)[number], number> = {
   '': 1,
   '/registry': 0.9,
   '/faq': 0.85,
   '/how-it-works': 0.85,
+  '/fair-pricing': 0.7,
   '/privacy': 0.5,
   '/terms': 0.5,
 };

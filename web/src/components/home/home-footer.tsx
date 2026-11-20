@@ -24,6 +24,9 @@ export function HomeFooter({ copy, locale }: HomeSectionProps) {
           <Link href={`/${locale}/how-it-works`} className="hover:text-clox-orange">
             {copy.journeyTitle}
           </Link>
+          <Link href={`/${locale}/fair-pricing`} className="hover:text-clox-orange">
+            Fair pricing
+          </Link>
           <Link href={`/${locale}/faq`} className="hover:text-clox-orange">
             {copy.faqTitle}
           </Link>

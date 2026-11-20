@@ -36,9 +36,32 @@
             "termsShort": "Terms",
             "faqShort": "FAQ",
             "howItWorksShort": "How it works",
+            "fairPricingShort": "Fair pricing",
             "contactShort": "Enquiries",
             "footerContactHint": "Commercial interest: use Registry or Partner EOI. Enquiries: info@clox.com.au."
           },
+  "fairPricingPage": {
+    "title": "Fair pricing principles",
+    "subtitle": "How CLOX protects cost recovery on the marketplace — without publishing exact rate-floor tables.",
+    "intro": "CLOX uses a server-side hard floor so posted jobs and carrier bids cannot undercut a cost-recovery baseline. Exact cents stay inside the platform; this page explains the principles only.",
+    "principles": [
+      {
+        "title": "Cost recovery, not a public rate card",
+        "body": "Floors are derived from vehicle class, distance or hours, fuel index, labour period, and body type. They are commercial policy anchors — not a published tariff for competitors to scrape."
+      },
+      {
+        "title": "Bids and publish stay above the floor",
+        "body": "When live, carriers cannot submit below the floor, and senders cannot publish a draft that sits under the current floor. The app shows the minimum; the API enforces it."
+      },
+      {
+        "title": "Fuel and labour move with reality",
+        "body": "Weekly diesel updates and time-of-day / weekend labour periods adjust the floor. Ops maintain the index; stale fuel triggers an internal alert."
+      }
+    ],
+    "commercialNote": "Typical AUD range bands for marketing (by lane or class) will be published here only after Commercial supplies approved copy. Until then, contact info@clox.com.au for guidance — we will not invent sample dollars on this page.",
+    "ctaRegistry": "Join pre-launch registry",
+    "ctaFaq": "Read FAQ"
+  },
   "home": {
     "eyebrow": "Pre-Launch"
   },
