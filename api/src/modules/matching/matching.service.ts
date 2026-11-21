@@ -157,6 +157,7 @@ export class MatchingService {
         stops: { orderBy: { sequence: 'asc' }, take: 4 },
         dgDocument: { select: { id: true, originalFilename: true } },
         originRegion: true,
+        rateFloorVersion: { select: { id: true, label: true } },
         proposals: {
           where: {
             carrierCompanyId: company.id,
@@ -294,6 +295,8 @@ export class MatchingService {
           minBidIncGstCents: hardFloorGross,
           /** Carrier-facing minimum payout (net). */
           minBidNetToCarrierCents,
+          rateFloorVersionId: j.rateFloorVersionId ?? j.rateFloorVersion?.id ?? null,
+          rateFloorVersionLabel: j.rateFloorVersion?.label ?? null,
           siteManeuverability: j.siteManeuverability,
           siteFacility: j.siteFacility,
           pickupAt: j.pickupAt,
