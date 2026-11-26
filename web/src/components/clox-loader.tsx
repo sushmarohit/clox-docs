@@ -2,16 +2,25 @@ type CloxLoaderProps = {
   className?: string;
   size?: number;
   label?: string;
+  /** Set true when the parent already owns role="status" and visible loading text. */
+  decorative?: boolean;
 };
 
-/** Shared CLOX brand loader (orange growth arrow GIF). */
-export function CloxLoader({ className = '', size = 40, label = 'Loading' }: CloxLoaderProps) {
+/** Shared CLOX brand loader (animated CLOX mark GIF). */
+export function CloxLoader({
+  className = '',
+  size = 40,
+  label = 'Loading',
+  decorative = false,
+}: CloxLoaderProps) {
   return (
     <span
-      className={`inline-flex items-center justify-center ${className}`}
-      role="status"
-      aria-live="polite"
-      aria-label={label}
+      className={`inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[22%] ring-1 ring-black/10 ${className}`}
+      style={{ width: size, height: size }}
+      role={decorative ? undefined : 'status'}
+      aria-live={decorative ? undefined : 'polite'}
+      aria-label={decorative ? undefined : label}
+      aria-hidden={decorative ? true : undefined}
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- animated GIF loader */}
       <img
@@ -19,10 +28,10 @@ export function CloxLoader({ className = '', size = 40, label = 'Loading' }: Clo
         alt=""
         width={size}
         height={size}
-        className="object-contain"
+        className="h-full w-full object-cover"
         decoding="async"
       />
-      <span className="sr-only">{label}</span>
+      {decorative ? null : <span className="sr-only">{label}</span>}
     </span>
   );
 }
